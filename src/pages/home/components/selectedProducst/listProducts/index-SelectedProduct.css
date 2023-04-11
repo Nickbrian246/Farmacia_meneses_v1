@@ -1,0 +1,19 @@
+.ItemsContainer{
+    width: 35%;
+    height: 100%;
+    background: blue;
+    display: flex;
+    flex-direction: column;
+    
+}
+.listConatiner{
+    max-width: 100%;
+    height: 25rem;
+    overflow: auto;
+    align-self: center;
+    background: black;
+}
+.total{
+    font-size: 2.5rem;
+    margin-left: 10px;
+}

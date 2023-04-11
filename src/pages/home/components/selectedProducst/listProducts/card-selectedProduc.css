@@ -1,0 +1,24 @@
+.cardSelectedPorudct-container{
+    width: 32rem;
+    height: 5rem;
+    background: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+}
+.cardSelectedProduct-ImgContainer{
+    width: 20%;
+    height: 5rem;
+    background: yellow;
+}
+.cerdSelectedProduct-detailsContainer{
+width: 60%;
+height: 5rem;
+background-color: greenyellow;
+}
+.cardSelectedProduct-quanityContainer{
+    width: 20%;
+    height: 5rem;
+    background: blueviolet;
+}
+

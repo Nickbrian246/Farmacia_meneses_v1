@@ -1,0 +1,14 @@
+.homeBodyContainer{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+}
+.masaicAndInputContainer{
+    margin-left: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+}
