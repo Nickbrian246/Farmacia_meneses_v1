@@ -1,5 +1,6 @@
 import "./card-selectedProduc.css"
 import { FC } from "react"
+import {BsFillTrashFill} from "react-icons/bs"
 
 interface Props{
     name:string,
@@ -16,17 +17,40 @@ const CardSelectedProduct:FC<Props> =(
 }) =>{
     return(
     <>
-    <section className="cardSelectedPorudct-container">
-        <picture className="cardSelectedProduct-ImgContainer">
-            <img src="" alt="image from"/>
+    <section className="cardSelectedProduct-container">
+        <div className="cardSelectedProdudct-imgAndNameConainer">
+        <picture >
+            <img 
+            className="cardSelectedProduct-imgContainer-img"
+            src={image} 
+            alt={`image medicine of ${name}`} 
+            />
         </picture>
-        <div className="cerdSelectedProduct-detailsContainer">
-            <p>Nombre de medicamento</p>
-            <p>precio$254 pejedolares</p>
+        <div className="cardSelectedProduct-nameContainer">
+            <p>{name}</p>
 
         </div>
-        <aside className="cardSelectedProduct-quanityContainer">
-            <p>cantidad: 45</p>
+        </div>
+        <div 
+        className="cerdSelectedProduct-detailsContainerPrice"
+        >
+            <p>{`$${price}`}</p>
+
+        </div>
+        <div 
+        className="cardSelectedProduct-quanityContainer"
+        >
+            <p>{`${quantity}`}</p>
+        </div>
+        <div 
+        className="cardSelectedProduct-totalContainer"
+        >
+            <p>{`$${quantity}`}</p>
+        </div>
+        <aside 
+        className="cardSelectedProduct-trashContainer"
+        >
+            <BsFillTrashFill/>
         </aside>
     </section>
 

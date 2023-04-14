@@ -17,6 +17,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: all  0.5s;
 }
 .icon{
     font-size: 6.8rem;
@@ -29,4 +30,8 @@
 .mosaic-drinks:hover{
     background: rgba(39, 187, 246, 0.963);
     
+}
+.masaic-baseStyle:hover{
+    transform: scale(1.2);
+    border-radius: 5px;
 }

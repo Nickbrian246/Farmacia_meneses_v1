@@ -1,24 +1,50 @@
-.cardSelectedPorudct-container{
-    width: 32rem;
+.cardSelectedProduct-container{
     height: 5rem;
-    background: red;
     display: flex;
+    align-content: center;
+    justify-content: center;
+    border-top: 2px solid gray;
+}
+/*contenedor de img y nombre del producto*/
+.cardSelectedProdudct-imgAndNameConainer{
+    display: flex;
+    width: 325px;
+    padding: 5px;
     align-items: center;
-    justify-content: center;   
-}
-.cardSelectedProduct-ImgContainer{
-    width: 20%;
-    height: 5rem;
-    background: yellow;
-}
-.cerdSelectedProduct-detailsContainer{
-width: 60%;
-height: 5rem;
-background-color: greenyellow;
-}
-.cardSelectedProduct-quanityContainer{
-    width: 20%;
-    height: 5rem;
-    background: blueviolet;
+    overflow: hidden;
+    
 }
 
+/*clase ligado a img */
+.cardSelectedProduct-imgContainer-img{
+    width: 128px;
+    height: 70px;
+    object-fit: contain ;
+    object-position: center;
+    border: 10px;
+}
+/*contenedor del precio*/
+.cerdSelectedProduct-detailsContainerPrice{
+    width: 148px;
+    align-self: center;
+}
+/*cantidad contenedor*/
+.cardSelectedProduct-quanityContainer{
+    width: 84px;
+    align-self: center;
+}
+/*contenedor del total */
+.cardSelectedProduct-totalContainer{
+    width: 92px;
+    align-self: center;
+}
+/* contenedor de bote de basura*/
+.cardSelectedProduct-trashContainer{
+    width: 92px;
+    align-self: center;
+}
+.cardSelectedProduct-trashContainer :hover{
+    color: red;
+    transform: scale(1.1);
+    cursor: pointer;
+}
