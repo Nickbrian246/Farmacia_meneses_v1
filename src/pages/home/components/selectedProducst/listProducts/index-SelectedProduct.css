@@ -14,31 +14,46 @@
     padding: 2px;
     margin-bottom: 2px;
     
+    
 }
 /*<p> producto*/
 .ItemsContainer .descriptons-topBar :nth-child(1){
-    flex-grow: 7.2;
+    width: 50%;
+    display: flex;
+    justify-content: center;
     font-size: 1.8rem;
+
 }
 /*<p> precio*/
 .ItemsContainer .descriptons-topBar :nth-child(2){
-    flex-grow: 1;
+    width: 12.5%;
+    display: flex;
+    justify-content: center;
     font-size: 1.8rem;
+
 }
 /*<p> cantidad*/
 .ItemsContainer .descriptons-topBar :nth-child(3){
-    flex-grow: 1;
+    width: 12.5%;
+    display: flex;
+    justify-content: center;
     font-size: 1.8rem;
 }
 /*<p> total*/
 .ItemsContainer .descriptons-topBar :nth-child(4){
-    flex-grow: 1;
+    width: 12.5%;
+    display: flex;
+    justify-content: center;
     font-size: 1.8rem;
+
 }
 /*<p> eliminar*/
 .ItemsContainer .descriptons-topBar :nth-child(5){
-    flex-grow: 1;
+    width: 12.5%;
+    display: flex;
+    justify-content: center;
     font-size: 1.8rem;
+
 }
 
 
