@@ -1,0 +1,40 @@
+.medicine-modalBackGround{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 1000;
+    padding: 40px;
+}
+.medicine-ModalContainer{
+    width: 80%;
+    height: 600px;
+    position: relative;
+    border-radius: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background: #ffff;
+    padding: 20px;
+}
+.medicModal-textContainer{
+    width: 100%;
+    height: 150px;
+    background: rgb(90, 90, 233);
+    border-radius: 10px;
+}
+.medicModal-textContainer > p{
+    font-size: 4rem;
+    color: whitesmoke;
+}
+.medicModal-stepperContainer{
+    width: 100%;
+    height: auto;
+    margin-top: 15px;
+}
+.medicForm{
+    margin-top: 20px;
+}

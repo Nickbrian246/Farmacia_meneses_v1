@@ -1,0 +1,26 @@
+.mosaic-container-item{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    width: 30rem;
+    height:28rem ;
+    align-content: center;
+    justify-content: center;
+
+}
+.mosaic-baseStyle{
+    width:8.5rem;
+    cursor: pointer;
+    height: 8.4em;
+    background-color:rgb(53, 215, 199);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all  0.5s;
+}
+
+.mosaic-baseStyle:hover{
+    transform: scale(1.2);
+    border-radius: 5px;
+}

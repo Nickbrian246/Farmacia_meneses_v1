@@ -2,7 +2,7 @@ interface ListItems{
     nombre:string
 }
 
- const listItems: ListItems[] = [
+const listItems: ListItems[] = [
     {
     nombre:"medicamentos"
     },
