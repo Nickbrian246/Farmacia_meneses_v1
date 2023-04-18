@@ -8,6 +8,8 @@ import { MedicineModalFlow } from "../../../Modalflow";
 
 const Header =() =>{
     const [isOpenmodal, setIsOpenModal] = useState<boolean>(false);
+    const [isOpenFormModal, setOpenFormModal] = useState<boolean>(false)
+    console.log(isOpenFormModal)
     const handleModal = () => {
         setIsOpenModal((prevState) => !prevState)
     }
@@ -26,8 +28,8 @@ const Header =() =>{
         </picture>
     </header>
     <aside>
-    {(isOpenmodal && (<ToggleMenu setIsOpenModal={setIsOpenModal}/>))}
-    <MedicineModalFlow/>
+    {(isOpenmodal && (<ToggleMenu setIsOpenModal={setIsOpenModal} setOpenFormModal={setOpenFormModal}/>))}
+    {(isOpenFormModal && (<MedicineModalFlow setOpenFormModal={setOpenFormModal}/>))}
     </aside>
     </>
     )

@@ -1,15 +1,16 @@
+
 const testList =[
     {
-    name:"medicamento"
+    name:"Agregar medicamento",
+    type:"add",
     },
     {
-    name:"bebidas"
+    name:"Actualizar medicamento",
+    type:"update",
     },
     {
-    name:"carlos"
+    name:"Eliminar Medicamento",
+    type:"delete",
     },
-    {
-        name:"carlos"
-        },
 ]
 export {testList}

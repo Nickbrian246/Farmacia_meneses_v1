@@ -38,3 +38,11 @@
 .medicForm{
     margin-top: 20px;
 }
+
+.medicine-ModalContainer-closeIcon{
+    font-size: 4rem;
+    position: fixed;
+    top: 20px;
+    right: 60px;
+    color: red;
+}

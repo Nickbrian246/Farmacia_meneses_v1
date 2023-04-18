@@ -11,20 +11,29 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
-type setIsOpenModal = React.Dispatch<React.SetStateAction<boolean>>;
+interface Props {
+    setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenFormModal:React.Dispatch<React.SetStateAction<boolean>>
+}
 
 
 
-export default function ToggleMenu(props :{setIsOpenModal:setIsOpenModal}) {
-    const {setIsOpenModal} = props
+export default function ToggleMenu(props :Props) {
+    const {
+        setIsOpenModal,
+        setOpenFormModal,
+    } = props
     const [optionSelected, setOptionSelected] = useState("")
-    console.log(optionSelected,"soy option selcted")
     const [state, setState] = useState({
         top: false,
         left:true,
         bottom: false,
         right: false,
     });
+
+    const handleOptionSelected = () =>{
+        setOpenFormModal(true)
+    }
 
 const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -52,7 +61,8 @@ const list = (anchor: Anchor) => (
         {listItems.map((text, index) => (
         <ListItem  key={uuidv4()} disablePadding>
             <ListItemButton onClick={()=> {
-                setOptionSelected(text.nombre)}} >
+                setOptionSelected(text.nombre)
+                handleOptionSelected()}} >
             <ListItemText primary={text.nombre}   />
             </ListItemButton>
         </ListItem>

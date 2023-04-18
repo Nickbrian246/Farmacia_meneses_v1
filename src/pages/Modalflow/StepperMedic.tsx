@@ -4,15 +4,23 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
+// type setIsOpenModal = React.Dispatch<React.SetStateAction<boolean>>;
+interface Props {
+    nextStep:number,
+}
 const steps = [
 'Seleccione la accion',
 'rellene los datos',
 ];
 
-const  HorizontalLabelPositionBelowStepper=() => {
+
+const  HorizontalLabelPositionBelowStepper=(props:Props) => {
+    const { nextStep} =props
+    const nextValue:number = nextStep
+
 return (
     <Box sx={{ width: '100%' }}>
-    <Stepper activeStep={1} alternativeLabel>
+    <Stepper activeStep={nextValue} alternativeLabel>
         {steps.map((label) => (
         <Step key={label}>
             <StepLabel>{label}</StepLabel>
