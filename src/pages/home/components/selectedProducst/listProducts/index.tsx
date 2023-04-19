@@ -1,5 +1,5 @@
 import "./index-SelectedProduct.css"
-import {CardSelectedProduct} from "./Card-selectedProduc";
+import {CardSelectedProduct} from "./card-SelectedProduct/Card-selectedProduc";
 
 
 const array = [

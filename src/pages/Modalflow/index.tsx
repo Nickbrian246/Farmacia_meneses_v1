@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import "./index-medicMidal.css"
 import {HorizontalLabelPositionBelowStepper} from "./StepperMedic";
-import { MosaicItem } from "../components/mosaicComponent/MosaicItem";
-import { testList } from "./listTest";
-import {AiFillPlusCircle} from "react-icons/ai";
-import {MdDeleteForever} from "react-icons/md";
-import {MdUpdate} from "react-icons/md"
 import {AiFillCloseCircle} from "react-icons/ai"
 import { IconButton } from "@mui/material";
 import Button from '@mui/material/Button';
+import { AddMedicine } from "../forms/addMedicine";
+import { OptionsFormedicines } from "./options";
 
 interface Props {
     setOpenFormModal:React.Dispatch<React.SetStateAction<boolean>>
@@ -38,44 +35,26 @@ const MedicineModalFlow = ( props:Props) => {
                 <div className="medicModal-textContainer">
                     <p>Seleccione la accion</p>
                 </div>
-                {(nextStep>1) 
-                &&(<Button 
-                variant="contained"
-                size="medium"
-                className="stepBack-btn"
-                onClick={()=>handleStepBack()}>
-                    Regresar <br/>al paso anterior 
-                </Button>)
-                }
-
                 <div className="medicModal-stepperContainer">
                     <HorizontalLabelPositionBelowStepper nextStep={nextStep} />
                 </div >
-                {/* <form className="medicForm" >
-                    <TextField
-                    id="outlined-basic"
-                    label="nombre del medicamento"
-                    variant="outlined"/>
-
-                </form> */}
-                <div style={{width:"100%", display:"flex"}} >
-                {
-                    testList.map((item) => (
-                        <MosaicItem
-                        name={item.name}
-                        width="350px"
-                        fontSize="1.5rem"
-                        key={item.name}
-                        handleNextStep={handleNextStep}
-                        >
-                        { 
-                        ((item.type==="add" ) && (<AiFillPlusCircle style={{fontSize:"3rem",color:"#5a5ae9"}}/>))
-                        ||((item.type==="update" ) && (<MdUpdate style={{color:"#0535E7",fontSize:"3rem"}}/>))
-                        ||((item.type==="delete" ) && (<MdDeleteForever style={{fontSize:"3rem",color:"#E7052B"}}/>))
-                        }
-                        </MosaicItem>
-                    ))
-                } 
+                <div  className={`options-constainterTest ${ nextStep>1 && `options-constainterActive`}`}>
+                { nextStep>1
+                ?<AddMedicine/>
+                :<OptionsFormedicines handleNextStep={handleNextStep}/>
+                }
+                
+                {(nextStep>1)
+                &&(<Button
+                style={{width:"200px"}}
+                variant="contained"
+                size="small"
+                className="stepBack-btn"
+                onClick={()=>handleStepBack()}>
+                    Regresar <br/>al paso anterior
+                </Button>)
+                }
+                
                 </div >
 
             </section>
