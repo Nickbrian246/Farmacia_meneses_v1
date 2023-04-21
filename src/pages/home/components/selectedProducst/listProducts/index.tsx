@@ -1,5 +1,7 @@
+import {useEffect, useState}from "react"
 import "./index-SelectedProduct.css"
 import {CardSelectedProduct} from "./card-SelectedProduct/Card-selectedProduc";
+import { fetchMedicinesDatA } from "../../../../../fetch/fetchMedicines/fetchMedicines";
 
 
 const array = [
@@ -12,9 +14,25 @@ const array = [
     {name:"hila mundo", price:2,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
 
     ]
+    interface List {
+        name:string,
+        compound:string,
+        price:number,
+        type:string,
+        quantity:number,
+        function:string,
+        imgId?:string,
+        image?:string
+        id:string
+    }
     
     
 const SelectedProductList=()=>{ 
+    const [productList, setProductList] = useState<List []>([])
+    useEffect(()=>{
+        fetchMedicinesDatA()
+        .then((data) =>{ setProductList(data.data)} )// revisar esto despues
+    },[])
     return (
         <>
         <section className="ItemsContainer" >
@@ -26,7 +44,7 @@ const SelectedProductList=()=>{
                 <p>eliminar</p>
         </div>
         <div className="listConatiner">
-        {array.map(item => (
+        {productList.map(item => (
         <CardSelectedProduct
         name={item.name}
         price={item.price}

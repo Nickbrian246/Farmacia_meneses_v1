@@ -2,36 +2,54 @@ import {useState,useRef} from "react";
 import { Button, TextField } from "@mui/material";
 import "./mediform.css";
 import { FormEvent } from "react";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 
 interface FormMedicineAdd {
     name:string,
     compound:string,
-    price:number | string,
+    price:string,
     type:string,
-    quantity:number,
+    quantity:string,
     function:string,
     imgId?:string
 }
 
 const AddMedicine=()=>{
-    const formRef = useRef<HTMLFormElement>(null);
+    const [error, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string>("")
     const [form, setForm] = useState<FormMedicineAdd>({
         name:"",
         compound:"",
         price:"",
         type:"",
-        quantity:0,
+        quantity:"",
         function:"",
         imgId:""
-
+        
     })
+    const formRef = useRef<HTMLFormElement>(null);
     
     
+
     const handleSumbitBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
+        
+        if(   !form.compound
+            || !form.function
+            || !form.name
+            || !form.price
+            || !form.quantity){
+                setErrorMessage(" todos los campos deben de estar completos")
+            return setError(true)
+        }
+        // SOLUCIONAR CHEQUEADO DE TIPOS DE DATOS
+        if( !!isNaN(parseFloat(form.price)) || !!isNaN(parseFloat(form.quantity)) ) {
+            setErrorMessage("los camops precio y cantidad deben de ser numeros")
+            return setError(true)
+        }
         formRef.current?.reset()
-        console.log(form,"soy form")
     }
     const handleInputChange=( event:React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -44,12 +62,22 @@ const AddMedicine=()=>{
         
     }
 
+    if(error) {
+        setTimeout(()=>{setError(false)},5000)
+    }
+
     return (
         <>
+        {error && (
+                <Alert style={{position:"fixed",top:"10%",right:"30%", left:"30%"}} severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {errorMessage} — <strong>porfavor revise el campo pertinente</strong>
+                </Alert>
+        )}
         <form ref={formRef} className="medicForm" onSubmit={handleSumbitBtn} >
             <TextField
                 id="outlined-basic"
-                label={`nombre del producto${form.name}`}
+                label={`nombre del producto`}
                 variant="outlined"
                 style={{width:"400px", margin:"5px"}}
                 onChange={handleInputChange}
@@ -57,7 +85,7 @@ const AddMedicine=()=>{
             />
             <TextField
                 id="outlined-basic"
-                label={`nombre de los componentes${form.compound}`}
+                label={`nombre de los componentes`}
                 variant="outlined"
                 style={{width:"400px", margin:"5px"}}
                 onChange={handleInputChange}
@@ -65,7 +93,7 @@ const AddMedicine=()=>{
             />            
             <TextField
                 id="outlined-basic"
-                label={`Precio $${form.price}`}  
+                label={`Precio $`}  
                 variant="outlined"
                 style={{width:"400px", margin:"5px"}}
                 onChange={handleInputChange}
@@ -73,7 +101,7 @@ const AddMedicine=()=>{
             />
             <TextField
                 id="outlined-basic"
-                label={`tipo inyectado | oral etc${form.type}`} 
+                label={`tipo inyectado | oral etc$`} 
                 variant="outlined"
                 style={{width:"400px", margin:"5px"}}
                 onChange={handleInputChange}
@@ -81,7 +109,7 @@ const AddMedicine=()=>{
             />
             <TextField
                 id="outlined-basic"
-                label={`cantidad ${form.quantity}`} 
+                label={`cantidad `} 
                 variant="outlined"
                 style={{width:"400px", margin:"5px"}}
                 onChange={handleInputChange}
@@ -89,7 +117,7 @@ const AddMedicine=()=>{
             />
             <TextField
                 id="outlined-basic"
-                label={`funcion: dolor| vomitio etc ${form.function}`} 
+                label={`funcion: dolor| vomitio etc `} 
                 variant="outlined"
                 style={{width:"400px", margin:"5px"}}
                 onChange={handleInputChange}

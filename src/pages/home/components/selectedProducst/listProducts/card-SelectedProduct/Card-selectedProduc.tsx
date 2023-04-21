@@ -20,11 +20,11 @@ const CardSelectedProduct:FC<Props> =(
     <section className="cardSelectedProduct-container">
         <div className="cardSelectedProdudct-imgAndNameConainer">
         <picture >
-            <img 
+        {image && (            <img 
             className="cardSelectedProduct-imgContainer-img"
             src={image} 
             alt={`image medicine of ${name}`} 
-            />
+            />)}
         </picture>
         <div className="cardSelectedProduct-nameContainer">
             <p>{name}</p>
