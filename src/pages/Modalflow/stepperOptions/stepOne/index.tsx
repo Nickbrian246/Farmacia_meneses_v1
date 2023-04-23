@@ -1,11 +1,11 @@
 import React from 'react'
 import { testList } from "./listTest";
-import { MosaicItem } from "../../components/mosaicComponent/MosaicItem";
+import { MosaicItem } from "../../../components/mosaicComponent/MosaicItem";
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { MdDeleteForever, MdUpdate } from 'react-icons/md';
 
 interface Props {
-    handleNextStep:(optionSelected:string) => string,
+    handleNextStep:(optionSelected:string) => string| void,
 }
 
 

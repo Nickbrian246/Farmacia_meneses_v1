@@ -7,7 +7,7 @@ interface Props{
     name:string,
     width?:string,
     fontSize?:string,
-    handleNextStep:(optionSelected:string) => string,
+    handleNextStep:(optionSelected:string) => string| void,
 
 }
 const MosaicItem=(props:Props) => {

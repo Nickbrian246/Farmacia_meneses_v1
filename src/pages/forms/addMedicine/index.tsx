@@ -36,11 +36,11 @@ const AddMedicine=()=>{
     const handleSumbitBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
         
-        if(   !form.compound
-            || !form.function
-            || !form.name
-            || !form.price
-            || !form.quantity){
+        if(   form.compound
+            || form.function
+            || form.name
+            || form.price
+            || form.quantity){
                 setErrorMessage(" todos los campos deben de estar completos")
             return setError(true)
         }
