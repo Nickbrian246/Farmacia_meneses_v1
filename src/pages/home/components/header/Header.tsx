@@ -16,7 +16,7 @@ const Header =() =>{
         setIsOpenModal((prevState) => !prevState)
     }
     useEffect(()=>{
-        PostMedicinesDara({         name:"desde la app",
+        PostMedicinesDara({name:"desde la app",
         compound:"eres mi mas bello amanecer xd",
         price:125,
         type:"inyectado",
@@ -26,7 +26,6 @@ const Header =() =>{
         id:"622137fd3029ec84a594f50b"})
         .then((response) => setDataTest(response))
     },[])
-    console.log(dataTest,"dat");
     
 
 

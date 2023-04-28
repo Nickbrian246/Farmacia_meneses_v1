@@ -1,0 +1,9 @@
+.InputlistContainer{
+    width: 400px;
+    max-height: 200px;
+    overflow: auto;
+    overflow-x: hidden;
+    background-color: rgb(245, 245, 245);
+    position:absolute;
+    z-index: 100000;
+}

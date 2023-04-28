@@ -1,0 +1,11 @@
+
+.Inputlist {
+    cursor: pointer;
+    padding-left: 10px;
+    animation: transform 5s;
+}
+
+.Inputlist:hover {
+    background-color: rgb(214, 214, 214);
+    transform: scale(1.01);
+}

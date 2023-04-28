@@ -1,5 +1,5 @@
 import {
-    Data,
+Data,
 PostMedicines,
 } from "./interface"
 const BASE_URL ="http://localhost:3000/api"
@@ -20,6 +20,10 @@ async function PostMedicinesDara (datos:PostMedicines) {
     });
     const response = data.json()
     return response
-
 }
-export {fetchMedicinesDatA,PostMedicinesDara}
+async function fetchItemByName(nombre:string){
+    const res= await fetch("http://localhost:3000/api/newmedicine/642002ecf7986d7e3cf59494")
+    const data= await res.json()
+    return data
+}
+export {fetchMedicinesDatA,PostMedicinesDara,fetchItemByName}

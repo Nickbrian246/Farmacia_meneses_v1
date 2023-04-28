@@ -6,7 +6,8 @@ import { IconButton } from "@mui/material";
 import Button from '@mui/material/Button';
 import { AddMedicine } from "../forms/addMedicine";
 import { OptionsFormedicines } from "./stepperOptions/stepOne";
-import {DragFile} from './stepperOptions/stepTwo'
+import {DragFile} from './stepperOptions/stepTwo';
+import {FormDeleteOrUpdateMedicne} from "../forms/deleteAndApdate/index"
 
 interface Props {
     setOpenFormModal:React.Dispatch<React.SetStateAction<boolean>>
@@ -21,7 +22,7 @@ const MedicineModalFlow = ( props:Props) => {
     const [mosaicOption, setMosaicOptions] = useState<string>("");
     const [currentOptionSelected, setcurrentOptionSelected] = useState<number>(0);
     const [nextStep,setNextStep] = useState<number>(1);
-    console.log(currentOptionSelected,"mosais opiton");
+    const [isAdd, setIsAdd] = useState<boolean>(false)
     
     const handleNextStep=(optionSelected:string):void| string => {
         // opcion seleccionada de las opciones  
@@ -61,20 +62,20 @@ const MedicineModalFlow = ( props:Props) => {
                 <AiFillCloseCircle className="medicine-ModalContainer-closeIcon"/>
                 </IconButton>
                 <div className="medicModal-textContainer">
-                    {(mosaicOption === "Agregar medicamento") 
+                    {(currentOptionSelected===1) 
                     && (<p>
                         suba una foto del producto
                         <span 
                             style={{
-                            fontSize:"1.3rem",
+                            fontSize:"1.5rem",
                             color:"#BEBEBE",
                         }}>
                             {`(este paso es opcional)`}
                         </span>
                         </p>)
-                    || (mosaicOption === "Actualizar medicamento") && (<p>ingrese el nombre </p>)
-                    || (mosaicOption === "Eliminar Medicamento") && (<p>ingrese el nombre</p>)
-                    || (mosaicOption === "") && (<p>seleccione una opcion</p>)}
+                    || currentOptionSelected===2 && mosaicOption==="Agregar medicamento" && <p>ingrese los datos </p>
+                    || (currentOptionSelected===2) && (<p>ingrese el nombre </p>)
+                    || (currentOptionSelected===0) && (<p>seleccione una opcion</p>)}
                     
                 </div>
                 <div className="medicModal-stepperContainer">
@@ -89,7 +90,7 @@ const MedicineModalFlow = ( props:Props) => {
                         {/* {(mosaicOption==="Agregar medicamento")? <DragFile/>:currentOptionSelected===2? <AddMedicine/>:
                         <OptionsFormedicines handleNextStep={handleNextStep}/>} */}
                         {(currentOptionSelected===1) &&<DragFile/>
-                        ||(currentOptionSelected===2) &&<AddMedicine/>
+                        ||(currentOptionSelected===2) &&<FormDeleteOrUpdateMedicne isAdd={true}/>
                         ||(currentOptionSelected===0) && <OptionsFormedicines handleNextStep={handleNextStep}/>}
 
                         {(currentOptionSelected===1 )

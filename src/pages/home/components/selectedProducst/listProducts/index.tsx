@@ -1,20 +1,12 @@
-import {useEffect, useState}from "react"
+import {Key, useEffect, useState}from "react"
 import "./index-SelectedProduct.css"
 import {CardSelectedProduct} from "./card-SelectedProduct/Card-selectedProduc";
 import { fetchMedicinesDatA } from "../../../../../fetch/fetchMedicines/fetchMedicines";
 
 
-const array = [
-    {name:"genoprazal ", price:24512214,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
-    {name:"hila mundo", price:24511214,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
-    {name:"hila mundo", price:24521324,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
-    {name:"hila mundo", price:2151214,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
-    {name:"hila mundo", price:244224514,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
-    {name:"hila mundo", price:21455614,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
-    {name:"hila mundo", price:2,quantity:2, image:"https://www.publico.es/ahorro-consumo-responsable/wp-content/uploads/2023/02/medicamento-scaled.jpg"},
 
-    ]
     interface List {
+        _id: Key | null | undefined;
         name:string,
         compound:string,
         price:number,
@@ -31,7 +23,7 @@ const SelectedProductList=()=>{
     const [productList, setProductList] = useState<List []>([])
     useEffect(()=>{
         fetchMedicinesDatA()
-        .then((data) =>{ setProductList(data.data)} )// revisar esto despues
+        .then((data) =>{ return setProductList(data.data);} )// revisar esto despues
     },[])
     return (
         <>
@@ -50,7 +42,7 @@ const SelectedProductList=()=>{
         price={item.price}
         quantity={item.quantity}
         image={item.image}
-        key={item.price}
+        key={item._id}
         />))}
         </div>
         <section className="total">

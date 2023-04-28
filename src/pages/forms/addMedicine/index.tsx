@@ -4,22 +4,13 @@ import "./mediform.css";
 import { FormEvent } from "react";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import {FormMedicine} from "../interfaces"
 
-
-interface FormMedicineAdd {
-    name:string,
-    compound:string,
-    price:string,
-    type:string,
-    quantity:string,
-    function:string,
-    imgId?:string
-}
 
 const AddMedicine=()=>{
     const [error, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
-    const [form, setForm] = useState<FormMedicineAdd>({
+    const [form, setForm] = useState<FormMedicine>({
         name:"",
         compound:"",
         price:"",
@@ -30,12 +21,8 @@ const AddMedicine=()=>{
         
     })
     const formRef = useRef<HTMLFormElement>(null);
-    
-    
-
     const handleSumbitBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
-        
         if(   form.compound
             || form.function
             || form.name
@@ -51,6 +38,7 @@ const AddMedicine=()=>{
         }
         formRef.current?.reset()
     }
+    
     const handleInputChange=( event:React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         // console.log(name,value,"soy value")
