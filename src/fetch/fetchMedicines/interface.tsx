@@ -7,18 +7,18 @@
         quantity:number,
         function:string,
         imgId?:string,
-        id:string
+        id?:string
     
     }
 export interface PostMedicines{
     name:string,
     compound:string,
-    price:number,
+    price:number| string,
     type:string,
-    quantity:number,
+    quantity:number| string,
     function:string,
     imgId?:string,
-    id:string
+    id?:string
 
 }
 export interface MedicinesData  {

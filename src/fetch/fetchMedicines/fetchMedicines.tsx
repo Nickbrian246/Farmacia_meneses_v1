@@ -2,7 +2,13 @@ import {
 Data,
 PostMedicines,
 } from "./interface"
+import axios from "axios"
 const BASE_URL ="http://localhost:3000/api"
+const config = {
+    headers: {
+    'Content-Type': 'application/json'
+    }
+};
 
 async function fetchMedicinesDatA(): Promise<Data>{
         const data =  await fetch(`http://localhost:3000/api/newmedicine`)
@@ -10,7 +16,7 @@ async function fetchMedicinesDatA(): Promise<Data>{
         return response 
 }
 
-async function PostMedicinesDara (datos:PostMedicines) {
+async function PostMedicinesData (datos:PostMedicines) {
     const data = await fetch("http://localhost:3000/api/newmedicine",{
         method:"POST",
         headers: {
@@ -21,9 +27,31 @@ async function PostMedicinesDara (datos:PostMedicines) {
     const response = data.json()
     return response
 }
-async function fetchItemByName(nombre:string){
-    const res= await fetch("http://localhost:3000/api/newmedicine/642002ecf7986d7e3cf59494")
+async function fetchItemById(id:string){
+    if(id==="") return null
+    const res= await fetch(`http://localhost:3000/api/newmedicine/${id}`)
     const data= await res.json()
     return data
 }
-export {fetchMedicinesDatA,PostMedicinesDara,fetchItemByName}
+
+async function updateMedicine(datos :PostMedicines, id:string) {
+    const req = await axios.put(
+                `http://localhost:3000/api/newmedicine/${id}`,
+                datos,
+                config)
+    const response = await req.data
+    return response
+}
+async function deleteMedicine(id:string) {
+    const req = await axios.delete(
+                `http://localhost:3000/api/newmedicine/${id}`,
+                config)
+    const response = await req.data
+    return response
+}
+export {
+    fetchMedicinesDatA,
+    PostMedicinesData,
+    fetchItemById,
+    updateMedicine,
+    deleteMedicine}

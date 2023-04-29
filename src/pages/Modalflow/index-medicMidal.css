@@ -65,3 +65,17 @@
     display: flex;
     justify-content: space-between;
 }
+.optionsContainer-inputSearchByName{
+    width: 480px;
+    height: 80px;
+    position: fixed;
+    left: 40%;
+    right: 40%;
+    top:20%;
+    border-radius: 10px;
+    z-index: 100000;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

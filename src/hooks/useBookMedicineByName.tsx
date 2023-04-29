@@ -12,7 +12,7 @@ const useBookMedicineByName= (name: string, dependence:string):BookMedicineRespo
     useEffect(() => {
         setLoading(true)
         if(name==="") {
-            setLoading(false)
+            return setLoading(false)
         }
         let cancel :any;
         axios({

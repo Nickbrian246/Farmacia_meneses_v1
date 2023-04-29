@@ -21,6 +21,7 @@ return (
                 width="350px"
                 fontSize="1.5rem"
                 key={item.name}
+                type={item.type}
                 handleNextStep={handleNextStep}
                 >
                 { 

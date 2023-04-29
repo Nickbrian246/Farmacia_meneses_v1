@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import "./index-medicMidal.css"
+import "./index-medicMidal.css";
 import {HorizontalLabelPositionBelowStepper} from "./StepperMedic";
-import {AiFillCloseCircle} from "react-icons/ai"
+import {AiFillCloseCircle} from "react-icons/ai";
 import { IconButton } from "@mui/material";
 import Button from '@mui/material/Button';
-import { AddMedicine } from "../forms/addMedicine";
 import { OptionsFormedicines } from "./stepperOptions/stepOne";
 import {DragFile} from './stepperOptions/stepTwo';
-import {FormDeleteOrUpdateMedicne} from "../forms/deleteAndApdate/index"
+import {FormCrudMedicne} from "../forms/deleteAndApdate/index";
+import {InputSearchByName} from "../home/components/inputSearchByName/InputSearchByName"
 
 interface Props {
     setOpenFormModal:React.Dispatch<React.SetStateAction<boolean>>
@@ -15,18 +15,23 @@ interface Props {
 // currentOptionSelected
 //0 mene de opciones del modal
 //1 subir imagenes
-//2 formulario
+//2 formulario  
 
 const MedicineModalFlow = ( props:Props) => {
     const {setOpenFormModal} = props
     const [mosaicOption, setMosaicOptions] = useState<string>("");
     const [currentOptionSelected, setcurrentOptionSelected] = useState<number>(0);
     const [nextStep,setNextStep] = useState<number>(1);
-    const [isAdd, setIsAdd] = useState<boolean>(false)
+    const[id, setid] =  useState<string>("")
+    
+    const getIdFromInputByName=(id:string):string=>{
+        setid(id)
+        return id
+    }
     
     const handleNextStep=(optionSelected:string):void| string => {
         // opcion seleccionada de las opciones  
-        if(optionSelected ==="Agregar medicamento") {
+        if(optionSelected ==="add") {
             setMosaicOptions(optionSelected)
             // se dispara el input para subir archivos
             return setcurrentOptionSelected(1)
@@ -38,11 +43,10 @@ const MedicineModalFlow = ( props:Props) => {
     const handleStepBack = () => {
         // ESTE METODO ES PARA EL  BTN DE REGRESAR
         // PARA TODOS LOS CASOS
-        if(currentOptionSelected===2 && mosaicOption==="Agregar medicamento" ){
-            console.log("estoy entradno");
-            
+        if(currentOptionSelected===2 && mosaicOption==="add" ){      
             return setcurrentOptionSelected(1)
         }
+        setid("")
         setNextStep((prevState) => prevState -1)
         setMosaicOptions((prevState1) => prevState1 ="" )
         setcurrentOptionSelected(0)
@@ -73,24 +77,27 @@ const MedicineModalFlow = ( props:Props) => {
                             {`(este paso es opcional)`}
                         </span>
                         </p>)
-                    || currentOptionSelected===2 && mosaicOption==="Agregar medicamento" && <p>ingrese los datos </p>
+                    || currentOptionSelected===2 && mosaicOption==="add" && <p>ingrese los datos </p>
                     || (currentOptionSelected===2) && (<p>ingrese el nombre </p>)
                     || (currentOptionSelected===0) && (<p>seleccione una opcion</p>)}
                     
                 </div>
-                <div className="medicModal-stepperContainer">
+                <div className="medicModal-stepperContainer"> 
                     <HorizontalLabelPositionBelowStepper nextStep={nextStep} />
                 </div >
-                <div  className={` ${(currentOptionSelected===0) && (`options-constainter`) 
-                                    || currentOptionSelected >=1 && (`options-constainterActive`)}`}>
-                        {/* { nextStep>1
-                        ?<DragFile/>
-                        :<OptionsFormedicines handleNextStep={handleNextStep}/>
-                        } */}
-                        {/* {(mosaicOption==="Agregar medicamento")? <DragFile/>:currentOptionSelected===2? <AddMedicine/>:
-                        <OptionsFormedicines handleNextStep={handleNextStep}/>} */}
+                <div className={`
+                ${(currentOptionSelected===0) && (`options-constainter`) // contenedor de formulario
+                || currentOptionSelected >=1 && (`options-constainterActive`)}`
+                }>
+                        {currentOptionSelected===2&& mosaicOption!="add"  &&(
+                            <div className="optionsContainer-inputSearchByName">
+                                <InputSearchByName getIdFromInputByName={getIdFromInputByName}/>
+                            </div>
+                        )}
                         {(currentOptionSelected===1) &&<DragFile/>
-                        ||(currentOptionSelected===2) &&<FormDeleteOrUpdateMedicne isAdd={true}/>
+                        ||(currentOptionSelected===2) 
+                        && (mosaicOption==="add"||mosaicOption==="update"||mosaicOption==="delete"  )
+                        &&<FormCrudMedicne id={id} type={mosaicOption}/>
                         ||(currentOptionSelected===0) && <OptionsFormedicines handleNextStep={handleNextStep}/>}
 
                         {(currentOptionSelected===1 )

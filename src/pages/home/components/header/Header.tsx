@@ -4,7 +4,7 @@ import logoFarmaciaMeneses from "../../../../assets/Farmacias-meneses-logo.png"
 import {CiMenuBurger} from "react-icons/ci";
 import ToggleMenu from "./asideMenu";
 import { MedicineModalFlow } from "../../../Modalflow";
-import {PostMedicinesDara} from "../../../../fetch/fetchMedicines/fetchMedicines"
+import {PostMedicinesData} from "../../../../fetch/fetchMedicines/fetchMedicines"
 
 
 
@@ -16,7 +16,7 @@ const Header =() =>{
         setIsOpenModal((prevState) => !prevState)
     }
     useEffect(()=>{
-        PostMedicinesDara({name:"desde la app",
+        PostMedicinesData({name:"desde la app",
         compound:"eres mi mas bello amanecer xd",
         price:125,
         type:"inyectado",

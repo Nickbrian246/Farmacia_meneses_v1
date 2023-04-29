@@ -1,27 +1,34 @@
 import TextField from '@mui/material/TextField';
-import { ChangeEvent,  useState } from 'react';
+import { ChangeEvent,  useEffect,  useState } from 'react';
 import { useBookMedicineByName } from '../../../../hooks/useBookMedicineByName';
 import { InputListByName } from './list/InputListByName';
 import CircularProgress from '@mui/material/CircularProgress';
 import "./inputSerachByName.css"
 
-function InputSearchByName() {
+interface Props{
+    getIdFromInputByName?: (id:string) => string;
+}
+
+function InputSearchByName(props:Props) {
+    const { getIdFromInputByName} = props
     const [name, setName] = useState<string>("");
     const [elementSelected, setElementSelected] = useState<string>("")
     const {
         elements,
         loading}=useBookMedicineByName(name, name)
-        console.log(elementSelected);
         
     const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
+    useEffect(()=>{
+    getIdFromInputByName?.(elementSelected)
+    }, [elementSelected])
 
     return (
         <>
         <section>
         <TextField
-        style={{width:"400px"}}
+        style={{width:"400px", background:"white",minHeight:"40px"}}
         label="escriba el nombre "
         onChange={handleInput}
     />
