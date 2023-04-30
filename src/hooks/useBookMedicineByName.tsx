@@ -28,6 +28,7 @@ const useBookMedicineByName= (name: string, dependence:string):BookMedicineRespo
 
     return () => {
         cancel()
+        setElements([])
     setElements([])}
     }, [dependence])
     return {elements,
