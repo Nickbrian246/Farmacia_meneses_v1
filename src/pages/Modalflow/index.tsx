@@ -61,10 +61,10 @@ const MedicineModalFlow = ( props:Props) => {
         <>
         <section className="medicine-modalBackGround">
             <section  className="medicine-ModalContainer">
-                <IconButton onClick={()=>{setOpenFormModal((prevState ) => !prevState);
+                <button className="medicine-ModalContianer-buttonCloseContainer" onClick={()=>{setOpenFormModal((prevState ) => !prevState);
                 }}>
                 <AiFillCloseCircle className="medicine-ModalContainer-closeIcon"/>
-                </IconButton>
+                </button>
                 <div className="medicModal-textContainer">
                     {(currentOptionSelected===1) 
                     && (<p>

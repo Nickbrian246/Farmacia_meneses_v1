@@ -41,10 +41,15 @@
 
 .medicine-ModalContainer-closeIcon{
     font-size: 4rem;
-    position: fixed;
-    top: 20px;
-    right: 5rem;
+    cursor: pointer;
     color: red;
+}
+.medicine-ModalContianer-buttonCloseContainer{
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    right: -1.5%;
+    top: -3%;
 }
 
 .options-constainter{
