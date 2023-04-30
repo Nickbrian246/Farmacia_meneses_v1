@@ -61,7 +61,7 @@ const FormCrudMedicne=(props:Props) =>{
         imgId:""
         
     });
-
+// funcion que asigna los valores al form independiente del metodo
     const handleInputChange=( event:React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         // console.log(name,value,"soy value")
@@ -72,6 +72,7 @@ const FormCrudMedicne=(props:Props) =>{
         }));
         
     }
+    // funcion para ejecutar los eventos del formulario
     const handleSumbitBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
         if(   !form.compound
@@ -157,7 +158,7 @@ const FormCrudMedicne=(props:Props) =>{
                     errorName:"error"})
                 })   
         };
-        setForm({ name:"",
+        setForm({ name:"", // limpiar los formulairos
         compound:"",
         price:"",
         type:"",
@@ -173,8 +174,7 @@ const FormCrudMedicne=(props:Props) =>{
 // aqui se recibe la informacion que vienie dede el input 
     useEffect(()=>{
         if(id==="") return
-        const response = fetchItemById?.(id)
-        response
+        fetchItemById?.(id)
         .then((data) => {setForm(data.data)})
         .catch((error) =>{
             console.log(error,"soy error")

@@ -13,14 +13,18 @@ function InputSearchByName(props:Props) {
     const { getIdFromInputByName} = props
     const [name, setName] = useState<string>("");
     const [elementSelected, setElementSelected] = useState<string>("")
+    const [itemsList, setItemsList] = useState<boolean>(false)
     const {
         elements,
         loading}=useBookMedicineByName(name, name)
+
+        
         
     const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
     useEffect(()=>{
+        
     getIdFromInputByName?.(elementSelected)
     }, [elementSelected])
 
@@ -32,7 +36,7 @@ function InputSearchByName(props:Props) {
         label="escriba el nombre "
         onChange={handleInput}
     />
-    {(elements && typeof(elements) != "string") && (
+    {(elements && typeof(elements) != "string" && itemsList=== false) && (
         <div className='InputlistContainer' >
             {elements.map((item:any) => (
             <InputListByName
@@ -40,6 +44,7 @@ function InputSearchByName(props:Props) {
             name={item.name}
             setElementSelected={setElementSelected}
             key={item._id}
+            setItemsList={setItemsList}
             />
         ))}
         </div>)}
