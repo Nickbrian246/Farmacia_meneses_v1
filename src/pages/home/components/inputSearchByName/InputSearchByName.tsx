@@ -4,6 +4,9 @@ import { useBookMedicineByName } from '../../../../hooks/useBookMedicineByName';
 import { InputListByName } from './list/InputListByName';
 import CircularProgress from '@mui/material/CircularProgress';
 import "./inputSerachByName.css"
+import { fetchItemById } from '../../../../fetch/fetchMedicines/fetchMedicines';
+import {setCartItems  } from "../../../../store/slices/home/ProductCart";
+import {useDispatch} from "react-redux"
 
 interface Props{
     getIdFromInputByName?: (id:string) => string;
@@ -11,18 +14,35 @@ interface Props{
 
 function InputSearchByName(props:Props) {
     const { getIdFromInputByName} = props
+    const dispatch= useDispatch()
     const [name, setName] = useState<string>("");
     const [elementSelected, setElementSelected] = useState<string>("")
     const [closeList, setCloseList] = useState<boolean>(false)
     const {
         elements,
-        loading}=useBookMedicineByName(name, name)    
+        loading}=useBookMedicineByName(name, name) 
+        console.log(elementSelected)
+    
     const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
+    // diferenciar hacia donde manda la info
     useEffect(()=>{
-        
+        if(elementSelected ==="") return
     getIdFromInputByName?.(elementSelected)
+
+    fetchItemById(elementSelected)
+    .then((response) => {
+        let cartInterface= {
+            name:response.data.name,
+            price:response.data.price,
+            quantity:1,
+            total:response.data.price,
+            id:response.data._id
+        }
+        dispatch(setCartItems(cartInterface))
+    })
+    setElementSelected("")
     }, [elementSelected])
 
     return (

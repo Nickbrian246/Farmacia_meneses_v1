@@ -1,30 +1,31 @@
-import {Key, useEffect, useState}from "react"
 import "./index-SelectedProduct.css"
 import {CardSelectedProduct} from "./card-SelectedProduct/Card-selectedProduc";
-import { fetchMedicinesDatA } from "../../../../../fetch/fetchMedicines/fetchMedicines";
-
-
-
-    interface List {
-        _id: Key | null | undefined;
+import {useSelector} from"react-redux"
+import { current } from "@reduxjs/toolkit";
+import { Button } from "@mui/material";
+    interface Item {
         name:string,
-        compound:string,
         price:number,
-        type:string,
         quantity:number,
-        function:string,
-        imgId?:string,
-        image?:string
+        total:number,
         id:string
     }
-    
-    
+    interface State {
+        shoppingCartReducer:shoppingCartReducer
+    }
+    interface shoppingCartReducer {
+        shoppingCart: Item[]
+    }
 const SelectedProductList=()=>{ 
-    const [productList, setProductList] = useState<List []>([])
-    useEffect(()=>{
-        fetchMedicinesDatA()
-        .then((data) =>{ return setProductList(data.data);} )// revisar esto despues
-    },[])
+    const data = useSelector((state:State)=> state.shoppingCartReducer.shoppingCart)
+    const total= data.map((item:Item) => {
+        let money = 0
+        return money+= item.total
+    });
+    let sum= total.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+    },0);
+    
     return (
         <>
         <section className="ItemsContainer" >
@@ -36,17 +37,23 @@ const SelectedProductList=()=>{
                 <p>eliminar</p>
         </div>
         <div className="listConatiner">
-        {productList.map(item => (
+        {data.map((item:Item) => (
         <CardSelectedProduct
         name={item.name}
         price={item.price}
         quantity={item.quantity}
-        image={item.image}
-        key={item._id}
+        key={item.id}
+        id={item.id}
+        total={item.total}
         />))}
         </div>
         <section className="total">
-            TOTAL: 245
+            <div className="total-sumTotal">
+            TOTAL: ${sum}
+            </div>
+            <Button variant="contained" size="large" >
+                Pagar
+            </Button>
         </section>
 
         </section>

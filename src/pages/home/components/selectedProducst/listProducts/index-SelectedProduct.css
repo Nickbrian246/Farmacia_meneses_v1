@@ -67,7 +67,14 @@
     border-left: 1px solid gray;
 }
 .total{
+    display: flex;
+    justify-content: space-between;
+    padding-left:10px;
+    padding-right:15px ;
+    padding-top: 10px;
+    border-top: 2px solid rgb(34, 136, 245);
+}
+.total .total-sumTotal{
     font-size: 2.5rem;
     margin-left: 10px;
-    border-top: 2px solid rgb(34, 136, 245);
 }
