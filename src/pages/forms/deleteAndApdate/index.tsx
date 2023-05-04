@@ -87,7 +87,7 @@ const FormCrudMedicine=(props:Props) =>{
                 setError((prevState) => !prevState),
                 setErrorMessage({
                     error:"dato registrado con exito",
-                    message:`el dado con nombre ${response.data.name}`,
+                    message:`el dato con nombre ${response.data.name}`,
                     type:"success",
                     errorName:"exito"
                 })
