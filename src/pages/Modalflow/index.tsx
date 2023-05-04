@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import "./index-medicMidal.css";
 import {HorizontalLabelPositionBelowStepper} from "./StepperMedic";
 import {AiFillCloseCircle} from "react-icons/ai";
-import { IconButton } from "@mui/material";
 import Button from '@mui/material/Button';
 import { OptionsFormedicines } from "./stepperOptions/stepOne";
 import {DragFile} from './stepperOptions/stepTwo';
-import {FormCrudMedicne} from "../forms/deleteAndApdate/index";
+import {FormCrudMedicine} from "../forms/deleteAndApdate/index";
 import {InputSearchByName} from "../home/components/inputSearchByName/InputSearchByName"
 
 interface Props {
@@ -97,7 +96,7 @@ const MedicineModalFlow = ( props:Props) => {
                         {(currentOptionSelected===1) &&<DragFile/>
                         ||(currentOptionSelected===2) 
                         && (mosaicOption==="add"||mosaicOption==="update"||mosaicOption==="delete"  )
-                        &&<FormCrudMedicne id={id} type={mosaicOption}/>
+                        &&<FormCrudMedicine id={id} type={mosaicOption}/>
                         ||(currentOptionSelected===0) && <OptionsFormedicines handleNextStep={handleNextStep}/>}
 
                         {(currentOptionSelected===1 )

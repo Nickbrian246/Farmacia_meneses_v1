@@ -14,7 +14,9 @@ import {
     } from "../../../fetch/fetchMedicines/fetchMedicines";
 
 
-export type AlertColor = 'success' | 'info' | 'warning' | 'error';
+type AlertColor = 'success' | 'info' | 'warning' | 'error';
+type FormMedicineKey = keyof FormMedicine;
+type BtnColor = 'success' | 'info' | 'warning' | 'error'| "inherit"| "primary"| "secondary";
 // dos formulario 
 // uno es para actualizar y crear 
 // para eliminar 
@@ -30,19 +32,8 @@ interface ErrorMessage {
     errorName:string
 
 }
-type FormMedicineKey = keyof FormMedicine;
-        // setForm({
-        //     name:"",
-        //     compound:"",
-        //     price:"",
-        //     type:"",
-        //     quantity:"",
-        //     function:"",
-        //     imgId:""
-            
-        // })
 
-const FormCrudMedicne=(props:Props) =>{
+const FormCrudMedicine=(props:Props) =>{
     const {type,id} = props
     const formRef = useRef<HTMLFormElement>(null);
     const [error, setError] = useState<boolean>(false)
@@ -74,9 +65,9 @@ const FormCrudMedicne=(props:Props) =>{
         
     }
     // funcion para ejecutar los eventos del formulario
-    const handleSumbitBtn = (event: FormEvent<HTMLFormElement> ) =>{
+    const handleSubmitBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
-        if(   !form.compound
+        if( !form.compound
             || !form.function
             || !form.name
             || !form.price
@@ -85,15 +76,6 @@ const FormCrudMedicne=(props:Props) =>{
                 setErrorMessage({
                 error:"campo vacio",
                 message:"porfavor revise que los campos no esten vacios",
-                type:"error",
-                errorName:"error"})
-            return setError((prevState) => !prevState)
-        }
-        // SOLUCIONAR CHEQUEADO DE TIPOS DE DATOS
-        if( !!isNaN(parseFloat(form.price)) || !!isNaN(parseFloat(form.quantity)) ) {
-            setErrorMessage({
-                error:"el compo de precio o canitdad no son numeros",
-                message:"porfavor revise que los datos intruducidos sean numeros",
                 type:"error",
                 errorName:"error"})
             return setError((prevState) => !prevState)
@@ -167,9 +149,10 @@ const FormCrudMedicne=(props:Props) =>{
         function:"",
         imgId:""})
     }
+    // apaga el error despues de unos segundos
     if(error) {
         setTimeout(()=>{
-            setError((prevState) => !prevState)
+            setError(false)
         },5000)
     }
 // aqui se recibe la informacion que vienie dede el input 
@@ -178,7 +161,6 @@ const FormCrudMedicne=(props:Props) =>{
         fetchItemById?.(id)
         .then((data) => {setForm(data.data)})
         .catch((error) =>{
-            console.log(error,"soy error")
             setError((prevState) => !prevState),
             setErrorMessage({
                 error:`${error}`,
@@ -197,77 +179,55 @@ const FormCrudMedicne=(props:Props) =>{
         {errorMessage.error} — <strong>{errorMessage.message}</strong>
         </Alert>
         )}
-        {type==="add" && ( // para agregar
-                    <form   ref={formRef} className="medicForm" onSubmit={handleSumbitBtn} >
-                    {listFormMedicineUpdateOrDelete.map((item) =>(
-                        <TextField
-                        key={item.id}
-                        value={form[item.name as FormMedicineKey ]}
-                        name={item.name}
-                        label={item.label}
-                        style={{width:"400px", margin:"5px"}}
-                        id="outlined-basic"
-                        onChange={handleInputChange}
-                        />
-                    ))}
-                    <Button
-                    type="submit" 
-                    size="large"
-                    variant="contained" 
-                    >
-                    guardar
-                    </Button>
-                    </form>
-        )}
-
-        {type=="update" && ( // para actualizar
-                    <form  ref={formRef} className="medicForm" onSubmit={handleSumbitBtn}  >
-                    {listFormMedicineUpdateOrDelete.map((item) =>(
-                        <TextField
-                        key={item.id}
-                        value={form[item.name as FormMedicineKey ]}
-                        name={item.name}
-                        label={item.label}
-                        style={{width:"400px", margin:"5px"}}
-                        id="outlined-basic"
-                        onChange={handleInputChange}
-                        
-                        />
-                        ))}
-                    <Button
-                        style={{marginTop:"18px"}}
-                        type= "submit"
-                        size="large"
-                        variant="contained"
-                        color="success" >
-                    actualizar
-                    </Button>
-                    </form>
-        )}
-        {type==="delete" && ( // para eliminar
-                    <form  ref={formRef} className="medicForm" onSubmit={handleSumbitBtn} >
-                    {listFormMedicineUpdateOrDelete.map((item) =>(
-                        <TextField
-                        key={item.id}
-                        value={form[item.name as FormMedicineKey ]}
-                        name={item.name}
-                        style={{width:"400px", margin:"5px"}}
-                        id="outlined-basic"
-                        label={item.label}
-                        />
-                    ))}
-                    <Button
-                        type=
-                        "submit"
-                        size="large"
-                        variant="contained"
-                        color="error"
-                    >
-                    eliminar
-                    </Button>
-                    </form>
-        )}
+        <form   ref={formRef} className="medicForm" onSubmit={handleSubmitBtn} >
+        {listFormMedicineUpdateOrDelete.map((item) =>(
+            <TextField
+            type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
+            key={item.id}
+            value={form[item.name as FormMedicineKey ]}
+            name={item.name}
+            label={item.label}
+            style={{width:"400px", margin:"5px"}}
+            id="outlined-basic"
+            onChange={handleInputChange}
+            />
+        ))}
+        {type==="add" && (
+        <Button
+        style={{marginTop:"18px"}}
+        type="submit" 
+        size="large"
+        variant="contained"
+        color="primary"
+        >
+        Guardar
+        </Button>
+        )
+        || type==="update" && (
+        <Button
+        style={{marginTop:"18px"}}
+        type="submit" 
+        size="large"
+        variant="contained"
+        color="success"
+        >
+        Actualizar
+        </Button>
+        )
+        || type==="delete" && (
+            <Button
+            style={{marginTop:"18px"}}
+            type="submit" 
+            size="large"
+            variant="contained"
+            color="error"
+            >
+            Eliminar
+            </Button>
+            )
+        }
+        </form>
         </>
     )
 }
-export{FormCrudMedicne}
+export{FormCrudMedicine}
