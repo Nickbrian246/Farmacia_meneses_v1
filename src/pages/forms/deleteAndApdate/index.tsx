@@ -87,7 +87,7 @@ const FormCrudMedicne=(props:Props) =>{
                 message:"porfavor revise que los campos no esten vacios",
                 type:"error",
                 errorName:"error"})
-            return setError(true)
+            return setError((prevState) => !prevState)
         }
         // SOLUCIONAR CHEQUEADO DE TIPOS DE DATOS
         if( !!isNaN(parseFloat(form.price)) || !!isNaN(parseFloat(form.quantity)) ) {
@@ -96,13 +96,13 @@ const FormCrudMedicne=(props:Props) =>{
                 message:"porfavor revise que los datos intruducidos sean numeros",
                 type:"error",
                 errorName:"error"})
-            return setError(true)
+            return setError((prevState) => !prevState)
         }
         setError(false)
         if(type==="add") { // agregar 
             PostMedicinesData(form)
             .then((response) => {
-                setError(true),
+                setError((prevState) => !prevState),
                 setErrorMessage({
                     error:"dato registrado con exito",
                     message:`el dado con nombre ${response.data.name}`,
@@ -111,7 +111,7 @@ const FormCrudMedicne=(props:Props) =>{
                 })
             })
             .catch((err) => {
-                setError(true),
+                setError((prevState) => !prevState),
                 setErrorMessage({
                     error:`${err}`,
                     message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
@@ -122,7 +122,7 @@ const FormCrudMedicne=(props:Props) =>{
         if(type==="update" ){
             updateMedicine(form,id)
             .then((response) => {
-                setError(true),
+                setError((prevState) => !prevState),
                 setErrorMessage({
                     error:"dato actualizado con exito",
                     message:`el dato con nombre ${response.data.name} fue actualizado con exito`,
@@ -131,7 +131,7 @@ const FormCrudMedicne=(props:Props) =>{
                 })
             })
             .catch((err) => {
-                setError(true),
+                setError((prevState) => !prevState),
                 setErrorMessage({
                     error:`${err}`,
                     message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
@@ -142,7 +142,7 @@ const FormCrudMedicne=(props:Props) =>{
         if(type==="delete"){
             deleteMedicine(id)
             .then((response) => {
-                setError(true),
+                setError((prevState) => !prevState),
                 setErrorMessage({
                     error:"",
                     message:`el dato  fue eliminado con exito`,
@@ -151,7 +151,7 @@ const FormCrudMedicne=(props:Props) =>{
                 })
             })
             .catch((err) => {
-                setError(true),
+                setError((prevState) => !prevState),
                 setErrorMessage({
                     error:`${err}`,
                     message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
@@ -169,7 +169,7 @@ const FormCrudMedicne=(props:Props) =>{
     }
     if(error) {
         setTimeout(()=>{
-            setError(false)
+            setError((prevState) => !prevState)
         },5000)
     }
 // aqui se recibe la informacion que vienie dede el input 
@@ -179,12 +179,12 @@ const FormCrudMedicne=(props:Props) =>{
         .then((data) => {setForm(data.data)})
         .catch((error) =>{
             console.log(error,"soy error")
-            setError(true),
+            setError((prevState) => !prevState),
             setErrorMessage({
                 error:`${error}`,
                 message:"porfavor comuniquese con servicio al cliente o intente mas tarde",
                 type:"error",
-                errorName:"error"
+                errorName:"Error"
             })
         })
     },[id]);
