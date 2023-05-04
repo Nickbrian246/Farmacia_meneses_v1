@@ -33,6 +33,9 @@ export const shoppingCartSlice = createSlice( {
     state.shoppingCart.push(newItem)
   }
     },
+    setClearState:(state,action) =>{
+    state.shoppingCart=action.payload
+    },
     deleteItem:(state,action:PayloadAction<string>) =>{
       const id =action.payload;
       const index = state.shoppingCart.findIndex((item) => {
@@ -67,4 +70,6 @@ export const {
   setCartItems,
   deleteItem,
   addIndividualProduct,
-  decreaseIndividualProduct,} = shoppingCartSlice.actions;
+  decreaseIndividualProduct,
+  setClearState,
+} = shoppingCartSlice.actions;
