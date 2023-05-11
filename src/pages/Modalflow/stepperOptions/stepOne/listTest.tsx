@@ -1,11 +1,11 @@
 
-const testList =[
+const ListForMedicines =[
     {
-    name:"Agregar medicamento",
+    name:"Agregar Nuevo Medicamento",
     type:"add",
     },
     {
-    name:"Actualizar medicamento",
+    name:"Actualizar Medicamento",
     type:"update",
     },
     {
@@ -13,4 +13,36 @@ const testList =[
     type:"delete",
     },
 ]
-export {testList}
+const ListForDrinks =[
+    {
+    name:"Agregar Nueva Bebida",
+    type:"add",
+    },
+    {
+    name:"Actualizar Bebida",
+    type:"update",
+    },
+    {
+    name:"Eliminar Bebida",
+    type:"delete",
+    },
+]
+const ListForOthers =[
+    {
+    name:"Agregar",
+    type:"add",
+    },
+    {
+    name:"Actualizar",
+    type:"update",
+    },
+    {
+    name:"Eliminar",
+    type:"delete",
+    },
+]
+export {
+    ListForMedicines,
+    ListForDrinks,
+    ListForOthers
+    }

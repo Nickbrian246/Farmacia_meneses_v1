@@ -14,6 +14,7 @@ type Anchor = 'top' | 'left' | 'bottom' | 'right';
 interface Props {
     setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
     setOpenFormModal:React.Dispatch<React.SetStateAction<boolean>>
+    setOptionSelected:React.Dispatch<React.SetStateAction<string>>
 }
 
 
@@ -22,8 +23,9 @@ export default function ToggleMenu(props :Props) {
     const {
         setIsOpenModal,
         setOpenFormModal,
+        setOptionSelected
     } = props
-    const [optionSelected, setOptionSelected] = useState("")
+    
     const [state, setState] = useState({
         top: false,
         left:true,
@@ -31,8 +33,9 @@ export default function ToggleMenu(props :Props) {
         right: false,
     });
 
-    const handleOptionSelected = () =>{
+    const handleOptionSelected = (name:string) :void =>{
         setOpenFormModal(true)
+        setOptionSelected(name)
     }
 
 const toggleDrawer =
@@ -61,9 +64,9 @@ const list = (anchor: Anchor) => (
         {listItems.map((text, index) => (
         <ListItem  key={uuidv4()} disablePadding>
             <ListItemButton onClick={()=> {
-                setOptionSelected(text.nombre)
-                handleOptionSelected()}} >
-            <ListItemText primary={text.nombre}   />
+                handleOptionSelected(text.nombre)
+                }} >
+            <ListItemText primary={text.nombre}  />
             </ListItemButton>
         </ListItem>
         ))}

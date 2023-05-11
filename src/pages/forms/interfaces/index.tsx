@@ -1,14 +1,23 @@
 interface FormMedicine {
     name:string,
     compound:string,
-    price:string,
+    price:number,
     type:string,
-    quantity:string,
+    quantity:number,
     function:string,
-    imgId?:string
+    size:string
+}
+interface FormDrinks {
+    name:string,
+    price:number,
+    brand:string,
+    quantity:number,
+    size:string,
+    parts:number,
+    type:string 
 }
 
-export type  {FormMedicine}
+export type  {FormMedicine,FormDrinks}
 // interface FormMedicineAdd {
 //     name:string,
 //     compound:string,

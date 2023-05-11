@@ -29,9 +29,23 @@ async function PostMedicinesData (datos:PostMedicines) {
 }
 async function fetchItemById(id:string){
     if(id==="") return null
-    const res= await fetch(`http://localhost:3000/api/newmedicine/${id}`)
-    const data= await res.json()
-    return data
+    let data;
+    try {
+        const [medicineResponse, drinksResponse] = await axios.all([
+            axios.get(`http://localhost:3000/api/newmedicine/${id}`),
+            axios.get(`http://localhost:3000/api/drinks/${id}`)
+        ]);
+        if (medicineResponse.data!=="elemenento no encontrado o ha sido eliminado") {
+            return data={...medicineResponse.data}
+        }
+        if(drinksResponse.data!=="elemenento no encontrado o ha sido eliminado"){
+            return data={...drinksResponse.data};
+        }
+     
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
 
 async function updateMedicine(datos :PostMedicines, id:string) {

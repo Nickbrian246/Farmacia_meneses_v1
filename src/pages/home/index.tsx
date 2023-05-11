@@ -11,7 +11,7 @@ const Home= () =>{
         </header>
         <section className="homeBodyContainer">
         <div className="masaicAndInputContainer">
-            <InputSearchByName/>
+            <InputSearchByName isforCartlist={true}/>
             <Mosaic/>
         </div>
         <SelectedProductList/>

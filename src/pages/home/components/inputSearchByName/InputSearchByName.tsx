@@ -6,14 +6,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import "./inputSerachByName.css"
 import { fetchItemById } from '../../../../fetch/fetchMedicines/fetchMedicines';
 import {setCartItems  } from "../../../../store/slices/home/ProductCart";
-import {useDispatch} from "react-redux"
+import {useDispatch} from "react-redux";
+import {getProductById} from"../../../../services/dashboard-api/adapters/driven/medicine-api"
+import { adaptingDataForCartList } from '../../../../services/dashboard-api/adapters/cartListAdapter/cartListAdapter';
 
 interface Props{
     getIdFromInputByName?: (id:string) => string;
+    isforCartlist?:boolean
 }
 
 function InputSearchByName(props:Props) {
-    const { getIdFromInputByName} = props
+    const { getIdFromInputByName,isforCartlist} = props
     const dispatch= useDispatch()
     const [name, setName] = useState<string>("");
     const [elementSelected, setElementSelected] = useState<string>("")
@@ -21,7 +24,6 @@ function InputSearchByName(props:Props) {
     const {
         elements,
         loading}=useBookMedicineByName(name, name) 
-        console.log(elementSelected)
     
     const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -31,17 +33,13 @@ function InputSearchByName(props:Props) {
         if(elementSelected ==="") return
     getIdFromInputByName?.(elementSelected)
 
-    fetchItemById(elementSelected)
-    .then((response) => {
-        let cartInterface= {
-            name:response.data.name,
-            price:response.data.price,
-            quantity:1,
-            total:response.data.price,
-            id:response.data._id
-        }
-        dispatch(setCartItems(cartInterface))
-    })
+    if (isforCartlist) {
+        getProductById(elementSelected)
+        .then((response) => {
+            let cartInterface= adaptingDataForCartList(response.data)
+            dispatch(setCartItems(cartInterface))
+        })
+    }
     setElementSelected("")
     }, [elementSelected])
 

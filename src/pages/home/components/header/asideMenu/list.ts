@@ -4,13 +4,13 @@ interface ListItems{
 
 const listItems: ListItems[] = [
     {
-    nombre:"medicamentos"
+    nombre:"Medicamentos"
     },
     {
-    nombre:"bebidas"
+    nombre:"Bebidas"
     },
     {
-    nombre:"otros productos"
+    nombre:"Otros productos"
     },
 ]
 export{listItems}

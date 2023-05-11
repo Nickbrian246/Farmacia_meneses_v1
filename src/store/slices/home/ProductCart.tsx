@@ -21,14 +21,10 @@ export const shoppingCartSlice = createSlice( {
     setCartItems:(state,action:PayloadAction<Item>) => {
       const newItem= action.payload
       const checkIfExist= state.shoppingCart.some((item) => {return item.id=== newItem.id})
+      const index = state.shoppingCart.findIndex((item) => { return item.id ===newItem.id})
       if(checkIfExist){
-        const updatedCart = state.shoppingCart.map((item) => {  
-      if (item.id === newItem.id) {
-        return { ...item, quantity: item.quantity + 1 }
-        }
-      return item
-      })
-    state.shoppingCart = updatedCart
+        state.shoppingCart[index].quantity+= +1
+        state.shoppingCart[index].total= state.shoppingCart[index].price * state.shoppingCart[index].quantity 
   } else {
     state.shoppingCart.push(newItem)
   }
@@ -42,7 +38,6 @@ export const shoppingCartSlice = createSlice( {
         return item.id === id
       })
       state.shoppingCart.splice(index,1)
-      state.shoppingCart= state.shoppingCart
     },
     addIndividualProduct:(state,action)=> {
       const id = action.payload

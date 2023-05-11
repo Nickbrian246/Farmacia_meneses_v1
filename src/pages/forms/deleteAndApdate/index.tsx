@@ -1,29 +1,44 @@
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import "../addMedicine/mediform.css";
 import React, { useEffect, useRef, useState } from "react";
-import {listFormMedicineUpdateOrDelete} from "./listOptions"
-import { Button, TextField } from "@mui/material";
 import { FormEvent } from "react";
-import {FormMedicine} from "../interfaces"
+
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import { Button, TextField } from "@mui/material";
+
 import { fetchItemById } from "../../../fetch/fetchMedicines/fetchMedicines";
-import { 
-    PostMedicinesData,
-    updateMedicine,
-    deleteMedicine,
-    } from "../../../fetch/fetchMedicines/fetchMedicines";
+import { postDrinks , updateDrinks,deleteDrinks} from "../../../services/dashboard-api/adapters/driver/drinks-api";
+import { getDrinksAdapter, postDrinksAdapter} from "../../../services/dashboard-api/adapters/drinksAdapter/for-DrinksAdapter";
+// import { 
+//     PostMedicinesData,
+    
+//     deleteMedicine,
+// } from "../../../fetch/fetchMedicines/fetchMedicines";
+import {postMedicines,updateMedicine,deleteMedicine} from "../../../services/dashboard-api/adapters/driver/medicine-api"
+import { adapterForGetMedicine } from "../../../services/dashboard-api/adapters/medicineAdapter/for-form-medicineAdapter";
+import { MedicDataForPost } from "../adapters/for-Medicine";
+import { getProductById } from "../../../services/dashboard-api/adapters/driven/medicine-api";
+import {
+    listFormMedicineUpdateOrDelete,
+    listFormForDrinks,
+} from "./listOptions"
+import {
+    FormMedicine,
+    FormDrinks,
+} from "../interfaces"
 
 
 type AlertColor = 'success' | 'info' | 'warning' | 'error';
 type FormMedicineKey = keyof FormMedicine;
-type BtnColor = 'success' | 'info' | 'warning' | 'error'| "inherit"| "primary"| "secondary";
+type FormDrinksKey = keyof FormDrinks;
 // dos formulario 
 // uno es para actualizar y crear 
 // para eliminar 
 
 interface Props  {
     type:string,
-    id:string
+    id:string,
+    optionSelectedFromToggleMenuHome:string,
 }
 interface ErrorMessage {
     error:string,
@@ -34,7 +49,11 @@ interface ErrorMessage {
 }
 
 const FormCrudMedicine=(props:Props) =>{
-    const {type,id} = props
+    const {
+        type,
+        id,
+        optionSelectedFromToggleMenuHome,
+    } = props
     const formRef = useRef<HTMLFormElement>(null);
     const [error, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<ErrorMessage>({
@@ -43,36 +62,56 @@ const FormCrudMedicine=(props:Props) =>{
         type:"success",
         errorName:""
     })
-    const [form, setForm] = useState<FormMedicine>({
+    const [formMedicine, setFormMedicine] = useState<FormMedicine>({
         name:"",
         compound:"",
-        price:"",
+        price:0,
         type:"",
-        quantity:"",
+        quantity:0,
         function:"",
-        imgId:""
+        size:""
         
     });
-// funcion que asigna los valores al form independiente del metodo
-    const handleInputChange=( event:React.ChangeEvent<HTMLInputElement>) => {
+    const [formDrinks, setFormDrinks] = useState<FormDrinks>({
+        name:"",
+        price:0,
+        type:"drink",
+        quantity:0,
+        brand:"",
+        parts:1,
+        size:""
+        
+    });
+// funcion que asigna los valores al formMedicine independiente del metodo
+    const handleInputMedicineChange=( event:React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         // console.log(name,value,"soy value")
         // Actualizar el estado con los nuevos valores
-        setForm(prevState => ({
+        setFormMedicine(prevState => ({
+        ...prevState,
+        [name]: value
+        }));
+        
+    }
+    const handleInputDrinksChange=( event:React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        // console.log(name,value,"soy value")
+        // Actualizar el estado con los nuevos valores
+        setFormDrinks(prevState => ({
         ...prevState,
         [name]: value
         }));
         
     }
     // funcion para ejecutar los eventos del formulario
-    const handleSubmitBtn = (event: FormEvent<HTMLFormElement> ) =>{
+    const handleSubmitMedicineBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
-        if( !form.compound
-            || !form.function
-            || !form.name
-            || !form.price
-            || !form.quantity
-            || !form.type){
+        if( !formMedicine.compound
+            || !formMedicine.function
+            || !formMedicine.name
+            || !formMedicine.price
+            || !formMedicine.quantity
+            || !formMedicine.type){
                 setErrorMessage({
                 error:"campo vacio",
                 message:"porfavor revise que los campos no esten vacios",
@@ -82,7 +121,11 @@ const FormCrudMedicine=(props:Props) =>{
         }
         setError(false)
         if(type==="add") { // agregar 
-            PostMedicinesData(form)
+            // PostMedicinesData(formMedicine)
+            const adaptingData= MedicDataForPost(formMedicine)
+            console.log(adaptingData);
+            
+            postMedicines(adaptingData)
             .then((response) => {
                 setError((prevState) => !prevState),
                 setErrorMessage({
@@ -102,7 +145,8 @@ const FormCrudMedicine=(props:Props) =>{
                 })
         }
         if(type==="update" ){
-            updateMedicine(form,id)
+            const adaptingData= MedicDataForPost(formMedicine)
+            updateMedicine(id,adaptingData)
             .then((response) => {
                 setError((prevState) => !prevState),
                 setErrorMessage({
@@ -141,13 +185,104 @@ const FormCrudMedicine=(props:Props) =>{
                     errorName:"error"})
                 })   
         };
-        setForm({ name:"", // limpiar los formulairos
+        setFormMedicine({
+        name:"", // limpiar los formulairos
         compound:"",
-        price:"",
+        price:0,
         type:"",
-        quantity:"",
+        quantity:0,
         function:"",
-        imgId:""})
+        size:""
+    })
+    }
+    const handleSubmitDrinksBtn = (event: FormEvent<HTMLFormElement> ) =>{
+        event.preventDefault();
+        if( !formDrinks.name
+            || !formDrinks.price
+            || !formDrinks.type
+            || !formDrinks.quantity
+            || !formDrinks.brand
+            || !formDrinks.parts
+            || !formDrinks.size){
+                setErrorMessage({
+                error:"campo vacio",
+                message:"porfavor revise que los campos no esten vacios",
+                type:"error",
+                errorName:"error"})
+            return setError((prevState) => !prevState)
+        }
+        setError(false)
+        if(type==="add") { // agregar 
+            const adapter=postDrinksAdapter(formDrinks)
+            postDrinks(adapter)
+            .then((response) => {
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:"dato registrado con exito",
+                    message:`el dato con nombre ${response.data.name}`,
+                    type:"success",
+                    errorName:"exito"
+                })
+            })
+            .catch((err) => {
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:`${err}`,
+                    message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                    type:"error",
+                    errorName:"error"})
+                })
+        }
+        if(type==="update" ){
+            const adapter= postDrinksAdapter(formDrinks)
+            updateDrinks(id,adapter)
+            .then((response) => {
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:"dato actualizado con exito",
+                    message:`el dato con nombre ${response.data.name} fue actualizado con exito`,
+                    type:"success",
+                    errorName:"exito"
+                })
+            })
+            .catch((err) => {
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:`${err}`,
+                    message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                    type:"error",
+                    errorName:"error"})
+                })
+        }
+        if(type==="delete"){
+            deleteDrinks(id)
+            .then((response) => {
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:"",
+                    message:`el dato  fue eliminado con exito`,
+                    type:"success",
+                    errorName:"exito"
+                })
+            })
+            .catch((err) => {
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:`${err}`,
+                    message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                    type:"error",
+                    errorName:"error"})
+                })   
+        };
+        setFormDrinks({ 
+        name:"",
+        price:0,
+        type:"drink",
+        quantity:0,
+        brand:"",
+        parts:1,
+        size:""
+    })
     }
     // apaga el error despues de unos segundos
     if(error) {
@@ -158,17 +293,39 @@ const FormCrudMedicine=(props:Props) =>{
 // aqui se recibe la informacion que vienie dede el input 
     useEffect(()=>{
         if(id==="") return
-        fetchItemById?.(id)
-        .then((data) => {setForm(data.data)})
-        .catch((error) =>{
-            setError((prevState) => !prevState),
-            setErrorMessage({
-                error:`${error}`,
-                message:"porfavor comuniquese con servicio al cliente o intente mas tarde",
-                type:"error",
-                errorName:"Error"
+        if(optionSelectedFromToggleMenuHome==="Medicamentos"){
+            getProductById?.(id)
+            .then((data) => {
+                const adapter= adapterForGetMedicine(data.data)
+                setFormMedicine(adapter)
             })
-        })
+            .catch((error) =>{
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:`${error}`,
+                    message:"porfavor comuniquese con servicio al cliente o intente mas tarde",
+                    type:"error",
+                    errorName:"Error"
+                })
+            })
+        }
+        if(optionSelectedFromToggleMenuHome==="Bebidas"){
+            getProductById?.(id)
+            .then((data) => {
+                const adapter= getDrinksAdapter(data.data)
+                console.log(adapter);
+                setFormDrinks(adapter)
+            })
+            .catch((error) =>{
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:`${error}`,
+                    message:"porfavor comuniquese con servicio al cliente o intente mas tarde",
+                    type:"error",
+                    errorName:"Error"
+                })
+            })
+        }
     },[id]);
 
     return (
@@ -179,54 +336,106 @@ const FormCrudMedicine=(props:Props) =>{
         {errorMessage.error} — <strong>{errorMessage.message}</strong>
         </Alert>
         )}
-        <form   ref={formRef} className="medicForm" onSubmit={handleSubmitBtn} >
-        {listFormMedicineUpdateOrDelete.map((item) =>(
-            <TextField
-            type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
-            key={item.id}
-            value={form[item.name as FormMedicineKey ]}
-            name={item.name}
-            label={item.label}
-            style={{width:"400px", margin:"5px"}}
-            id="outlined-basic"
-            onChange={handleInputChange}
-            />
-        ))}
-        {type==="add" && (
-        <Button
-        style={{marginTop:"18px"}}
-        type="submit" 
-        size="large"
-        variant="contained"
-        color="primary"
-        >
-        Guardar
-        </Button>
-        )
-        || type==="update" && (
-        <Button
-        style={{marginTop:"18px"}}
-        type="submit" 
-        size="large"
-        variant="contained"
-        color="success"
-        >
-        Actualizar
-        </Button>
-        )
-        || type==="delete" && (
+        {optionSelectedFromToggleMenuHome==="Medicamentos" && (
+            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitMedicineBtn} >
+            {listFormMedicineUpdateOrDelete.map((item) =>(
+                <TextField
+                type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
+                key={item.id}
+                value={formMedicine[item.name as FormMedicineKey ]}
+                name={item.name}
+                label={item.label}
+                style={{width:"400px", margin:"5px"}}
+                id="outlined-basic"
+                onChange={handleInputMedicineChange}
+                />
+            ))}
+            {type==="add" && (
             <Button
             style={{marginTop:"18px"}}
             type="submit" 
             size="large"
             variant="contained"
-            color="error"
+            color="primary"
             >
-            Eliminar
+            Guardar
             </Button>
             )
-        }
-        </form>
+            || type==="update" && (
+            <Button
+            style={{marginTop:"18px"}}
+            type="submit" 
+            size="large"
+            variant="contained"
+            color="success"
+            >
+            Actualizar
+            </Button>
+            )
+            || type==="delete" && (
+                <Button
+                style={{marginTop:"18px"}}
+                type="submit" 
+                size="large"
+                variant="contained"
+                color="error"
+                >
+                Eliminar
+                </Button>
+                )
+            }
+            </form>
+        )}
+        {optionSelectedFromToggleMenuHome==="Bebidas" && (
+            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitDrinksBtn} >
+            {listFormForDrinks.map((item) =>(
+                <TextField
+                type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
+                key={item.id}
+                value={formDrinks[item.name as FormDrinksKey ]}
+                name={item.name}
+                label={item.label}
+                style={{width:"400px", margin:"5px"}}
+                id="outlined-basic"
+                onChange={handleInputDrinksChange}
+                />
+            ))}
+            {type==="add" && (
+            <Button
+            style={{marginTop:"18px"}}
+            type="submit" 
+            size="large"
+            variant="contained"
+            color="primary"
+            >
+            Guardar
+            </Button>
+            )
+            || type==="update" && (
+            <Button
+            style={{marginTop:"18px"}}
+            type="submit" 
+            size="large"
+            variant="contained"
+            color="success"
+            >
+            Actualizar
+            </Button>
+            )
+            || type==="delete" && (
+                <Button
+                style={{marginTop:"18px"}}
+                type="submit" 
+                size="large"
+                variant="contained"
+                color="error"
+                >
+                Eliminar
+                </Button>
+                )
+            }
+            </form>
+        )}
         </>
     )
 }

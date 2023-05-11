@@ -11,21 +11,23 @@ import {PostMedicinesData} from "../../../../fetch/fetchMedicines/fetchMedicines
 const Header =() =>{
     const [isOpenmodal, setIsOpenModal] = useState<boolean>(false);
     const [isOpenFormModal, setOpenFormModal] = useState<boolean>(false);
-    const [dataTest , setDataTest] = useState({})
+    const [optionSelected , setOptionSelected] = useState<string>("")
     const handleModal = () => {
         setIsOpenModal((prevState) => !prevState)
     }
-    useEffect(()=>{
-        PostMedicinesData({name:"desde la app",
-        compound:"eres mi mas bello amanecer xd",
-        price:125,
-        type:"inyectado",
-        quantity:500,
-        function:"marep",
-        imgId:"622137fd3029ec84a594f50b",
-        id:"622137fd3029ec84a594f50b"})
-        .then((response) => setDataTest(response))
-    },[])
+    console.log(optionSelected,"soy option desde header");
+    
+    // useEffect(()=>{
+    //     PostMedicinesData({name:"desde la app",
+    //     compound:"eres mi mas bello amanecer xd",
+    //     price:125,
+    //     type:"inyectado",
+    //     quantity:500,
+    //     function:"marep",
+    //     imgId:"622137fd3029ec84a594f50b",
+    //     id:"622137fd3029ec84a594f50b"})
+    //     .then((response) => setDataTest(response))
+    // },[])
     
 
 
@@ -43,8 +45,20 @@ const Header =() =>{
         </picture>
     </header>
     <aside>
-    {(isOpenmodal && (<ToggleMenu setIsOpenModal={setIsOpenModal} setOpenFormModal={setOpenFormModal}/>))}
-    {(isOpenFormModal && (<MedicineModalFlow setOpenFormModal={setOpenFormModal}/>))}
+    {(isOpenmodal && (<ToggleMenu 
+    setIsOpenModal={setIsOpenModal} 
+    setOpenFormModal={setOpenFormModal}
+    setOptionSelected={setOptionSelected}
+    />
+    ))}
+    {
+    (isOpenFormModal && (
+    <MedicineModalFlow
+    setOpenFormModal={setOpenFormModal}
+    optionSelectedFromToggleMenuHome={optionSelected}
+
+    />
+    ))}
     </aside>
     </>
     )
