@@ -313,7 +313,6 @@ const FormCrudMedicine=(props:Props) =>{
             getProductById?.(id)
             .then((data) => {
                 const adapter= getDrinksAdapter(data.data)
-                console.log(adapter);
                 setFormDrinks(adapter)
             })
             .catch((error) =>{
