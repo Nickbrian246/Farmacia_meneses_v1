@@ -15,7 +15,6 @@ const Header =() =>{
     const handleModal = () => {
         setIsOpenModal((prevState) => !prevState)
     }
-    console.log(optionSelected,"soy option desde header");
     
     // useEffect(()=>{
     //     PostMedicinesData({name:"desde la app",

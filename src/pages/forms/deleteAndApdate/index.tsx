@@ -6,21 +6,17 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { Button, TextField } from "@mui/material";
 
-import { fetchItemById } from "../../../fetch/fetchMedicines/fetchMedicines";
 import { postDrinks , updateDrinks,deleteDrinks} from "../../../services/dashboard-api/adapters/driver/drinks-api";
 import { getDrinksAdapter, postDrinksAdapter} from "../../../services/dashboard-api/adapters/drinksAdapter/for-DrinksAdapter";
-// import { 
-//     PostMedicinesData,
-    
-//     deleteMedicine,
-// } from "../../../fetch/fetchMedicines/fetchMedicines";
-import {postMedicines,updateMedicine,deleteMedicine} from "../../../services/dashboard-api/adapters/driver/medicine-api"
+import {postMedicines,updateMedicine,deleteMedicine} from "../../../services/dashboard-api/adapters/driver/medicine-api";
+import { postOtherProduct,deleteOtherProduct,updateOtherProduct } from "../../../services/dashboard-api/adapters/driver/otherProducts-api";
 import { adapterForGetMedicine } from "../../../services/dashboard-api/adapters/medicineAdapter/for-form-medicineAdapter";
 import { MedicDataForPost } from "../adapters/for-Medicine";
-import { getProductById } from "../../../services/dashboard-api/adapters/driven/medicine-api";
+import { getProductById } from "../../../services/dashboard-api/adapters/driven/getProduct-api";
 import {
     listFormMedicineUpdateOrDelete,
     listFormForDrinks,
+    listFormForOtherProducts
 } from "./listOptions"
 import {
     FormMedicine,
@@ -82,26 +78,38 @@ const FormCrudMedicine=(props:Props) =>{
         size:""
         
     });
+    const [otherProductsForm, setOtherProductsForm] = useState<FormDrinks>({
+        name:"",
+        price:0,
+        type:"",
+        quantity:0,
+        brand:"",
+        parts:1,
+        size:""
+        
+    });
 // funcion que asigna los valores al formMedicine independiente del metodo
-    const handleInputMedicineChange=( event:React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange=( event:React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        // console.log(name,value,"soy value")
-        // Actualizar el estado con los nuevos valores
-        setFormMedicine(prevState => ({
-        ...prevState,
-        [name]: value
-        }));
-        
-    }
-    const handleInputDrinksChange=( event:React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        // console.log(name,value,"soy value")
-        // Actualizar el estado con los nuevos valores
-        setFormDrinks(prevState => ({
-        ...prevState,
-        [name]: value
-        }));
-        
+                // Actualizar el estado con los nuevos valores
+        if(optionSelectedFromToggleMenuHome==="Medicamentos"){
+            return  setFormMedicine(prevState => ({
+                ...prevState,
+                [name]: value
+                }));
+        }
+        if(optionSelectedFromToggleMenuHome==="Bebidas"){
+            return  setFormDrinks(prevState => ({
+                ...prevState,
+                [name]: value
+                }));
+        } 
+        if(optionSelectedFromToggleMenuHome==="Otros productos"){
+            return  setOtherProductsForm(prevState => ({
+                ...prevState,
+                [name]: value
+                }));
+        } 
     }
     // funcion para ejecutar los eventos del formulario
     const handleSubmitMedicineBtn = (event: FormEvent<HTMLFormElement> ) =>{
@@ -195,94 +203,197 @@ const FormCrudMedicine=(props:Props) =>{
         size:""
     })
     }
-    const handleSubmitDrinksBtn = (event: FormEvent<HTMLFormElement> ) =>{
+    const handleSubmitBtn = (event: FormEvent<HTMLFormElement> ) =>{
         event.preventDefault();
-        if( !formDrinks.name
-            || !formDrinks.price
-            || !formDrinks.type
-            || !formDrinks.quantity
-            || !formDrinks.brand
-            || !formDrinks.parts
-            || !formDrinks.size){
-                setErrorMessage({
-                error:"campo vacio",
-                message:"porfavor revise que los campos no esten vacios",
-                type:"error",
-                errorName:"error"})
-            return setError((prevState) => !prevState)
+        if(optionSelectedFromToggleMenuHome==="Bebidas"){
+            if( !formDrinks.name
+                || !formDrinks.price
+                || !formDrinks.type
+                || !formDrinks.quantity
+                || !formDrinks.brand
+                || !formDrinks.parts
+                || !formDrinks.size){
+                    setErrorMessage({
+                    error:"campo vacio",
+                    message:"porfavor revise que los campos no esten vacios",
+                    type:"error",
+                    errorName:"error"})
+                return setError((prevState) => !prevState)
+            }
         }
+        if(optionSelectedFromToggleMenuHome==="Otros productos"){
+            if( !otherProductsForm.name
+                || !otherProductsForm.price
+                || !otherProductsForm.type
+                || !otherProductsForm.quantity
+                || !otherProductsForm.brand
+                || !otherProductsForm.parts
+                || !otherProductsForm.size){
+                    setErrorMessage({
+                    error:"campo vacio",
+                    message:"porfavor revise que los campos no esten vacios",
+                    type:"error",
+                    errorName:"error"})
+                return setError((prevState) => !prevState)
+            }
+        }
+
         setError(false)
         if(type==="add") { // agregar 
-            const adapter=postDrinksAdapter(formDrinks)
-            postDrinks(adapter)
-            .then((response) => {
-                setError((prevState) => !prevState),
-                setErrorMessage({
-                    error:"dato registrado con exito",
-                    message:`el dato con nombre ${response.data.name}`,
-                    type:"success",
-                    errorName:"exito"
+            console.log("estoy entrando desde add");
+            if(optionSelectedFromToggleMenuHome==="Otros productos"){
+                console.log("estoy entrando");
+                
+                const adapter=postDrinksAdapter(otherProductsForm)
+                postOtherProduct(adapter)
+                .then((response) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:"dato registrado con exito",
+                        message:`el dato con nombre ${response.data.name}`,
+                        type:"success",
+                        errorName:"exito"
+                    })
                 })
-            })
-            .catch((err) => {
-                setError((prevState) => !prevState),
-                setErrorMessage({
-                    error:`${err}`,
-                    message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
-                    type:"error",
-                    errorName:"error"})
+                .catch((err) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:`${err}`,
+                        message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                        type:"error",
+                        errorName:"error"})
+                    })
+            }
+            if(optionSelectedFromToggleMenuHome==="Bebidas"){
+                const adapter=postDrinksAdapter(formDrinks)
+                postDrinks(adapter)
+                .then((response) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:"dato registrado con exito",
+                        message:`el dato con nombre ${response.data.name}`,
+                        type:"success",
+                        errorName:"exito"
+                    })
                 })
+                .catch((err) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:`${err}`,
+                        message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                        type:"error",
+                        errorName:"error"})
+                    })
+            }
         }
         if(type==="update" ){
-            const adapter= postDrinksAdapter(formDrinks)
-            updateDrinks(id,adapter)
-            .then((response) => {
-                setError((prevState) => !prevState),
-                setErrorMessage({
-                    error:"dato actualizado con exito",
-                    message:`el dato con nombre ${response.data.name} fue actualizado con exito`,
-                    type:"success",
-                    errorName:"exito"
+            if(optionSelectedFromToggleMenuHome==="Bebidas"){
+                const adapter= postDrinksAdapter(formDrinks)
+                updateDrinks(id,adapter)
+                .then((response) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:"dato actualizado con exito",
+                        message:`el dato con nombre ${response.data.name} fue actualizado con exito`,
+                        type:"success",
+                        errorName:"exito"
+                    })
                 })
-            })
-            .catch((err) => {
-                setError((prevState) => !prevState),
-                setErrorMessage({
-                    error:`${err}`,
-                    message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
-                    type:"error",
-                    errorName:"error"})
+                .catch((err) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:`${err}`,
+                        message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                        type:"error",
+                        errorName:"error"})
+                    })
+            }
+            if(optionSelectedFromToggleMenuHome==="Otros productos"){
+                const adapter=postDrinksAdapter(otherProductsForm)
+                updateOtherProduct(id,adapter)
+                .then((response) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:"dato registrado con exito",
+                        message:`el dato con nombre ${response.data.name}`,
+                        type:"success",
+                        errorName:"exito"
+                    })
                 })
+                .catch((err) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:`${err}`,
+                        message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                        type:"error",
+                        errorName:"error"})
+                    })
+            }
         }
         if(type==="delete"){
-            deleteDrinks(id)
-            .then((response) => {
-                setError((prevState) => !prevState),
-                setErrorMessage({
-                    error:"",
-                    message:`el dato  fue eliminado con exito`,
-                    type:"success",
-                    errorName:"exito"
+            if(optionSelectedFromToggleMenuHome==="Bebidas"){
+                deleteDrinks(id)
+                .then((response) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:"",
+                        message:`el dato  fue eliminado con exito`,
+                        type:"success",
+                        errorName:"exito"
+                    })
                 })
-            })
-            .catch((err) => {
-                setError((prevState) => !prevState),
-                setErrorMessage({
-                    error:`${err}`,
-                    message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
-                    type:"error",
-                    errorName:"error"})
-                })   
+                .catch((err) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:`${err}`,
+                        message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                        type:"error",
+                        errorName:"error"})
+                    })
+            }
+            if(optionSelectedFromToggleMenuHome==="Otros productos"){
+                deleteOtherProduct(id)
+                .then((response) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:"dato registrado con exito",
+                        message:`el dato  fue eliminado con exito`,
+                        type:"success",
+                        errorName:"exito"
+                    })
+                })
+                .catch((err) => {
+                    setError((prevState) => !prevState),
+                    setErrorMessage({
+                        error:`${err}`,
+                        message:"porfavor comuniquese con soporte al cliente o intente mas tarde",
+                        type:"error",
+                        errorName:"error"})
+                    })
+            }
         };
-        setFormDrinks({ 
-        name:"",
-        price:0,
-        type:"drink",
-        quantity:0,
-        brand:"",
-        parts:1,
-        size:""
-    })
+        if(optionSelectedFromToggleMenuHome==="Bebidas"){
+            setFormDrinks({ 
+                name:"",
+                price:0,
+                type:"drink",
+                quantity:0,
+                brand:"",
+                parts:1,
+                size:""
+            })
+        }
+        if(optionSelectedFromToggleMenuHome==="Otros productos"){
+            setOtherProductsForm({ 
+                name:"",
+                price:0,
+                type:"",
+                quantity:0,
+                brand:"",
+                parts:1,
+                size:""
+            })
+        }
     }
     // apaga el error despues de unos segundos
     if(error) {
@@ -325,6 +436,25 @@ const FormCrudMedicine=(props:Props) =>{
                 })
             })
         }
+        if(optionSelectedFromToggleMenuHome==="Otros productos"){
+            console.log("entrando");
+            
+            getProductById?.(id)
+            .then((data) => {
+
+                const adapter= getDrinksAdapter(data.data)
+                setOtherProductsForm(adapter)
+            })
+            .catch((error) =>{
+                setError((prevState) => !prevState),
+                setErrorMessage({
+                    error:`${error}`,
+                    message:"porfavor comuniquese con servicio al cliente o intente mas tarde",
+                    type:"error",
+                    errorName:"Error"
+                })
+            })
+        }
     },[id]);
 
     return (
@@ -346,7 +476,7 @@ const FormCrudMedicine=(props:Props) =>{
                 label={item.label}
                 style={{width:"400px", margin:"5px"}}
                 id="outlined-basic"
-                onChange={handleInputMedicineChange}
+                onChange={handleInputChange}
                 />
             ))}
             {type==="add" && (
@@ -386,7 +516,7 @@ const FormCrudMedicine=(props:Props) =>{
             </form>
         )}
         {optionSelectedFromToggleMenuHome==="Bebidas" && (
-            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitDrinksBtn} >
+            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitBtn} >
             {listFormForDrinks.map((item) =>(
                 <TextField
                 type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
@@ -396,7 +526,57 @@ const FormCrudMedicine=(props:Props) =>{
                 label={item.label}
                 style={{width:"400px", margin:"5px"}}
                 id="outlined-basic"
-                onChange={handleInputDrinksChange}
+                onChange={handleInputChange}
+                />
+            ))}
+            {type==="add" && (
+            <Button
+            style={{marginTop:"18px"}}
+            type="submit" 
+            size="large"
+            variant="contained"
+            color="primary"
+            >
+            Guardar
+            </Button>
+            )
+            || type==="update" && (
+            <Button
+            style={{marginTop:"18px"}}
+            type="submit" 
+            size="large"
+            variant="contained"
+            color="success"
+            >
+            Actualizar
+            </Button>
+            )
+            || type==="delete" && (
+                <Button
+                style={{marginTop:"18px"}}
+                type="submit" 
+                size="large"
+                variant="contained"
+                color="error"
+                >
+                Eliminar
+                </Button>
+                )
+            }
+            </form>
+        )}
+            {optionSelectedFromToggleMenuHome==="Otros productos" && (
+            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitBtn} >
+            {listFormForOtherProducts.map((item) =>(
+                <TextField
+                type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
+                key={item.id}
+                value={otherProductsForm[item.name as FormDrinksKey ]}
+                name={item.name}
+                label={item.label}
+                style={{width:"400px", margin:"5px"}}
+                id="outlined-basic"
+                onChange={handleInputChange}
                 />
             ))}
             {type==="add" && (

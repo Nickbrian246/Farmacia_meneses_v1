@@ -26,7 +26,7 @@ export interface GeneralProducts {
   tag:string,
   size:string,
   brand:string,
-  pieces:string
+  pieces:number
 }
 export interface MedicineData {
   name:string,

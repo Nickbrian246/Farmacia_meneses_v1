@@ -6,37 +6,37 @@ interface List{
 const listFormMedicineUpdateOrDelete :List []=[
     {
     name:"name",
-    id:"nameField",
+    id:"nameFieldMedicine",
     label:"nombre"
     },
     {
     name:"compound",
-    id:"compundField",
+    id:"compundFieldMedicine",
     label:"compuesto:  clorfenimina| ...etc "
     },
     {
     name:"price",
-    id:"priceField",
+    id:"priceFieldMedicine",
     label:"precio"
     },
     {
     name:"type",
-    id:"typeField",
+    id:"typeFieldMedicine",
     label:"tipo: inyectado| tomado| supositorio... etc"
     },
     {
     name:"quantity",
-    id:"quantityField",
+    id:"quantityFieldMedicine",
     label:"cantidad en almacen"
     },
     {
     name:"function",
-    id:"functionField",
+    id:"functionFieldMedicine",
     label:"para que sirve? dolor de cabeza| presion alta ...etc"
     },
     {   
     name:"size",
-    id:"sizeField",
+    id:"sizeFieldMedicine",
     label:"presentacion: 10mg | 20 tabletas | 90 Ml ...etc"
     },
 
@@ -44,34 +44,72 @@ const listFormMedicineUpdateOrDelete :List []=[
 const listFormForDrinks :List []=[
     {
     name:"name",
-    id:"nameField",
+    id:"nameFieldDrinks",
     label:"Nombre"
     },
     {
     name:"price",
-    id:"priceField",
+    id:"priceFieldDrinks",
     label:"Precio"
     },
     {
     name:"brand",
-    id:"typeField",
+    id:"typeFieldDrinks",
     label:"Marca"
     },
     {
     name:"quantity",
-    id:"quantityField",
+    id:"quantityFieldDrinks",
     label:"Cantidad en stock"
     },
     {
     name:"size",
-    id:"functionField",
+    id:"sizeFieldDrinks",
     label:"Tamaño: 600ml | 200ml ...etc"
     },
     { 
     name:"parts",
-    id:"functionField",
+    id:"partsFieldDrinks",
     label:"cuantos trae el paquete?"
     },
 
 ]
-export {listFormForDrinks,listFormMedicineUpdateOrDelete}
+const listFormForOtherProducts:List []=[
+    {
+    name:"name",
+    id:"nameFieldOtherProductDrinks",
+    label:"Nombre"
+    },
+    {
+    name:"price",
+    id:"priceFieldOtherProduct",
+    label:"Precio"
+    },
+    {
+    name:"brand",
+    id:"brandFieldOtherProduct",
+    label:"Marca"
+    },
+    {
+    name:"quantity",
+    id:"quantityFieldOtherProduct",
+    label:"Cantidad en stock"
+    },
+    {
+    name:"size",
+    id:"sizeFieldOtherProduct",
+    label:"Tamaño: 600ml | 200ml ...etc"
+    },
+    { 
+    name:"parts",
+    id:"partsFieldOtherProduct",
+    label:"cuantos trae el paquete?"
+    },
+    { 
+    name:"type",
+    id:"typeFieldOtherProduct",
+    label:"que tipo de productos es? sabritas | corta uñas ...etc"
+    },
+
+]
+export {listFormForDrinks,listFormMedicineUpdateOrDelete,listFormForOtherProducts}

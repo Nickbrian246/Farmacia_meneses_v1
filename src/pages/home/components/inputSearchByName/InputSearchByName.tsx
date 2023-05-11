@@ -7,7 +7,7 @@ import "./inputSerachByName.css"
 import { fetchItemById } from '../../../../fetch/fetchMedicines/fetchMedicines';
 import {setCartItems  } from "../../../../store/slices/home/ProductCart";
 import {useDispatch} from "react-redux";
-import {getProductById} from"../../../../services/dashboard-api/adapters/driven/medicine-api"
+import {getProductById} from"../../../../services/dashboard-api/adapters/driven/getProduct-api"
 import { adaptingDataForCartList } from '../../../../services/dashboard-api/adapters/cartListAdapter/cartListAdapter';
 
 interface Props{
