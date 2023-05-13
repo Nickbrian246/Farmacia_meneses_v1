@@ -20,10 +20,10 @@ const MosaicItem=(props:Props) => {
     return (
         <>
         <section className="mosaic-container-item"  onClick={()=>handleClick(props.type)}>
-        <div className="mosaic-baseStyle" style={{width:`${props.width}`}}>
+        <button  className="mosaic-baseStyle" style={{width:`${props.width}`}}>
                 {props.children}
                 <p style={{fontSize:`${props.fontSize}`}}>{props.name}</p>
-            </div>
+        </button>
 
         </section>
         </>

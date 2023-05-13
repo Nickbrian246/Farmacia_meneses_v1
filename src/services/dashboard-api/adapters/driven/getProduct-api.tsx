@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ModelData } from "../interfaces/productInterface";
 
 const BASE_URL="http://localhost:3000/apiV2"
 
@@ -12,7 +13,15 @@ const getProductById=  async(id:string) => {
     const get = await axios.get(`${BASE_URL}/productsV2/${id}`)
     return get.data
   } catch (error) {
-    console.log(error,"soy error de ger medidince");
+    console.log(error,"soy error de ger medicine");
   }
 }
-export {getProductById}
+const getAllProducts=  async() => {
+  try {
+    const get = await axios.get(`${BASE_URL}/productsV2/`)
+    return get.data
+  } catch (error) {
+    console.log(error,"soy error obtener todos productos");
+  }
+}
+export {getProductById,getAllProducts}

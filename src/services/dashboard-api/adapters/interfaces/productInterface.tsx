@@ -4,10 +4,11 @@ export interface ModelData {
   quantity:number,
   compound:string,
   tag:string,
-  whatIsItFor:string,
+  whatIsItFor?:string,
   size:string,
-  brand:string,
-  pieces:string
+  brand?:string,
+  pieces?:string
+  _id?:string
   }
   // esta es en general el de drinks
 export interface Drinks {
