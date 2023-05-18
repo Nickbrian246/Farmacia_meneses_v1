@@ -2,10 +2,15 @@ import { listOptions } from "./sellOptionsList";
 import { Stack, Typography } from "@mui/material";
 import { OptionsElement } from "../../../../components/optionsElementComponent/OptionsElement";
 
-const SellOptionsList =() => {
-  
-  const handleOptionSelected=(option:string):string=>{
-  return option
+interface Props{
+  optionSelected:( name:string) => void
+}
+
+const SellOptionsList =(props:Props) => {
+  const {optionSelected}= props
+  const handleOptionSelected=(option:string):void=>{
+    optionSelected(option)
+
   }
 
   return (

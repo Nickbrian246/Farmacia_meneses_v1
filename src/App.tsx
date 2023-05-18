@@ -1,5 +1,5 @@
 import { Home } from './pages/home'
-import { RoutesApp } from './Routes/inedx'
+import { RoutesApp } from './Routes'
 
 
 function App() {

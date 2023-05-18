@@ -1,7 +1,8 @@
 import axios from "axios";
 import { MedicineData,Drinks } from "../interfaces/productInterface";
 
-const BASE_URL = "http://localhost:3000/apiV2/"
+// const BASE_URL = "http://localhost:3000/apiV2/"
+const BASE_URL= import.meta.env.VITE_BASE_URL
 
 
 const config = {
@@ -45,9 +46,11 @@ const postDrinks= async( data:Drinks) => {
     console.log(error)
   }
 }
-export {postMedicines,
+export {
+  postMedicines,
   deleteMedicine,
   postDrinks,
-  updateMedicine,
-}
+  updateMedicine
+};
+  export type { MedicineData };
 

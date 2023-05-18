@@ -11,9 +11,9 @@ const RoutesApp= () => {
   return (
     <>
       <BrowserRouter>
-      <Stack>
+      {/* <Stack>
         <Header/>
-      </Stack>
+      </Stack> */}
     <Routes>
       {Object.values(routerList).map(({path, element , description,status}) => (
       <Route element= {element} path= {path} key={description}/>

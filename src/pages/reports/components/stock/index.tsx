@@ -2,9 +2,14 @@ import { stockOptionsList } from "./listStockOptions";
 import { Stack, Typography } from "@mui/material";
 import { OptionsElement } from "../../../components/optionsElementComponent/OptionsElement";
 
-const StockOptionsList =() => {
+interface Props{
+  optionSelected:( name:string) => void
+}
+const StockOptionsList =(props:Props) => {
+  const {optionSelected}= props
   
   const handleOptionSelected=(option:string):string=>{
+    optionSelected(option)
   return option
   }
 

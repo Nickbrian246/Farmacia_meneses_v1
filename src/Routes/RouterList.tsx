@@ -1,6 +1,9 @@
 import React from "react"
 import { Home } from "../pages/home"
 import { Reports } from "../pages/reports"
+import LogInForm from "../pages/authForms"
+import RegisterForm from "../pages/authForms/RegisterFrom"
+import AuthForms from "../pages/authForms"
 
 
 
@@ -21,12 +24,26 @@ const routerList :RouterList[]= [
   status:false,
   title:"home"
   },
+{
+  path:"/Reports",
+  description:"Reports element",
+  element:<Reports  path="/Reports" />,
+  status:false,
+  title:"home"
+  },
   {
-    path:"/Reports",
+    path:"/LogIn",
     description:"Reports element",
-    element:<Reports  path="/Reports" />,
+    element:<AuthForms  path="/LogIn" />,
     status:false,
-    title:"home"
+    title:"LogIn"
+  },
+  {
+    path:"/Register",
+    description:"Reports element",
+    element:<AuthForms  path="/Register" />,
+    status:false,
+    title:"LogIn"
     },
 ]
 export {routerList}
