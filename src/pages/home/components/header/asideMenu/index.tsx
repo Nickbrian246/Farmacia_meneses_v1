@@ -6,8 +6,10 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import {listItems} from "./list"
+import {listItems,logout} from "./list"
 import { v4 as uuidv4 } from 'uuid';
+import {logOutUser} from "../../../../../store/slices/auth/Login";
+import { useDispatch } from "react-redux";
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -32,6 +34,7 @@ export default function ToggleMenu(props :Props) {
         bottom: false,
         right: false,
     });
+    const dispatch= useDispatch()
 
     const handleOptionSelected = (name:string) :void =>{
         setOpenFormModal(true)
@@ -51,6 +54,12 @@ const toggleDrawer =
     setIsOpenModal(false)
     setState({ ...state, [anchor]: open });
     };
+
+    const handleLogOut = (id:string):void => {
+        if(id==="logOut"){
+            dispatch(logOutUser())
+        }
+    }
 
 
 const list = (anchor: Anchor) => (
@@ -72,15 +81,17 @@ const list = (anchor: Anchor) => (
         ))}
     </List>
     <Divider />
-    {/* <List>
-        {listItems.map((text) => (
+    <List >
+        {logout.map((text) => (
         <ListItem key={uuidv4()} disablePadding>
-            <ListItemButton>
-            <ListItemText primary={text.nombre}  />
+            <ListItemButton onClick={()=> {
+                handleLogOut(text.id)
+            }}>
+            <ListItemText sx={{color:"red",fontSize:"bold"}} primary={text.nombre}  />
             </ListItemButton>
         </ListItem>
         ))}
-    </List> */}
+    </List>
     </Box>
 );
 

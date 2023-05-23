@@ -1,28 +1,44 @@
+import React,{ useEffect} from "react"
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { Button, Stack, TextField, Typography, InputAdornment } from "@mui/material";
+import { Button, Stack, TextField, Typography, InputAdornment, Alert, AlertTitle } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Autocomplete } from "@mui/material";
-import { forAuth } from "../../../interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import { RegisterRequest } from "../../../store/thunks/auth/authThunks";
+import { checkPassword } from "../../../utils";
+import RegisterUser from "../../../interfaces/for-Auth";
+import { Role } from "../../../interfaces/for-Auth";
+import { estadosMexicanos,roles } from "./utils";
+import { useNavigate } from "react-router-dom";
 
-type Auth = Omit<forAuth, "state" | "role">;
-type Role = Pick<forAuth, "role" >;
+type Register = Omit<RegisterUser, "state" | "role">;
+
 interface Props {
   path?:string,
+  setIsError:React.Dispatch<React.SetStateAction<Error>>,
+  isError:Error
+}
+interface Error{
+  isError:boolean,
+  message:string
 }
 
 const RegisterForm = (props:Props) => {
-  const {path}= props
-  const [selectedState, setSelectedState] = useState<string | null>(null);
-  const [role, setRole]= useState("")
-  const [showPassword, setShowPassword] = useState(false);
-  const [registerUser, setRegisterUser] = useState<Auth >({
+  const {path,setIsError, isError}= props
+  const [state, setSelectedState] = useState<string>("");
+  const [role, setRole]= useState<Role>("admin");
+  const navigate= useNavigate()
+  const userState= useSelector((State:any)=> State.loggedUser)
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [registerUser, setRegisterUser] = useState<Register >({
     age: 0,
     email: "",
     howManyBusinessHasWithUs: 1,
     name: "",
     password: "",
   });
+  const dispatch= useDispatch()
 
   const handleEmailInput = (event: ChangeEvent<HTMLInputElement>): void => {
     const { value, name } = event.target;
@@ -34,13 +50,15 @@ const RegisterForm = (props:Props) => {
   };
 
   const handleAutocompleteState = (event: ChangeEvent<{}>, value: string | null) => {
+  if (value) {
     setSelectedState(value);
+  }
   };
 
   const handleTogglePasswordVisibility = (): void => {
     setShowPassword(!showPassword);
   };
-  const handleRole=(event: React.SyntheticEvent<Element, Event>, value: { label: string, value: string } | null) => {
+  const handleRole=(event: React.SyntheticEvent<Element, Event>, value: { label: string, value: Role } | null) => {
     if (value) {
       setRole(value.value)
     }
@@ -48,10 +66,25 @@ const RegisterForm = (props:Props) => {
 
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    const data= {...registerUser, selectedState,role}
-    console.log(data);
-    
+    const data= {...registerUser, state,role}
+    const passwordDoesNotMeet= checkPassword(data.password)
+    if (passwordDoesNotMeet) {
+      setIsError({
+          isError:true,
+          message:passwordDoesNotMeet
+        }
+      )
+      return 
+    }
+    dispatch(RegisterRequest(data) as any)
+  
+
   };
+  useEffect(()=> {
+    if(userState.id){
+      navigate("/Home")
+    }
+  },[userState.id])
 
   return (
     <>
@@ -120,6 +153,7 @@ const RegisterForm = (props:Props) => {
           <TextField
             label="Ingrese una Contraseña"
             value={registerUser.password}
+            error={isError.isError}
             type={showPassword ? "text" : "password"}
             name="password"
             onChange={handleEmailInput}
@@ -135,7 +169,7 @@ const RegisterForm = (props:Props) => {
               )
             }}
           />
-          <Button type="submit" size="large" variant="contained" color="primary">
+          <Button type="submit" size="large" variant="contained" color="primary" >
             Iniciar Sesión
           </Button>
         </form>
@@ -159,43 +193,3 @@ const RegisterForm = (props:Props) => {
 };
 
 export default RegisterForm;
-
-const estadosMexicanos = [
-  { label: "Aguascalientes" },
-  { label: "Baja California" },
-  { label: "Baja California Sur" },
-  { label: "Campeche" },
-  { label: "Chiapas" },
-  { label: "Chihuahua" },
-  { label: "Coahuila" },
-  { label: "Colima" },
-  { label: "Durango" },
-  { label: "Estado de México" },
-  { label: "Guanajuato" },
-  { label: "Guerrero" },
-  { label: "Hidalgo" },
-  { label: "Jalisco" },
-  { label: "Michoacán" },
-  { label: "Morelos" },
-  { label: "Nayarit" },
-  { label: "Nuevo León" },
-  { label: "Oaxaca" },
-  { label: "Puebla" },
-  { label: "Querétaro" },
-  { label: "Quintana Roo" },
-  { label: "San Luis Potosí" },
-  { label: "Sinaloa" },
-  { label: "Sonora" },
-  { label: "Tabasco" },
-  { label: "Tamaulipas" },
-  { label: "Tlaxcala" },
-  { label: "Veracruz" },
-  { label: "Yucatán" },
-  { label: "Zacatecas" }
-];
-const roles = [
-  { label: "empleado", value:"employee" },
-  { label: "administrador", value:"admin" },
-  { label: "maestro", value:"master" },
-
-];

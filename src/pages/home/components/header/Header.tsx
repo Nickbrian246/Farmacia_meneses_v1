@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from "react"
+import  {useState} from "react"
 import './header.css';
 import logoFarmaciaMeneses from "../../../../assets/Farmacias-meneses-logo.png"
 import {CiMenuBurger} from "react-icons/ci";
 import ToggleMenu from "./asideMenu";
 import { MedicineModalFlow } from "../../../Modalflow";
-import {PostMedicinesData} from "../../../../fetch/fetchMedicines/fetchMedicines"
 
 
 

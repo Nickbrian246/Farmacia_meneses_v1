@@ -1,6 +1,10 @@
 interface ListItems{
     nombre:string
 }
+interface logOut{
+    nombre:string,
+    id:string
+}
 
 const listItems: ListItems[] = [
     {
@@ -13,4 +17,10 @@ const listItems: ListItems[] = [
     nombre:"Otros productos"
     },
 ]
-export{listItems}
+const logout: logOut[] = [
+    {
+    nombre:"Cerrar sesion",
+    id:"logOut"
+    },
+]
+export{listItems,logout}

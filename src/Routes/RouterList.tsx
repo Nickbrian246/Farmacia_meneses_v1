@@ -1,8 +1,6 @@
 import React from "react"
 import { Home } from "../pages/home"
 import { Reports } from "../pages/reports"
-import LogInForm from "../pages/authForms"
-import RegisterForm from "../pages/authForms/RegisterFrom"
 import AuthForms from "../pages/authForms"
 
 
@@ -16,7 +14,7 @@ interface RouterList{
 }
 
 
-const routerList :RouterList[]= [
+const routerPrivateList :RouterList[]= [
   {
   path:"/Home",
   description:"home element",
@@ -46,4 +44,20 @@ const routerList :RouterList[]= [
     title:"LogIn"
     },
 ]
-export {routerList}
+const routerPublicList :RouterList[]= [
+  {
+    path:"/LogIn",
+    description:"Reports element",
+    element:<AuthForms  path="/LogIn" />,
+    status:false,
+    title:"LogIn"
+  },
+  {
+    path:"/Register",
+    description:"Reports element",
+    element:<AuthForms  path="/Register" />,
+    status:false,
+    title:"LogIn"
+    },
+]
+export {routerPrivateList,routerPublicList}
