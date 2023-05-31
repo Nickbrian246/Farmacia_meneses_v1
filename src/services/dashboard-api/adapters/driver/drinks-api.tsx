@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Drinks } from "../interfaces/productInterface";
+import { PostDrinks, ModifyItemForOtherProducts } from "../../../../pages/forms/interfaces";
+import { Drinks ,} from "../interfaces/productInterface";
 // const BASE_URL="http://localhost:3000/apiV2/"
 const BASE_URL= import.meta.env.VITE_BASE_URL
 
@@ -13,26 +14,44 @@ const config = {
 
 
 
-const postDrinks= async( data:Drinks) => {
+const postDrinks= async( data:PostDrinks, token:string) => {
   try {
-    const sendData= await axios.post(`${BASE_URL}/productsV2`,data,config)
+    const sendData= await axios.put(`${BASE_URL}/productsV2`,data,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization":`Bearer ${token}`
+        }
+    })
     return sendData.data
   } catch (error) {
     console.log(error)
   }
 }
-const updateDrinks= async( id:string, data:Drinks) => {
+const updateDrinks= async( data:ModifyItemForOtherProducts, token:string) => {
   try {
-    const update= await axios.put(`${BASE_URL}/productsV2/${id}`, data,config)
+    const update= await axios.put(`${BASE_URL}/modifyProductInStock`, data,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization":`Bearer ${token}`
+        }
+    })
     return update.data
   } catch (error) {
     console.log(error)
   }
 
 }
-const deleteDrinks= async (id:string) => {
+const deleteDrinks= async (id:string, token:string) => {
   try {
-    const deleteItem=  await axios.delete(`${BASE_URL}/productsV2/${id}`)
+    const deleteItem=  await axios.delete(`${BASE_URL}/modifyProductInStock/${id}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization":`Bearer ${token}`
+        }
+    })
     return deleteItem.data
   } catch (error) {
     console.log(error)

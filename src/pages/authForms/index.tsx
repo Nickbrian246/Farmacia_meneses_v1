@@ -42,10 +42,10 @@ const AuthForms = (props:Props) => {
         <AlertTitle>{isError.message}</AlertTitle>
         </Alert>
         )}
-      {path==="/Register" && (
+      {path==="/register" && (
         <RegisterForm setIsError={setIsError} isError={isError}/>
       )}
-      {path==="/LogIn" && (
+      {path==="/login" && (
         <LogInForm setIsError={setIsError} isError={isError}/>
       )}
 

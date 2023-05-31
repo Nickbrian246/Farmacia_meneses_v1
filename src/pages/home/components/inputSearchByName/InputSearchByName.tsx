@@ -9,6 +9,7 @@ import {setCartItems  } from "../../../../store/slices/home/ProductCart";
 import {useDispatch} from "react-redux";
 import {getProductById} from"../../../../services/dashboard-api/adapters/driven/getProduct-api"
 import { adaptingDataForCartList } from '../../../../services/dashboard-api/adapters/cartListAdapter/cartListAdapter';
+import { useSelector } from 'react-redux';
 
 interface Props{
     getIdFromInputByName?: (id:string) => string;
@@ -23,35 +24,44 @@ function InputSearchByName(props:Props) {
     const [closeList, setCloseList] = useState<boolean>(false)
     const {
         elements,
-        loading}=useBookMedicineByName(name, name) 
-    
+        loading,
+        errorMessage,
+        isError,
+        setIsError,
+    }=useBookMedicineByName(name, name) 
+    const token = useSelector((state:any) => state.loggedUser.token)
+ 
     const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
     // diferenciar hacia donde manda la info
-    useEffect(()=>{
+    useEffect(()=>{ 
+        console.log(elementSelected)
         if(elementSelected ==="") return
-    getIdFromInputByName?.(elementSelected)
-
-    if (isforCartlist) {
-        getProductById(elementSelected)
-        .then((response) => {
-            let cartInterface= adaptingDataForCartList(response.data)
-            dispatch(setCartItems(cartInterface))
-        })
-    }
-    setElementSelected("")
+        getIdFromInputByName?.(elementSelected)
+        if (isforCartlist) {
+            getProductById(elementSelected,token)
+            .then((response) => {
+                let cartInterface= adaptingDataForCartList(response.data)
+                dispatch(setCartItems(cartInterface))
+            })
+        }
+        setElementSelected("")
     }, [elementSelected])
+    const handleOnBlur=()=>{
+        setIsError(false)
+    }
 
     return (
         <>
-        <section>
+        <section  onBlur={handleOnBlur}>
         <TextField
         style={{width:"400px", background:"white",minHeight:"40px"}}
         label="escriba el nombre "
         value={name}
         onChange={handleInput}
         onClick={()=> setCloseList(false)}
+
     />
     {(elements.length !=0 && typeof(elements) != "string" && closeList === false) && (
         <div className='InputlistContainer' >
@@ -78,6 +88,14 @@ function InputSearchByName(props:Props) {
                 </strong>
                 <CircularProgress color='info'
                 />
+            </span>
+        </div>)}
+        {(isError) && (
+        <div className='InputlistContainer' >
+            <span>
+                <strong>
+                    {errorMessage}
+                </strong>
             </span>
         </div>)}
         </section>

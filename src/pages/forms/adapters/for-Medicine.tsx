@@ -1,17 +1,22 @@
-import { FormMedicine } from "../interfaces"
-import { MedicineData } from "../../../services/dashboard-api/adapters/driver/medicine-api"
+import { FormMedicine,PostMedicines } from "../interfaces"
 
-const MedicDataForPost= (data: FormMedicine) :MedicineData=> {
-  const dataForPost= {
-    name: data.name,
-    price:data.price,
-    quantity: data.quantity,
-    compound:data.compound,
-    tag: data.type ,
-    whatIsItFor: data.function,
-    size:data.size,
-  }
-  return dataForPost
+
+const MedicDataForPost= (data: FormMedicine) :PostMedicines=> {
+  const productsInStock: PostMedicines = {
+    productsInStock: [
+      {
+        name: data.name,
+        price: data.price,
+        quantity: data.quantity,
+        compound: data.compound,
+        whatIsItFor: data.function,
+        tag:data.type,
+        size: data.size,
+      }
+    ]
+  };
+  console.log( data.name,)
+  return productsInStock
 
 }
 export {MedicDataForPost}

@@ -14,12 +14,12 @@ const RoutesApp= () => {
     <>
     <BrowserRouter>
       <Routes>
-      <Route element={<AuthForms path="/LogIn"/>}  path="/LogIn"/> 
-      <Route element={<AuthForms path="/Register"/>}  path="/Register"/> 
+      <Route element={<AuthForms path="/login"/>}  path="/logIn"/> 
+      <Route element={<AuthForms path="/register"/>}  path="/register"/> 
       <Route path="/*" element= {<NotFound/>} />
         <Route element={<AuthGuard />}>
-          <Route element={<Home path="/Home"/>}   path="/Home"/> 
-          <Route element={<Reports path="/Reports"/>}   path="/Reports"/> 
+          <Route element={<Home path="/home"/>}   path="/home"/> 
+          <Route element={<Reports path="/reports"/>}   path="/reports"/> 
           <Route path="/*" element= {<NotFound/>} />
         </Route>
       </Routes>

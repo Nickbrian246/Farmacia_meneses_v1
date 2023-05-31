@@ -1,44 +1,59 @@
 import axios from "axios"
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import { MedicinesData } from "../fetch/fetchMedicines/interface";
-import { error, log } from "console";
+import { useSelector } from "react-redux";
+const BASE_URL = import.meta.env.VITE_BASE_URL
 interface BookMedicineResponse {
     elements : MedicinesData[],
     loading:boolean
+    errorMessage:string,
+    isError:boolean,
+    setIsError:(value: boolean)=> void
+
 }
-const BASE_URL="http://localhost:3000/apiV2/";
 
 const useBookMedicineByName= (name: string, dependence:string):BookMedicineResponse => {
-    const [ elements, setElements] = useState<MedicinesData[]>([])
+    const [elements, setElements] = useState<MedicinesData[]>([])
     const[loading, setLoading] = useState<boolean>(false)
+    const [isError, setIsError]=useState<boolean>(false)
+    const [errorMessage, setErrorMessage]=useState<string>("")
+    const token = useSelector((state:any)=> state.loggedUser.token)
     useEffect(() => {
         setLoading(true)
+        let cancel :any;
         if(name==="") {
             return setLoading(false)
         }
-        let cancel :any;
-        try {
-            axios({
+    try {
+        axios({
                 method:"get",
                 url:`${BASE_URL}/inputDynamicSearchByName/${name}`,
+                headers:{
+                    'Content-Type': 'application/json',
+                    "Authorization":`Bearer ${token}`
+                },
                 cancelToken:new axios.CancelToken (c=> cancel =c)
-            }).then((response) => {
-                setLoading(false)
-                setElements(response.data.data)
-            }).catch( (error) =>{
-                console.log(error,"desde inputn dinamico")
-            }
-            )
-        } catch (error) {
-            console.log(error,"soy errro desde el input")
+        }).then((response) => {
+            setLoading(false)
+            setIsError(false)
+            setElements(response.data.data)
+        }).catch( (error) =>{
+            setLoading(false)
+            setIsError(true)
+            setErrorMessage(error.response.data.error)
         }
+        )
+    } catch (error) {
+        console.log(error)
+    }
     return () => {
         cancel()
         setElements([])
-    setElements([])}
+        setElements([])
+    }
     }, [dependence])
-    return {elements,
-        loading}
+
+    return {elements,loading,isError,errorMessage,setIsError}
     
 }
 export { useBookMedicineByName}

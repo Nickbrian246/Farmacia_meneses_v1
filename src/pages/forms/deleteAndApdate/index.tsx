@@ -7,8 +7,9 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { Button, TextField } from "@mui/material";
 
 import { postDrinks , updateDrinks,deleteDrinks} from "../../../services/dashboard-api/adapters/driver/drinks-api";
-import { getDrinksAdapter, postDrinksAdapter} from "../../../services/dashboard-api/adapters/drinksAdapter/for-DrinksAdapter";
+import { getDrinksAdapter, postDrinksAdapter, updateItem} from "../../../services/dashboard-api/adapters/drinksAdapter/for-DrinksAdapter";
 import {postMedicines,updateMedicine,deleteMedicine} from "../../../services/dashboard-api/adapters/driver/medicine-api";
+import { useSelector } from "react-redux";
 import { postOtherProduct,deleteOtherProduct,updateOtherProduct } from "../../../services/dashboard-api/adapters/driver/otherProducts-api";
 import { adapterForGetMedicine } from "../../../services/dashboard-api/adapters/medicineAdapter/for-form-medicineAdapter";
 import { MedicDataForPost } from "../adapters/for-Medicine";
@@ -22,6 +23,7 @@ import {
     FormMedicine,
     FormDrinks,
 } from "../interfaces"
+import { adapterForMedicineUpdateItem } from "../adapters/for-modifyItemMedicineStock";
 
 
 type AlertColor = 'success' | 'info' | 'warning' | 'error';
@@ -50,7 +52,8 @@ const FormCrudMedicine=(props:Props) =>{
         id,
         optionSelectedFromToggleMenuHome,
     } = props
-    const formRef = useRef<HTMLFormElement>(null);
+    const token =  useSelector((state:any)=> state.loggedUser.token)
+
     const [error, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<ErrorMessage>({
         error:"",
@@ -131,14 +134,13 @@ const FormCrudMedicine=(props:Props) =>{
         if(type==="add") { // agregar 
             // PostMedicinesData(formMedicine)
             const adaptingData= MedicDataForPost(formMedicine)
-            console.log(adaptingData);
             
-            postMedicines(adaptingData)
+            postMedicines(adaptingData,token)
             .then((response) => {
                 setError((prevState) => !prevState),
                 setErrorMessage({
                     error:"dato registrado con exito",
-                    message:`el dato con nombre ${response.data.name}`,
+                    message:`el dato con nombre ${formMedicine.name}`,
                     type:"success",
                     errorName:"exito"
                 })
@@ -153,8 +155,8 @@ const FormCrudMedicine=(props:Props) =>{
                 })
         }
         if(type==="update" ){
-            const adaptingData= MedicDataForPost(formMedicine)
-            updateMedicine(id,adaptingData)
+            const adaptingData= adapterForMedicineUpdateItem(formMedicine,id)
+            updateMedicine(adaptingData,token)
             .then((response) => {
                 setError((prevState) => !prevState),
                 setErrorMessage({
@@ -174,7 +176,7 @@ const FormCrudMedicine=(props:Props) =>{
                 })
         }
         if(type==="delete"){
-            deleteMedicine(id)
+            deleteMedicine(id,token)
             .then((response) => {
                 setError((prevState) => !prevState),
                 setErrorMessage({
@@ -240,12 +242,9 @@ const FormCrudMedicine=(props:Props) =>{
 
         setError(false)
         if(type==="add") { // agregar 
-            console.log("estoy entrando desde add");
             if(optionSelectedFromToggleMenuHome==="Otros productos"){
-                console.log("estoy entrando");
-                
                 const adapter=postDrinksAdapter(otherProductsForm)
-                postOtherProduct(adapter)
+                postOtherProduct(adapter,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
                     setErrorMessage({
@@ -266,12 +265,12 @@ const FormCrudMedicine=(props:Props) =>{
             }
             if(optionSelectedFromToggleMenuHome==="Bebidas"){
                 const adapter=postDrinksAdapter(formDrinks)
-                postDrinks(adapter)
+                postDrinks(adapter,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
                     setErrorMessage({
                         error:"dato registrado con exito",
-                        message:`el dato con nombre ${response.data.name}`,
+                        message:`el dato con nombre ${formDrinks.name}`,
                         type:"success",
                         errorName:"exito"
                     })
@@ -288,13 +287,13 @@ const FormCrudMedicine=(props:Props) =>{
         }
         if(type==="update" ){
             if(optionSelectedFromToggleMenuHome==="Bebidas"){
-                const adapter= postDrinksAdapter(formDrinks)
-                updateDrinks(id,adapter)
+                const adapter= updateItem(formDrinks,id)
+                updateDrinks(adapter,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
                     setErrorMessage({
                         error:"dato actualizado con exito",
-                        message:`el dato con nombre ${response.data.name} fue actualizado con exito`,
+                        message:`el dato con nombre ${formDrinks.name} fue actualizado con exito`,
                         type:"success",
                         errorName:"exito"
                     })
@@ -309,13 +308,13 @@ const FormCrudMedicine=(props:Props) =>{
                     })
             }
             if(optionSelectedFromToggleMenuHome==="Otros productos"){
-                const adapter=postDrinksAdapter(otherProductsForm)
-                updateOtherProduct(id,adapter)
+                const adapter=updateItem(otherProductsForm,id)
+                updateOtherProduct(adapter,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
                     setErrorMessage({
                         error:"dato registrado con exito",
-                        message:`el dato con nombre ${response.data.name}`,
+                        message:`el dato con nombre ${otherProductsForm.name}`,
                         type:"success",
                         errorName:"exito"
                     })
@@ -332,12 +331,12 @@ const FormCrudMedicine=(props:Props) =>{
         }
         if(type==="delete"){
             if(optionSelectedFromToggleMenuHome==="Bebidas"){
-                deleteDrinks(id)
+                deleteDrinks(id,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
                     setErrorMessage({
                         error:"",
-                        message:`el dato  fue eliminado con exito`,
+                        message:`el dato ${formDrinks.name}  fue eliminado con exito`,
                         type:"success",
                         errorName:"exito"
                     })
@@ -352,12 +351,12 @@ const FormCrudMedicine=(props:Props) =>{
                     })
             }
             if(optionSelectedFromToggleMenuHome==="Otros productos"){
-                deleteOtherProduct(id)
+                deleteOtherProduct(id,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
                     setErrorMessage({
                         error:"dato registrado con exito",
-                        message:`el dato  fue eliminado con exito`,
+                        message:`el dato ${otherProductsForm.name} fue eliminado con exito`,
                         type:"success",
                         errorName:"exito"
                     })
@@ -405,7 +404,8 @@ const FormCrudMedicine=(props:Props) =>{
     useEffect(()=>{
         if(id==="") return
         if(optionSelectedFromToggleMenuHome==="Medicamentos"){
-            getProductById?.(id)
+            console.log(id,"soy id")
+            getProductById?.(id,token)
             .then((data) => {
                 const adapter= adapterForGetMedicine(data.data)
                 setFormMedicine(adapter)
@@ -421,7 +421,7 @@ const FormCrudMedicine=(props:Props) =>{
             })
         }
         if(optionSelectedFromToggleMenuHome==="Bebidas"){
-            getProductById?.(id)
+            getProductById?.(id,token)
             .then((data) => {
                 const adapter= getDrinksAdapter(data.data)
                 setFormDrinks(adapter)
@@ -439,7 +439,7 @@ const FormCrudMedicine=(props:Props) =>{
         if(optionSelectedFromToggleMenuHome==="Otros productos"){
             console.log("entrando");
             
-            getProductById?.(id)
+            getProductById?.(id,token)
             .then((data) => {
 
                 const adapter= getDrinksAdapter(data.data)
@@ -466,7 +466,7 @@ const FormCrudMedicine=(props:Props) =>{
         </Alert>
         )}
         {optionSelectedFromToggleMenuHome==="Medicamentos" && (
-            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitMedicineBtn} >
+            <form  className="medicForm" onSubmit={handleSubmitMedicineBtn} >
             {listFormMedicineUpdateOrDelete.map((item) =>(
                 <TextField
                 type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
@@ -516,7 +516,7 @@ const FormCrudMedicine=(props:Props) =>{
             </form>
         )}
         {optionSelectedFromToggleMenuHome==="Bebidas" && (
-            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitBtn} >
+            <form    className="medicForm" onSubmit={handleSubmitBtn} >
             {listFormForDrinks.map((item) =>(
                 <TextField
                 type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }
@@ -566,7 +566,7 @@ const FormCrudMedicine=(props:Props) =>{
             </form>
         )}
             {optionSelectedFromToggleMenuHome==="Otros productos" && (
-            <form   ref={formRef} className="medicForm" onSubmit={handleSubmitBtn} >
+            <form  className="medicForm" onSubmit={handleSubmitBtn} >
             {listFormForOtherProducts.map((item) =>(
                 <TextField
                 type={`${item.name==="quantity" && "number" || item.name==="price" && "number"  }` }

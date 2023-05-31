@@ -20,6 +20,7 @@ export const LoggingRequest = createAsyncThunk (
         config
         );
       const adapter = loggedAdapter(gettingInfo.data);
+      console.log(adapter)
       return adapter
     } catch (error) {
       console.log(error);

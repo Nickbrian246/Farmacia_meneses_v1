@@ -81,10 +81,10 @@ const RegisterForm = (props:Props) => {
 
   };
   useEffect(()=> {
-    if(userState.id){
-      navigate("/Home")
+    if(userState.token){
+      navigate("/home")
     }
-  },[userState.id])
+  },[userState.token])
 
   return (
     <>

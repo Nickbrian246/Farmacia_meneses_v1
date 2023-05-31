@@ -6,14 +6,15 @@ const BASE_URL= import.meta.env.VITE_BASE_URL
 
 
 
-const config = {
-  headers: {
-  'Content-Type': 'application/json'
-  }
-};
-const getProductById=  async(id:string) => {
+const getProductById = async(id:string, token:string) => {
   try {
-    const get = await axios.get(`${BASE_URL}/productsV2/${id}`)
+    const get = await axios.get(`${BASE_URL}/modifyProductInStock/${id}`,{
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization":`Bearer ${token}`
+        }
+    })
+    console.log(get.data.data)
     return get.data
   } catch (error) {
     console.log(error,"soy error de ger medicine");

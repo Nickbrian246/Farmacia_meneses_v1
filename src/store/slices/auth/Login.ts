@@ -29,20 +29,22 @@ export const loggedUser = createSlice({
     .addCase(LoggingRequest.fulfilled, (state, action) => {
       let dataForLocalStorage= {
         name:action.payload.name,
-        token:action.payload.token,
+        token: action.payload.token
       }
       persisLocalStorage("User",dataForLocalStorage)
-      state.token= action.payload.token,
+      
       state.name=action.payload.name
+      state.token= action.payload.token
     })
     .addCase(RegisterRequest.fulfilled, (state, action) => {
       let dataForLocalStorage= {
         name:action.payload.name,
-        token:action.payload.token
+        token: action.payload.token
+        
       }
       persisLocalStorage("User",dataForLocalStorage)
-      state.token= action.payload.token
       state.name=action.payload.name
+      state.token= action.payload.token
     })
   }
 })

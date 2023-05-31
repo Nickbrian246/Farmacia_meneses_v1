@@ -62,7 +62,7 @@ const LogInForm = (props:Props) => {
   };
 useEffect(()=>{
   if(userState.token){
-    navigate("/Home")
+    navigate("/home")
   }
 },[userState.token])
 

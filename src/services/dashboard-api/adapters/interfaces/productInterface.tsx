@@ -37,6 +37,12 @@ export interface MedicineData {
   tag:string,
   whatIsItFor:string,
   size:string,
+  _id:string
+}
+
+
+export interface ModifyItemForOtherProducts{
+    modifyItem:GeneralProducts
 }
 // export type MedicineData= Omit<ModelData, "brand"| "pieces" >
 // export type PostDrinks= Omit<ModelData,"compound"|"whatIsFor">

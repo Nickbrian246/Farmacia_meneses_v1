@@ -16,18 +16,15 @@ interface UserLogIn{
 }
 interface UserLogged{
   name:string,
-  clientId:string,
-  role:[Role], 
   token:string
 }
 interface UserFromBackEnd {
   name:string,
-  _id:string
+  token:string
 }
 interface ResponseApiUser {
   token:string,
   user:UserFromBackEnd,
-  role:[Role]
 }
 
 interface ResponseAuthFromBackEnd {
