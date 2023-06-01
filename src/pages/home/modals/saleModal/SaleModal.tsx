@@ -1,9 +1,10 @@
 import "./saleModal.css";
 import { ChangeEvent, useState } from "react";
 import { Alert, AlertTitle, Button } from "@mui/material";
-import {postSales} from "../../../../fetch/fetchMedicines/sales";
+import { postSales } from "./services";
+import { salesAdapter } from "./adapters";
 import { setClearState } from "../../../../store/slices/home/ProductCart";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 
 interface Item {
   name:string,
@@ -26,6 +27,7 @@ interface ErrorMessages{
 export type AlertColor = 'success' | 'info' | 'warning' | 'error';
 
 const SaleModal=(props:Props) => {
+  const token= useSelector((state:any)=> state.loggedUser.token)
   const [inputMoneyReceived, setInputMoneyReceived] = useState<string>("")
   const [error, setError] = useState<boolean>(false)
   const[errorMessage, setErrorMessage] = useState<ErrorMessages>({
@@ -41,7 +43,6 @@ const SaleModal=(props:Props) => {
   total,
   data,
 } = props
-
 
   const handleInputChange= (event: ChangeEvent<HTMLInputElement>) => {
     setInputMoneyReceived(event.target.value)
@@ -61,20 +62,10 @@ const SaleModal=(props:Props) => {
       })
       return setError((prevState) => !prevState)
     }
-    let date= new Date()
-    let dateString= date.toLocaleString()
+
     let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
-  const postSalesStructure= {
-    products:[
-      ...data,
-    ],
-    date: dateString,
-    total:total,
-    cashReceived:cashReceived,
-    changeGiven:cambio
-  }
-  console.log(postSalesStructure);
-  postSales(postSalesStructure)
+    const adapter= salesAdapter({data:data})
+    postSales(adapter ,token)
   .then((response) => console.log(response))
   .catch(err => console.log(err))
   dispatch(setClearState([]))
