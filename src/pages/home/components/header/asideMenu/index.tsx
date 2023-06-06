@@ -6,10 +6,11 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import {listItems,logout} from "./list"
+import {listItems,logout, secondList} from "./list"
 import { v4 as uuidv4 } from 'uuid';
 import {logOutUser} from "../../../../../store/slices/auth/Login";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -27,13 +28,13 @@ export default function ToggleMenu(props :Props) {
         setOpenFormModal,
         setOptionSelected
     } = props
-    
     const [state, setState] = useState({
         top: false,
         left:true,
         bottom: false,
         right: false,
     });
+    const navigate= useNavigate()
     const dispatch= useDispatch()
 
     const handleOptionSelected = (name:string) :void =>{
@@ -61,6 +62,11 @@ const toggleDrawer =
         }
     }
 
+    const handleSecondList=(name:string)=>{
+        if(name==="Reportes"){
+            navigate("/reports")
+        }
+    }
 
 const list = (anchor: Anchor) => (
     <Box
@@ -75,6 +81,18 @@ const list = (anchor: Anchor) => (
             <ListItemButton onClick={()=> {
                 handleOptionSelected(text.nombre)
                 }} >
+            <ListItemText primary={text.nombre}  />
+            </ListItemButton>
+        </ListItem>
+        ))}
+    </List>
+    <Divider />
+    <List >
+        {secondList.map((text) => (
+        <ListItem key={uuidv4()} disablePadding>
+            <ListItemButton onClick={()=> {
+                handleSecondList(text.nombre)
+            }}>
             <ListItemText primary={text.nombre}  />
             </ListItemButton>
         </ListItem>

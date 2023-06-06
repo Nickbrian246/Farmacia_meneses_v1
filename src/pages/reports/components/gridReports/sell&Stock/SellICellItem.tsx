@@ -5,6 +5,7 @@ interface Props{
   price:number,
   sells:number,
   inStock:number,
+  quantityOfProductsSold:number,
   date?:string,
   id:string | undefined
 }
@@ -15,6 +16,7 @@ const SellCellItem=(props:Props)=> {
     name,
     price,
     sells,
+    quantityOfProductsSold,
     date
         }= props
         let priceWithFormat = price.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -24,10 +26,12 @@ const SellCellItem=(props:Props)=> {
       <Divider/>
     <Grid   container >
     <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
+      <Grid sx={{display:"flex", justifyContent:"center"}} width={"250px"} >
         <p
         style={{
-          fontSize:"2rem"
+          fontSize:"2rem",
+          display:"inline-block",
+          justifySelf:"center"
         }}
         >
           {name}
@@ -36,7 +40,7 @@ const SellCellItem=(props:Props)=> {
 
       <Divider orientation="vertical" flexItem />
 
-      <Grid width={"250px"} >
+      <Grid sx={{display:"flex", justifyContent:"center"}} width={"250px"} >
         <p
         style={{
           fontSize:"2rem"
@@ -48,7 +52,18 @@ const SellCellItem=(props:Props)=> {
 
       <Divider orientation="vertical" flexItem />
 
-      <Grid width={"250px"}  >
+      <Grid sx={{display:"flex", justifyContent:"center"}} width={"250px"}   >
+        <p
+        style={{
+          fontSize:"2rem"
+          }}
+          >
+            {quantityOfProductsSold}
+        </p>
+      </Grid>
+      <Divider orientation="vertical" flexItem />
+
+      <Grid sx={{display:"flex", justifyContent:"center"}} width={"250px"}  >
         <p
         style={{
           fontSize:"2rem"
@@ -58,9 +73,10 @@ const SellCellItem=(props:Props)=> {
         </p>
       </Grid>
 
+
       <Divider orientation="vertical" flexItem />
 
-      <Grid width={"250px"}   >
+      <Grid sx={{display:"flex", justifyContent:"center"}} width={"250px"}   >
         <p
         style={{
           fontSize:"2rem"

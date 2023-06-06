@@ -4,22 +4,22 @@ const listOptions= [
   {
     name:"sellsToday",
     lable:"hoy",
-    id:"ventasOptionstoday"
+    id:"sellsToday"
   },
   {
-    name:"sellWeek",
+    name:"sellsWeek",
     lable:"de la semana",
-    id:"ventasOptionsWeek"
+    id:"sellsWeek"
   },
   {
     name:"sellsMonth",
     lable:"Del mes",
-    id:"ventasOptionsMonth"
+    id:"sellsMonth"
   },
   {
-    name:"sellsPersonalized",
+    name:"Personalized",
     lable:"Elegir una fecha",
-    id:"ventasOptionsPersonalized"
+    id:"Personalized"
   },
 ]
 export {listOptions}

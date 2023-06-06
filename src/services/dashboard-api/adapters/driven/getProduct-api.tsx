@@ -14,7 +14,6 @@ const getProductById = async(id:string, token:string) => {
         "Authorization":`Bearer ${token}`
         }
     })
-    console.log(get.data.data)
     return get.data
   } catch (error) {
     console.log(error,"soy error de ger medicine");

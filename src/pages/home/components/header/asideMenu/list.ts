@@ -17,10 +17,15 @@ const listItems: ListItems[] = [
     nombre:"Otros productos"
     },
 ]
+const secondList: ListItems[] = [
+    {
+    nombre:"Reportes",
+    },
+]
 const logout: logOut[] = [
     {
     nombre:"Cerrar sesion",
     id:"logOut"
     },
 ]
-export{listItems,logout}
+export{listItems,logout, secondList}
