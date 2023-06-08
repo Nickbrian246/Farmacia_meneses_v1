@@ -1,10 +1,10 @@
 import { BrowserRouter,Routes,Route } from "react-router-dom"
-import { Header } from "../pages/home/components/header/Header"
 import { NotFound } from "../pages/NotFound404"
 import AuthGuard from "../guards/auth.guard"
 import { Home } from "../pages/home"
 import { Reports } from "../pages/reports"
 import AuthForms from "../pages/authForms"
+
 
 
 const RoutesApp= () => {

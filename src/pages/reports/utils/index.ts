@@ -1,3 +1,3 @@
 export * from './addStockToList';
-export * from './dateFormat';
+export * from './date';
 export * from './listTotalSales';

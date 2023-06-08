@@ -4,11 +4,12 @@ import { Stack, Typography, } from "@mui/material";
 import { SellOptionsList } from "./components/sellOptions/options";
 import { StockOptionsList } from "./components/stock";
 import { SellsList } from "./components/gridReports/sell&Stock";
-import { fetchTodayReport ,fetchStock } from "./services";
+import { fetchReport ,fetchStock } from "./services";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { addStockToList, listNetSales, totalSales } from "./utils";
 import { ListNetSalesOutPut, addedStockToListNetSales } from "./interfaces";
+import { Header } from "../home/components/header/Header";
+import { addStockToList, formatDate, listNetSales, totalSales, yesterday } from "./utils";
 
 
 
@@ -23,14 +24,13 @@ const Reports=(props:Props) => {
 
   const handleOptionSelected=(name:string) :void=> {
     console.log(name)
-
+    setIsLoading((prevStae)=> !prevStae)
     if(name==="sellsToday"){
-      setIsLoading((prevStae)=> !prevStae)
       const today = new Date();
-      const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
-      fetchTodayReport(formattedDate,token)
+      const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+      const formaDate= formatDate(formattedDate)
+      fetchReport(formaDate,token)
         .then((response)=> {
-        
           const netSalesArray= response.data[0].salesOfTheDay;
           console.log(response)
           const cleaningListNetSales= listNetSales(netSalesArray)
@@ -39,6 +39,19 @@ const Reports=(props:Props) => {
           setApiResponse(cleaningListNetSales)
         }).catch((error)=>{ console.log(error);
       })
+    }
+    else if(name==="sellsYesterday"){
+      const yesterdayDate= yesterday()
+      console.log(yesterdayDate)
+      fetchReport(yesterdayDate,token)
+      .then((response)=> {
+        const netSalesArray= response.data[0].salesOfTheDay;
+        const cleaningListNetSales= listNetSales(netSalesArray)
+        const total= totalSales(cleaningListNetSales)
+        setTotalSales(total)
+        setApiResponse(cleaningListNetSales)
+      }).catch((error)=>{ console.log(error);
+    })
     }
   }
 
@@ -53,6 +66,9 @@ useEffect(()=>{
 
   return (
     <>
+    <Stack>
+      <Header/>
+    </Stack>
     <Stack justifyContent={"center"} alignItems={"center"} useFlexGap flexWrap="wrap" >
       <Typography variant="h2" alignSelf={"center"}>Reportes de: </Typography>
       <StockOptionsList optionSelected={handleOptionSelected}/>

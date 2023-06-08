@@ -7,6 +7,11 @@ const listOptions= [
     id:"sellsToday"
   },
   {
+    name:"sellsYesterday",
+    lable:"ayer",
+    id:"sellsYesterday"
+  },
+  {
     name:"sellsWeek",
     lable:"de la semana",
     id:"sellsWeek"

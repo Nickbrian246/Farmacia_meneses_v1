@@ -1,5 +1,5 @@
 import "./saleModal.css";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Alert, AlertTitle, Button } from "@mui/material";
 import { postSales } from "./services";
 import { salesAdapter } from "./adapters";
@@ -47,30 +47,46 @@ const SaleModal=(props:Props) => {
   const handleInputChange= (event: ChangeEvent<HTMLInputElement>) => {
     setInputMoneyReceived(event.target.value)
   } 
+
   let cambio=0
   if(inputMoneyReceived) {
   cambio =  (inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0) -total 
   }
 
-  const handleCobrar= () => {
-    if(cambio< 0) {
+  const handleCobrar= ( e:FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(cambio)
+    if(cambio<= 0) {
       setErrorMessage({
         error:"quedo un adeudo",
         errorMessage:"favor de verificar el adeudo",
         errorName:"adeudo",
         errorType:"error"
       })
-      return setError((prevState) => !prevState)
+      setError((prevState) => !prevState)
+    }else if(!inputMoneyReceived){
+      setErrorMessage({
+        error:"quedo un adeudo",
+        errorMessage:"favor de verificar el adeudo",
+        errorName:"adeudo",
+        errorType:"error"
+      })
+      setError((prevState) => !prevState)
+    }
+    else {
+      let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
+      const adapter= salesAdapter({data:data})
+      console.log(adapter)
+      postSales(adapter ,token)
+      .then((response) => console.log(response))
+      .catch(err => console.log(err))
+      dispatch(setClearState([]))
+      handleOpenSaleModal()
     }
 
-    let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
-    const adapter= salesAdapter({data:data})
-    postSales(adapter ,token)
-  .then((response) => console.log(response))
-  .catch(err => console.log(err))
-  dispatch(setClearState([]))
-  handleOpenSaleModal()
+    
 }
+
 if (error) {
   setTimeout(()=>{
     setError((prevState) => !prevState)
@@ -90,7 +106,8 @@ if (error) {
         )}
       <div className="backGroundContainer-formContainer">
         <p>total: ${total}</p>
-        <form>
+        
+        <form onSubmit={handleCobrar}> 
           <label htmlFor="moneyReceived-input" className="formContainer-label">Efectivo recibido:</label>
             <input 
             id="moneyReceived-input"
@@ -98,9 +115,8 @@ if (error) {
             type="number"
             value={inputMoneyReceived}
             onChange={handleInputChange}/>
-        </form>
         <p>{cambio < 0 ? "faltan" : "cambio"}: $ { cambio}</p>
-        <div className="formContainer-BtnContainer">
+        
         <Button
         size="large"
         variant="contained"
@@ -113,11 +129,12 @@ if (error) {
         size="large"
         variant="contained"
         color="success"
-        onClick={handleCobrar}
+        type="submit"
         >
           Cobrar
         </Button>
-        </div>
+  
+        </form>
 
       </div>
 
