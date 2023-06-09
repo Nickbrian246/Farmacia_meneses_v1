@@ -34,15 +34,15 @@ const Reports=(props:Props) => {
 
 const handleOptionSelected=(name:string) :void=> {
     console.log(name)
-    setIsLoading((prevStae)=> !prevStae)
+    setIsLoading((prevState)=> !prevState)
     if(name==="sellsToday"){
       const today = new Date();
       const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
       const formaDate= formatDate(formattedDate)
+
       fetchReport(formaDate,token)
         .then((response)=> {
           const netSalesArray= response.data[0].salesOfTheDay;
-          console.log(response)
           const cleaningListNetSales= listNetSales(netSalesArray)
           const total= totalSales(cleaningListNetSales)
           setTotalSales(total)
@@ -52,6 +52,7 @@ const handleOptionSelected=(name:string) :void=> {
     }
     else if(name==="sellsYesterday"){
       const yesterdayDate= yesterday()
+
       fetchReport(yesterdayDate,token)
       .then((response)=> {
         const netSalesArray= response.data[0].salesOfTheDay;
@@ -88,7 +89,7 @@ const handleOptionSelected=(name:string) :void=> {
     }
 }
 // este effect se ejecuta cada que se recibe una respusta
-// pide informacion del stock y uno las compras con sus
+// pide informacion del stock y une las compras con sus
 // correspondientes stock
 useEffect(()=>{
   fetchStock(token )

@@ -1,4 +1,4 @@
-import { ResponseGeneralProduct,GeneralProduct } from "../interfaces";
+import { GeneralProduct } from "../interfaces";
 import axios from "axios";
 
 const BASE_URL= import.meta.env.VITE_BASE_URL

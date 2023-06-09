@@ -5,7 +5,10 @@ export function formatDate(date:string) {
   const day = String(today.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-
+/**
+ * este metodo retorna la fecha correspondiente al dia de ayer
+ * @returns fecha de ayer en formato año-mes-dia
+ */
 export function yesterday (): string{
   const today = new Date();
   const yesterday = new Date();
@@ -18,10 +21,13 @@ export function yesterday (): string{
   return formattedDate
 }
 
-
-// This function returns the first day of the week if no argument is passed.
-// It returns the corresponding day of the week in the format year-month-day,
-// always taking the current week as a reference, starting on Monday.
+/**
+ * This function returns the first day of the week if no argument is passed.
+ * It returns the corresponding day of the week in the format year-month-day,
+ * always taking the current week as a reference, starting on Monday.
+ * @param dayNumber dia en numero 
+ * @returns 
+ */
 export function weekly(dayNumber?:number){
   let currentDate = new Date(); 
   let currentDay = currentDate.getDay();
@@ -40,7 +46,6 @@ export function weekly(dayNumber?:number){
   return year + "/" + month + "/" + day;
 
 }
-
 
 /**
  * This function returns an array of dates from the first day of the week to the current day.
@@ -68,8 +73,7 @@ export function getArrayOfDates(fromDate:string): string[]{
 }
 /**
  * remplaza el "/" con "-"
- * @param arrayDates pasa array con fechas o vacio para usar el date
- * @param date pasar date en string 
+ * @param arrayDates pasa array con fechas o vacio para usar el date 
  * @returns 
  */
 export function replaceSlashInDates(arrayDates:string[]): string[]{
