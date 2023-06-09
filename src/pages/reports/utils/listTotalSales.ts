@@ -1,5 +1,10 @@
 import { ListNetSalesDriven,ListNetSalesOutPut } from "../interfaces";
-
+/**
+ * este metodo quita y suma los repetidos
+ * suma las propiedades de "total" y " quantity"
+ * @param array pasa el array de ventas 
+ * @returns 
+ */
 export function listNetSales (array:ListNetSalesDriven[]): ListNetSalesOutPut[]{
   let total: ListNetSalesOutPut[] = []
   
@@ -32,7 +37,11 @@ export function listNetSales (array:ListNetSalesDriven[]): ListNetSalesOutPut[]{
 return total
 
 }
-
+/**
+ * este metodo retorna el total de las ventas $$
+ * @param salesList pasa la lista de ventas limpia.
+ * @returns 
+ */
 export function totalSales(salesList:ListNetSalesOutPut[]):number{
   const total = salesList.reduce((accumulator, currentValue)=>{
     return accumulator + currentValue.total

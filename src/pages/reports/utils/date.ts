@@ -22,7 +22,7 @@ export function yesterday (): string{
 // This function returns the first day of the week if no argument is passed.
 // It returns the corresponding day of the week in the format year-month-day,
 // always taking the current week as a reference, starting on Monday.
-export function weekly(dayNumber :number){
+export function weekly(dayNumber?:number){
   let currentDate = new Date(); 
   let currentDay = currentDate.getDay();
   let firstDayOfWeek= dayNumber ?? 1 //starts on monday
@@ -48,7 +48,7 @@ export function weekly(dayNumber :number){
  * @param fromDate pasa formato fecha en string y formato AÑO / MES  / DIA
  * @returns 
  */
-export function getArrayOfDates(fromDate:string){
+export function getArrayOfDates(fromDate:string): string[]{
   const currentDay= new Date()
   const today = currentDay.getDay()
   const conversionToDate = new Date(fromDate) 
@@ -60,26 +60,28 @@ export function getArrayOfDates(fromDate:string){
     }
   let arrayOfDates = []
   
-  for(let i = 1 ; i<differenceInDays +1; i++){
+  for(let i = 1 ; i<differenceInDays +3; i++){
     const date = weekly(i)
     arrayOfDates.push(date)
   }
   return arrayOfDates
 }
 /**
- * no se pueden usar los dos parametros al mismo tiempo
+ * remplaza el "/" con "-"
  * @param arrayDates pasa array con fechas o vacio para usar el date
  * @param date pasar date en string 
  * @returns 
  */
-export function replaceSlashInDates(arrayDates:[string] | undefined, date:string){
-  if(Array.isArray(arrayDates)){
+export function replaceSlashInDates(arrayDates:string[]): string[]{
+
     const dates =  arrayDates.map((item)=>{
       return item.replace(/\//g, "-")
     })
     return dates
-  }
-  return date.replace(/\//g, "-")
+
+  // if(date){
+  //   return  date.replace(/\//g, "-")
+  // }
 
 }
 

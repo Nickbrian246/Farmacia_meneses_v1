@@ -18,3 +18,4 @@ export async function fetchReport(date:string, token: string){
   }
 
 }
+
