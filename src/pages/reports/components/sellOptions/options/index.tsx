@@ -31,7 +31,7 @@ const SellOptionsList =(props:Props) => {
         elementId={item.id}
         fontSize="1.7rem"
         height="100px"
-        text={item.lable}
+        text={item.label}
         width="230px"
         key={item.id}
         whatIsThisFor={item.name}

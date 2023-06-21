@@ -3,27 +3,32 @@
 const listOptions= [
   {
     name:"sellsToday",
-    lable:"hoy",
+    label:"hoy",
     id:"sellsToday"
   },
   {
     name:"sellsYesterday",
-    lable:"ayer",
+    label:"ayer",
     id:"sellsYesterday"
   },
   {
     name:"sellsWeek",
-    lable:"de la semana",
+    label:"desde el lunes hasta hoy",
     id:"sellsWeek"
   },
   {
+    name:"sellsLastWeek",
+    label:"semana pasada (lunes -domingo)",
+    id:"sellsLastWeek"
+  },
+  {
     name:"sellsMonth",
-    lable:"Del mes",
+    label:"Del mes",
     id:"sellsMonth"
   },
   {
     name:"Personalized",
-    lable:"Elegir una fecha",
+    label:"Elegir una fecha",
     id:"Personalized"
   },
 ]

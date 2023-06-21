@@ -1,4 +1,12 @@
-import { ListNetSalesDriven,ListNetSalesOutPut } from "../interfaces";
+import {
+  Array2levelS,
+  CleaningRepeatItems,
+  ListNetSalesDriven,
+  ListNetSalesOutPut,
+  SaleModel,
+  SalesOfTheDay,
+  TotalAndDatesArray,
+} from "../interfaces";
 /**
  * este metodo quita y suma los repetidos
  * suma las propiedades de "total" y " quantity"
@@ -48,3 +56,47 @@ export function totalSales(salesList:ListNetSalesOutPut[]):number{
   },0)
   return total 
 }
+
+/**
+ * el array dede contener un array anidado por cada dia de venta que contenga el objeto 
+ * de "sales", dentro debe venir el array salesOfDay.
+ * @param salesOfWeek recibe un arrays que debe contener otro array  donde cada array es un dia de ventas 
+ * @returns retorna un array de 2 dimensinoes donde cada subArray tendra el total de venta y la fecha en formato AÑ0/MES/DIA
+ */
+export function reduceArraysOfSalesToTotalAndDate(salesOfWeek: []):TotalAndDatesArray[]{
+  const arrayOfDatesAndTotal = salesOfWeek.map((mainArrayItem:Array2levelS)=>{
+      const subArray = mainArrayItem.map((SubArrayItem:SaleModel)=>{
+        let cleaningRepeatsItems:CleaningRepeatItems[] = []
+        SubArrayItem.salesOfTheDay.forEach((salesItem:SalesOfTheDay)=>{
+              const found = cleaningRepeatsItems.find((foundItem) => salesItem.name===foundItem.name )
+              if(salesItem.name){
+                if(found){
+                    const index = cleaningRepeatsItems.findIndex((itemIndex)=> itemIndex.name=== found.name )
+                    const currentPosition= cleaningRepeatsItems[index]
+                    const oldTotal = currentPosition.total 
+                    const complement = {...currentPosition, total: oldTotal + parseFloat(salesItem.total) }
+            
+                    const newItem = [...cleaningRepeatsItems]
+                    newItem.splice(index, 1 , complement)
+                cleaningRepeatsItems = newItem
+                  }else {
+                    const addToCleaningRepeatsItems = {
+                      ...salesItem,
+                      total: parseFloat(salesItem.total)
+                    }
+                    cleaningRepeatsItems.push(addToCleaningRepeatsItems)
+                  }
+                }
+        })
+        const total = cleaningRepeatsItems.reduce((accumulate, currentElement) => {
+            return accumulate + currentElement.total
+          },0)
+        const result :TotalAndDatesArray = [total, SubArrayItem.date]
+          return result
+      })
+  
+    return subArray
+  })
+return arrayOfDatesAndTotal.flat()
+}
+

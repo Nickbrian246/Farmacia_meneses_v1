@@ -7,7 +7,7 @@ import { addedStockToListNetSales } from "../../../interfaces";
 interface Props{
   isLoading:boolean,
   dataList: addedStockToListNetSales[],
-  total:number
+  total :number |null
 }
 
 
@@ -76,34 +76,35 @@ const SellsList=(props:Props)=>{
       />
     ))
   )}
-    <Divider/>
-  <Grid   container >
-    <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-      <p style={{fontSize:"2.4rem"}}>Total </p>
-      </Grid>
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-      </Grid>
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
+  {total && (
+        <><Divider /><Grid container>
+            <Divider orientation="vertical" flexItem />
+            <Grid width={"250px"}>
+              <p style={{ fontSize: "2.4rem" }}>Total </p>
+            </Grid>
+            <Divider orientation="vertical" flexItem />
+            <Grid width={"250px"}>
+            </Grid>
+            <Divider orientation="vertical" flexItem />
+            <Grid width={"250px"}>
 
-      </Grid>
-      
-      <Divider orientation="vertical" flexItem />
-      <Grid sx={{display:"flex", justifyContent:"center"}} width={"250px"} >
-        <p style={{fontSize:"2.4rem", color:"red"}}>$ {total}</p>
-      </Grid>
+            </Grid>
 
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
+            <Divider orientation="vertical" flexItem />
+            <Grid sx={{ display: "flex", justifyContent: "center" }} width={"250px"}>
+              <p style={{ fontSize: "2.4rem", color: "red" }}>$ {total}</p>
+            </Grid>
 
-      </Grid>
+            <Divider orientation="vertical" flexItem />
+            <Grid width={"250px"}>
+
+            </Grid>
 
 
-      <Divider orientation="vertical" flexItem />
-    </Grid>
-  <Divider/>
+            <Divider orientation="vertical" flexItem />
+          </Grid><Divider /></>
+  )}
+
   </Stack>
 
   </>
