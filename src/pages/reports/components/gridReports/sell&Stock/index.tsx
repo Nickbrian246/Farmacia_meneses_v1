@@ -1,8 +1,16 @@
-import { useEffect, useState } from "react";
-import { SellCellItem } from "./SellICellItem";
-import { ModelData } from "../../../../../services/dashboard-api/adapters/interfaces/productInterface";
-import { Divider, Grid, Paper, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, styled, tableCellClasses } from "@mui/material";
 import { addedStockToListNetSales } from "../../../interfaces";
+import {
+  Paper,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TableRow,
+  styled,
+  tableCellClasses } from "@mui/material";
 
 interface Props{
   isLoading:boolean,
@@ -96,70 +104,3 @@ const SellsList=(props:Props)=>{
   )
 };
 export {SellsList}
-  {/* <Divider/>
-
-    <Grid   container >
-    <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-        <p style={{fontSize:"2.4rem"}}>Nombre</p>
-      </Grid>
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-        <p style={{fontSize:"2.4rem"}}>Precio</p>
-      </Grid>
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-        <p style={{fontSize:"2.4rem"}}>productos vendidos</p>
-      </Grid>
-      
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-        <p style={{fontSize:"2.4rem"}}>Total de venta</p>
-      </Grid>
-
-      <Divider orientation="vertical" flexItem />
-      <Grid width={"250px"} >
-        <p style={{fontSize:"2.4rem"}}>Productos en Almacen</p>
-      </Grid>
-
-
-      <Divider orientation="vertical" flexItem />
-    </Grid> */}
-
-    // <SellCellItem
-    //       inStock={item.stock}
-    //       name={item.name}
-    //       price={item.price}
-    //       quantityOfProductsSold={item.quantity}
-    //       sells={item.total}
-    //       key={item.id}
-    //       id={item.id}
-    //       />
-
-
-  //   <><Divider /><Grid container>
-  //   <Divider orientation="vertical" flexItem />
-  //   <Grid width={"250px"}>
-  //     <p style={{ fontSize: "2.4rem" }}>Total </p>
-  //   </Grid>
-  //   <Divider orientation="vertical" flexItem />
-  //   <Grid width={"250px"}>
-  //   </Grid>
-  //   <Divider orientation="vertical" flexItem />
-  //   <Grid width={"250px"}>
-
-  //   </Grid>
-
-  //   <Divider orientation="vertical" flexItem />
-  //   <Grid sx={{ display: "flex", justifyContent: "center" }} width={"250px"}>
-  //     <p style={{ fontSize: "2.4rem", color: "red" }}>$ {total}</p>
-  //   </Grid>
-
-  //   <Divider orientation="vertical" flexItem />
-  //   <Grid width={"250px"}>
-
-  //   </Grid>
-
-
-  //   <Divider orientation="vertical" flexItem />
-  // </Grid><Divider /></>
