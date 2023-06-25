@@ -1,7 +1,7 @@
-import {addDays, subDays} from "date-fns"
-import { ArraySaleTotalAndDay, DateFormat, Total } from "../interfaces";
+import {addDays, format, subDays} from "date-fns"
+import { ArraySaleTotalAndDay, DateFormat, SaleModel, Total } from "../interfaces";
 
-export function formatDate(date:string) {
+export function formatDate(date:string | Date) {
   const today = new Date(date);
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -58,22 +58,27 @@ export function weekly(dayNumber?:number){
  * @returns 
  */
 export function getArrayOfDates(fromDate:string): string[]{
-  const currentDay= new Date() // current day
-  const today = currentDay.getDay() // dia en numero de 0 al 6
-  const conversionToDate = new Date(fromDate) // convierto la fecha recibida por parametro  un tipo fecha que se pueda manipular 
-  const from =   conversionToDate.getDay() //obtengo el dia de comienzo 
+  let formattedDate = fromDate.split("-").join("/")
+  const date = new Date (formattedDate)
+  const day = date.getDay()
 
-  let differenceInDays = from - today // obtengo la diferencia en dias que sera el numero de veces que iterara el for 
-    if (differenceInDays < 0) {
-      differenceInDays += 7; 
-    }
-  let arrayOfDates = []//  guardar las fechas 
-  
-  for(let i = 1 ; i<differenceInDays +3; i++){ // iterar en la diferencia obtenida para sacar las fechas en formato año mes dia 
-    const date = weekly(i) // cada iteracion pasa un dia de la presente semana y el metodo weekly retorna la fecha en formato año mes dia
-    arrayOfDates.push(date)
+  if(day === 1) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const dateFormatted= `${year}-${month}-${day}`;
+    return new Array(dateFormatted)
   }
-  return arrayOfDates
+  let difference = 1 - day
+  const  absolute = Math.abs(difference)
+  let arrOfDates :string[]= []
+  
+  for(let i = absolute; i>=0; i--){
+    let day = subDays(date, i)
+    let dateformat = formatDate(day)
+    arrOfDates.push(dateformat)
+  }
+return arrOfDates
 }
 /**
  * remplaza el "/" con "-"
@@ -172,3 +177,133 @@ export function addDayOfWeek(dates: Array<[Total, DateFormat]>): Array<ArraySale
   
   return datesObj;
 }
+/**
+ * 
+ * @param arr array de arrays donde cada subArray representa un dia 
+ * @returns array de arrays con el una propiedad day donde viene el dia de la semana a la que pertenece 
+ */
+export function addDayToArray (arr:[]){
+  const salesWWithDay = arr.map((ArrayItem:[])=> {
+        const newObj= ArrayItem.map((item:SaleModel)=>{
+          const date = item.date
+          let dayOfWeek = ""
+          const replaceSlashWithHypen = date.split("-").join("/")
+          let convertingToDateObject = new Date(replaceSlashWithHypen);
+          let gettingDay = convertingToDateObject.getDay();
+          
+          switch (gettingDay) {
+            case 0:
+              dayOfWeek = "Domingo";
+              break;
+            case 1:
+              dayOfWeek = "Lunes";
+              break;
+            case 2:
+              dayOfWeek = "Martes";
+              break;
+            case 3:
+              dayOfWeek = "Miércoles";
+              break;
+            case 4:
+              dayOfWeek = "Jueves";
+              break;
+            case 5:
+              dayOfWeek = "Viernes";
+              break;
+            case 6:
+              dayOfWeek = "Sábado";
+              break;
+          }
+            return {...item, day:dayOfWeek}
+          })
+        return newObj
+    
+  })
+  return salesWWithDay
+
+  
+}
+/**
+ * 
+ * @returns array de fechas de hoy y ayer
+ */
+export function todayAndYesterday():string[]{
+  const today = new Date();
+  const yesterday = subDays(today,1);
+    
+  const formattedYesterday = format(yesterday, 'yyyy-MM-dd');
+  const formattedToday = format(today, 'yyyy-MM-dd');
+  
+    return [formattedYesterday,formattedToday]
+  }
+
+  export function  addDayToSingleArray(saleArray:[]){  
+    const date = saleArray[0].date
+    const data = saleArray[0]
+    let dayOfWeek = ""
+    
+    const replaceSlashWithHypen = date.split("-").join("/")
+    const convertingDateFromStringToObjectDate = new Date(replaceSlashWithHypen)
+    const getDay = convertingDateFromStringToObjectDate.getDay()
+    switch (getDay) {
+      case 0:
+        dayOfWeek = "Domingo";
+        break;
+      case 1:
+        dayOfWeek = "Lunes";
+        break;
+      case 2:
+        dayOfWeek = "Martes";
+        break;
+      case 3:
+        dayOfWeek = "Miércoles";
+        break;
+      case 4:
+        dayOfWeek = "Jueves";
+        break;
+      case 5:
+        dayOfWeek = "Viernes";
+        break;
+      case 6:
+        dayOfWeek = "Sábado";
+        break;
+    }
+    const dayAdded = {...data,day:dayOfWeek}
+    return new Array(dayAdded)
+  
+  }
+  /**
+   * 
+   * @param date date string cualquer Formato
+   * @returns dia de la semana Lunes, Martes, Miercoles ...etc
+   */
+  export function getDayOfWeek(date: string){
+    const adapterForDateObject = date.split("-").join("/")
+    const convertDayToOjectDay = new Date(adapterForDateObject)
+    const getDay = convertDayToOjectDay.getDay()
+    let dayOfWeek: string = ""
+    switch (getDay) {
+        case 0:
+          dayOfWeek = "Domingo";
+          break;
+        case 1:
+          dayOfWeek = "Lunes";
+          break;
+        case 2:
+          dayOfWeek = "Martes";
+          break;
+        case 3:
+          dayOfWeek = "Miércoles";
+          break;
+        case 4:
+          dayOfWeek = "Jueves";
+          break;
+        case 5:
+          dayOfWeek = "Viernes";
+          break;
+        case 6:
+          dayOfWeek = "Sábado";
+          break;
+      }
+    return dayOfWeek
+  }

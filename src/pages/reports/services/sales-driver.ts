@@ -12,7 +12,7 @@ export async function fetchWeeklyReport(date:ArrayOfDates, token: string){
     })
     return fetch.data
   } catch (error) {
-    console.log(error)
+  throw error
   }
 
 }

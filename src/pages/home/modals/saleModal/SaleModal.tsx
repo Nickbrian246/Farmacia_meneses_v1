@@ -5,6 +5,7 @@ import { postSales } from "./services";
 import { salesAdapter } from "./adapters";
 import { setClearState } from "../../../../store/slices/home/ProductCart";
 import { useDispatch , useSelector} from "react-redux";
+import { setErrorMessage } from "../../../../store/slices/globalErrorMessage/globalErrorMessage";
 
 interface Item {
   name:string,
@@ -29,15 +30,13 @@ export type AlertColor = 'success' | 'info' | 'warning' | 'error';
 const SaleModal=(props:Props) => {
   const token= useSelector((state:any)=> state.loggedUser.token)
   const [inputMoneyReceived, setInputMoneyReceived] = useState<string>("")
-  const [error, setError] = useState<boolean>(false)
-  const[errorMessage, setErrorMessage] = useState<ErrorMessages>({
-    errorName: '',
-    errorType:"error",
-    error: '',
-    errorMessage: ''
-  })
-
   const dispatch= useDispatch()
+  // const[errorMessage, setErrorMessage] = useState<ErrorMessages>({
+  //   errorName: '',
+  //   errorType:"error",
+  //   error: '',
+  //   errorMessage: ''
+  // })
   const {
   handleOpenSaleModal,
   total,
@@ -55,55 +54,65 @@ const SaleModal=(props:Props) => {
 
   const handleCobrar= ( e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(cambio)
-    if(cambio<= 0) {
-      setErrorMessage({
-        error:"quedo un adeudo",
+
+    if( parseFloat(inputMoneyReceived) < total) {
+      dispatch(setErrorMessage({
+        isError:true,
         errorMessage:"favor de verificar el adeudo",
-        errorName:"adeudo",
-        errorType:"error"
-      })
-      setError((prevState) => !prevState)
+        title:"adeudo",
+        severityType:"error",
+        errorMessageBold:"",
+      }))
+
     }else if(!inputMoneyReceived){
-      setErrorMessage({
-        error:"quedo un adeudo",
+      dispatch(setErrorMessage({
+        isError:true,
         errorMessage:"favor de verificar el adeudo",
-        errorName:"adeudo",
-        errorType:"error"
-      })
-      setError((prevState) => !prevState)
+        title:"adeudo",
+        severityType:"error",
+        errorMessageBold:"",
+      }))
+
     }
     else {
       let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
       const adapter= salesAdapter({data:data})
-      // trabajar mensaje de error 
+
       postSales(adapter ,token)
-      .then((response) => console.log(response))
-      .catch(err => console.log(err))
-      dispatch(setClearState([]))
-      handleOpenSaleModal()
+      .then((response) => {
+        if(response ==="OK"){
+          dispatch(setErrorMessage({
+            errorMessage:``,
+            isError:true,
+            errorMessageBold:"",
+            severityType:"success",
+            title:"Transaccion exitosa",
+            duration:1500
+            }))
+
+          dispatch(setClearState([]))
+          handleOpenSaleModal()
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch(setErrorMessage({
+        errorMessage:`${err}`,
+        isError:true,
+        errorMessageBold:"",
+        severityType:"error",
+        title:"error al realizar la transaccion"
+        }))
+      })
+    
     }
 
     
 }
 
-if (error) {
-  setTimeout(()=>{
-    setError((prevState) => !prevState)
-  },5000)
-}
-
   return (
     <>
     <section className="backGroundContainer-SaleModal">
-    {error && (
-        <Alert style={{position:"fixed",top:"12%",right:"30%", left:"30%",zIndex:"10000000"}}
-        severity={errorMessage.errorType}
-        >
-          <AlertTitle>{errorMessage.errorName}</AlertTitle>
-          {errorMessage.error} — <strong>{errorMessage.errorMessage}</strong>
-        </Alert>
-        )}
       <div className="backGroundContainer-formContainer">
         <p>total: ${total}</p>
         

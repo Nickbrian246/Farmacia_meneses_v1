@@ -1,88 +1,197 @@
-import {useEffect} from "react"
+import {ChangeEvent, useEffect} from "react"
 import { Reports as Props } from "./interfaces/ReportsInterfaces";
 import { Button, Stack, Typography, TextField, Box } from "@mui/material";
 import { SellOptionsList } from "./components/sellOptions/options";
 import { StockOptionsList } from "./components/stock";
 import { SellsList } from "./components/gridReports/sell&Stock";
 import { fetchReport ,fetchStock, fetchWeeklyReport } from "./services";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
 import { useState } from "react";
 import { ArraySaleTotalAndDay, ListNetSalesOutPut, addedStockToListNetSales } from "./interfaces";
 import { Header } from "../home/components/header/Header";
-import { postWeeklyReportsAdapter } from "./adapters/forPostWeeklyReport";
-import * as XLSX from "xlsx"
+import { adapterForReport, postWeeklyReportsAdapter } from "./adapters/forPostWeeklyReport";
+import { setErrorMessage } from "../../store/slices/globalErrorMessage/globalErrorMessage";
+import { createExcelReport } from "./utils/createExcelReport";
 import LinesChart from "./components/graphics/weeklyReportsGraphics/LineChart";
 import {
   addDayOfWeek,
+  addDayToArray,
   addStockToList,
   formatDate,
   getArrayOfDates,
+  getDayOfWeek,
   lastWeek,
   listNetSales,
   reduceArraysOfSalesToTotalAndDate,
-  replaceSlashInDates,
+  todayAndYesterday,
   totalSales,
-  weekly,
   yesterday,
   } from "./utils";
 
-
+  let dataForReport:any []
+  let optionSelected:string
 const Reports = (props:Props) => {
   const [dataList, setDataList]= useState<addedStockToListNetSales[]>([])
+  const [dataListFilter, setDataListFilter]= useState<addedStockToListNetSales[]>([])
+  const [inputFilter, setInputFilter] = useState<string>("")
   const [apiResponse, setApiResponse]= useState<ListNetSalesOutPut[]>([])
   const [arrayDateTotalAndDay, setArrayDateTotalAndDay] = useState<ArraySaleTotalAndDay[]>([])
   const [total,setTotalSales]= useState<number | null>(0)
   const [isLoading, setIsLoading]= useState<boolean>(false)
   const [isGraphicOpen, setIsGraphicOpen] = useState<Boolean>(false)
+  const dispatch =  useDispatch()
   const token= useSelector((state:any)=> state.loggedUser.token)
-  /**
-   * this function handles the user option selected 
-   * where each case do something and show something
-   * @param name name action selected
-   */
+
+const handleFilterInput = (e:ChangeEvent<HTMLInputElement>):void =>{
+    setInputFilter(e.target.value)
+}
+
 const handleOptionSelected=(name:string) :void=> {
     console.log(name)
+    optionSelected = name
 
     setIsLoading((prevState)=> !prevState)
     setDataList([])
     setTotalSales(null)
+    switch (name){
+      case "sellsToday":
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        const formaDate= formatDate(formattedDate)
+        const dayOfWeek = getDayOfWeek(formattedDate)
+    
+        fetchReport(formaDate,token)
+          .then((response)=> {
+            
+            const netSalesArray= response.data[0].salesOfTheDay;
+            const cleaningListNetSales= listNetSales(netSalesArray)
+            const total= totalSales(cleaningListNetSales)
+            setApiResponse(cleaningListNetSales)
+            setTotalSales(total)
+            
+            const dataCleaningTest = adapterForReport(cleaningListNetSales)
+            dataForReport = new Array([dayOfWeek,[...dataCleaningTest]])
+          }).catch((error)=>{ 
+            dispatch(setErrorMessage({
+              isError:true,
+              errorMessage:"",
+              errorMessageBold:`${error.response.data.data}`,
+              severityType:"error",
+              title:`${error.message}`}))
+              setIsLoading((prevState)=> !prevState)
+        })
+        break
+      case "sellsYesterday":
+        const yesterdayDate= yesterday()
 
-    if(name==="sellsToday"){
-      const today = new Date();
-      const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-      const formaDate= formatDate(formattedDate)
-
-      fetchReport(formaDate,token)
+        fetchReport(yesterdayDate,token)
         .then((response)=> {
           const netSalesArray= response.data[0].salesOfTheDay;
           const cleaningListNetSales= listNetSales(netSalesArray)
           const total= totalSales(cleaningListNetSales)
           setApiResponse(cleaningListNetSales)
           setTotalSales(total)
-        }).catch((error)=>{ console.log(error);
+          // se prepara data para reporte
+          const dayOfWeek = getDayOfWeek(yesterdayDate)
+          const dataCleaningTest = adapterForReport(cleaningListNetSales)
+          dataForReport = new Array([dayOfWeek,[...dataCleaningTest]])
+          dataForReport = dataForReport
+        }).catch((error)=>{ 
+          dispatch(setErrorMessage({
+            isError:true,
+            errorMessage:"",
+            errorMessageBold:`${error.response.data.data}`,
+            severityType:"error",
+            title:`${error.message}`}))
+            setIsLoading((prevState)=> !prevState)
       })
-    }
-    else if(name==="sellsYesterday"){
-      const yesterdayDate= yesterday()
+        break
+      case "yesterdayNToday":
+        const dates = todayAndYesterday()
+        const datesAdapter = postWeeklyReportsAdapter(dates)
+    
+        fetchWeeklyReport(datesAdapter,token)
+        .then((response)=>{
+          const dataForExcelReport = addDayToArray(response.data)
+          dataForReport = dataForExcelReport
+          
+          const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
+          const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
+          setArrayDateTotalAndDay(dayAdded)
+          const responseFlat = response.data.flat()
+          let productsArray :any = []
+          responseFlat.forEach((item:any )=> {
+              const sells = item.salesOfTheDay
+              productsArray.push(sells)
+          })
+          const productsArrayFlatted= productsArray.flat(1)
+          const netSales = listNetSales(productsArrayFlatted)
+          const total = totalSales(netSales)
+          setApiResponse(netSales)
+          setTotalSales(total)
+        })
+        .catch((error)=>{
+          dispatch(setErrorMessage({
+            isError:true,
+            errorMessage:"",
+            errorMessageBold:`${error.response.data.data}`,
+            severityType:"error",
+            title:`${error.message}`}))
+            setIsLoading((prevState)=> !prevState)
+        })
 
-      fetchReport(yesterdayDate,token)
-      .then((response)=> {
-        const netSalesArray= response.data[0].salesOfTheDay;
-        const cleaningListNetSales= listNetSales(netSalesArray)
-        const total= totalSales(cleaningListNetSales)
-        setApiResponse(cleaningListNetSales)
-        setTotalSales(total)
-      }).catch((error)=>{ console.log(error);
-    })
-    }
-    else if(name==="sellsWeek"){
-      const currentDay= weekly()
-      const arrayOfDays = getArrayOfDates(currentDay)
-      const replaceSlashInDate = replaceSlashInDates(arrayOfDays)
-      const postAdapter = postWeeklyReportsAdapter(replaceSlashInDate)
 
-      fetchWeeklyReport(postAdapter,token)
-      .then((response) => {
+        break
+      case "sellsWeek":
+        const currentDay= formatDate(new Date())
+        const arrayOfDays = getArrayOfDates(currentDay)
+        const postAdapter = postWeeklyReportsAdapter(arrayOfDays)
+    
+        fetchWeeklyReport(postAdapter,token)
+        .then((response) => {
+          const dataForExcelReport = addDayToArray(response.data)
+          dataForReport = dataForExcelReport
+    
+          const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
+          const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
+          setArrayDateTotalAndDay(dayAdded)
+    
+          const responseFlat = response.data.flat()
+          let productsArray :any = []
+          responseFlat.forEach((item:any )=> {
+              const sells = item.salesOfTheDay
+              productsArray.push(sells)
+          })
+          const productsArrayFlatted= productsArray.flat(1)
+          const netSales = listNetSales(productsArrayFlatted)
+          const total = totalSales(netSales)
+          setApiResponse(netSales)
+          setTotalSales(total)
+    
+        })
+        .catch((error) => {
+          dispatch(setErrorMessage({
+            isError:true,
+            errorMessage:"",
+            errorMessageBold:`${error.response.data.data}`,
+            severityType:"error",
+            title:`${error.message}`}))
+            setIsLoading((prevState)=> !prevState)
+        })
+        break
+      case "sellsLastWeek":
+        const dateLastWeek= lastWeek()
+        const ArrayOfDatesAdapter = postWeeklyReportsAdapter(dateLastWeek)
+        
+        fetchWeeklyReport(ArrayOfDatesAdapter,token)
+        .then((response) => {
+        const dataForExcelReport = addDayToArray(response.data)
+        dataForReport=dataForExcelReport
+        
+    
+        const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
+        const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
+        setArrayDateTotalAndDay(dayAdded)
         const responseFlat = response.data.flat()
         let productsArray :any = []
         responseFlat.forEach((item:any )=> {
@@ -94,41 +203,22 @@ const handleOptionSelected=(name:string) :void=> {
         const total = totalSales(netSales)
         setApiResponse(netSales)
         setTotalSales(total)
-
-      })
-      .catch((error) => console.log(error))
-
+        }).catch((error) => {
+          dispatch(setErrorMessage({
+            isError:true,
+            errorMessage:"",
+            errorMessageBold:`${error.response.data.data}`,
+            severityType:"error",
+            title:`${error.message}`}))
+            setIsLoading((prevState)=> !prevState)
+        })
+        break
     }
-    else if(name==="sellsLastWeek"){
-      const dateLastWeek= lastWeek()
-      const ArrayOfDatesAdapter = postWeeklyReportsAdapter(dateLastWeek)
-      
-      fetchWeeklyReport(ArrayOfDatesAdapter,token)
-      .then((response) => {
-      const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
-      const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
-      setArrayDateTotalAndDay(dayAdded)
-      console.log(dayAdded)
-      const responseFlat = response.data.flat()
-      let productsArray :any = []
-      responseFlat.forEach((item:any )=> {
-          const sells = item.salesOfTheDay
-          productsArray.push(sells)
-      })
-      const productsArrayFlatted= productsArray.flat(1)
-      const netSales = listNetSales(productsArrayFlatted)
-      const total = totalSales(netSales)
-      setApiResponse(netSales)
-      setTotalSales(total)
-      })
-    }
-}
+  }
 
 const handleDownloadExcelReport = () => {
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(dataList);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "SALES");
-  XLSX.writeFile(workbook, "Sales22.xlsx", { compression: true });
+  createExcelReport(dataForReport)
+
 }
 // este effect se ejecuta cada que se recibe una respusta
 // pide informacion del stock y une las compras con sus
@@ -139,8 +229,26 @@ useEffect(()=>{
     const addedStockToList= addStockToList(response,apiResponse)
     setIsLoading(false)
     setDataList(addedStockToList)
-  }).catch((error)=> console.log(error))
+  }).catch((error)=> {
+    dispatch(setErrorMessage({
+      isError:true,
+      errorMessage:"",
+      errorMessageBold:`${error.response.data.data}`,
+      severityType:"error",
+      title:`${error.message}`}))
+  })
 },[apiResponse])
+
+useEffect(()=>{
+  if (inputFilter.length === 0) {
+    return setDataListFilter([])
+  }
+  const dataFiltered = dataList.filter((item) =>{
+    return item.name.includes(inputFilter)
+  })
+  setDataListFilter(dataFiltered)
+},[inputFilter])
+console.log(dataListFilter)
 
   return (
     <>
@@ -153,19 +261,33 @@ useEffect(()=>{
       <StockOptionsList optionSelected={handleOptionSelected}/>
       <SellOptionsList optionSelected={handleOptionSelected}/>
       {dataList.length > 0 && (
-        <Stack direction="row" spacing={10} sx={{pt:"30px"}}  justifyContent="space-between">
-          <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-            <Stack direction="row" spacing={10}  >
-              <Button variant="contained" color="success">Visualizar en grafica</Button>
+        <Stack direction="row" sx={{pt:"30px" ,minWidth:"1200px"}}  justifyContent="space-between">
+          <TextField onChange={handleFilterInput} value={inputFilter} id="outlined-basic" label="filtrar" variant="outlined" sx={{minWidth:"400px"}} />
+            <Stack direction="row" spacing={10} >
+              {optionSelected!=="sellsToday" && optionSelected !== "sellsYesterday" && (
+                <Button
+                variant="contained"
+                color="success"
+                onClick={()=>{setIsGraphicOpen((prevState)=>!prevState)}}
+                >
+                  Visualizar en grafica
+                </Button>
+              )}
               <Button variant="contained"  color="secondary"  onClick={handleDownloadExcelReport}>Descargar en excel</Button>
             </Stack>
         </Stack>
       )}
-      {  (isLoading ||(dataList.length>0)) && 
-      (<SellsList total={total} dataList={dataList} isLoading={isLoading}/>)}
+      { 
+        (isLoading ||(dataList.length>0)) &&  (dataListFilter.length<=0) &&
+        (<SellsList total={total} dataList={dataList} isLoading={isLoading}/>)
+      }
+      { 
+        (isLoading ||(dataListFilter.length>0)) && 
+        (<SellsList  dataList={dataListFilter} isLoading={isLoading}/>)
+      }
     
         
-      {( isLoading ||(dataList.length>0) && (
+      {( isGraphicOpen  && (
           <Box sx={{width:"1090px", height:"700px"}}>
         <LinesChart arrayDateTotalAndDay={arrayDateTotalAndDay} />
           </Box>

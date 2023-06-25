@@ -15,7 +15,7 @@ export async function fetchStock(token: string):Promise<GeneralProduct[]>{
     const result = fetch.data.data.productsInStock
     data = result
   } catch (error) {
-    console.log(error)
+    throw  error
   }
   return data 
 }

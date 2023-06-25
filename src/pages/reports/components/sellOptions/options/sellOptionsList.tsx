@@ -12,6 +12,11 @@ const listOptions= [
     id:"sellsYesterday"
   },
   {
+    name:"yesterdayNToday",
+    label:"ayer y hoy",
+    id:"yesterdayNToday"
+  },
+  {
     name:"sellsWeek",
     label:"desde el lunes hasta hoy",
     id:"sellsWeek"

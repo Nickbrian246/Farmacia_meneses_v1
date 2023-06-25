@@ -11,7 +11,7 @@ export async function fetchReport(date:string, token: string){
     })
     return fetch.data
   } catch (error) {
-    console.log(error)
+    throw error;
   }
 
 }

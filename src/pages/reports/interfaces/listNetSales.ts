@@ -53,6 +53,15 @@ export interface SaleModel {
   updatedAt: string,
   _id: string
 }
+export interface SaleModelForReport {
+  client: string,
+  createdAt: string,
+  date: string,
+  salesOfTheDay: SalesOfTheDay[],
+  updatedAt: string,
+  _id: string,
+  day:string
+}
 export interface ArraySaleTotalAndDay {
   total:number,
   date:string,
