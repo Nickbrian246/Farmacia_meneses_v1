@@ -13,7 +13,6 @@ import {
   tableCellClasses } from "@mui/material";
 
 interface Props{
-  isLoading:boolean,
   dataList: addedStockToListNetSales[],
   total?:number |null
 }
@@ -39,7 +38,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 const SellsList=(props:Props)=>{
-  const {dataList,isLoading,total}= props
+  const {dataList,total}= props
   
   let arrayForSkeleton=  new Array(20).fill("h") 
 // useEffect(()=>{
@@ -78,11 +77,11 @@ const SellsList=(props:Props)=>{
           </StyledTableRow>
         ))
       )}
-      {isLoading && (
+      {/* {isLoading && (
         arrayForSkeleton.map((item, index) => (
           <Skeleton sx={{width:"100%"}} key={index} animation="wave" />
         ))
-      )}
+      )} */}
       </TableBody>
 
 

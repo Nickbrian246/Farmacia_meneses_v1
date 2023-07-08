@@ -19,8 +19,10 @@ export interface GeneralProduct{
   whatIsItFor:string,
   size:string,
   brand:string,
-  pieces:number
+  pieces:number,
+  _id:string
 }
+
 export interface ResponseGeneralProduct{
   productsInStock:GeneralProduct[]
 }

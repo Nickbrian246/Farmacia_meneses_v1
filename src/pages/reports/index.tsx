@@ -1,22 +1,24 @@
 import {ChangeEvent, useEffect} from "react"
 import { Reports as Props } from "./interfaces/ReportsInterfaces";
-import { Button, Stack, Typography, TextField, Box } from "@mui/material";
+import { Button, Stack, Typography, TextField, Box, CircularProgress } from "@mui/material";
 import { SellOptionsList } from "./components/sellOptions/options";
 import { StockOptionsList } from "./components/stock";
 import { SellsList } from "./components/gridReports/sell&Stock";
 import { fetchReport ,fetchStock, fetchWeeklyReport } from "./services";
 import { useSelector, useDispatch} from "react-redux";
 import { useState } from "react";
-import { ArraySaleTotalAndDay, ListNetSalesOutPut, addedStockToListNetSales } from "./interfaces";
+import { ArraySaleTotalAndDay, ListNetSalesOutPut, StockWithColorNIsSelected, addedStockToListNetSales } from "./interfaces";
 import { Header } from "../home/components/header/Header";
 import { adapterForReport, postWeeklyReportsAdapter } from "./adapters/forPostWeeklyReport";
 import { setErrorMessage } from "../../store/slices/globalErrorMessage/globalErrorMessage";
-import { createExcelReport } from "./utils/createExcelReport";
+import { createExcelReport, createStockReport } from "./utils/createExcelReport";
 import LinesChart from "./components/graphics/weeklyReportsGraphics/LineChart";
+import { StockTable } from "./components/gridReports/stock/stock";
 import {
   addDayOfWeek,
   addDayToArray,
   addStockToList,
+  cleanStockNAddProperties,
   formatDate,
   getArrayOfDates,
   getDayOfWeek,
@@ -27,13 +29,25 @@ import {
   totalSales,
   yesterday,
   } from "./utils";
+import { stockAdapter } from "./adapters";
+
 
   let dataForReport:any []
   let optionSelected:string
 const Reports = (props:Props) => {
+  //dataList es donde se guarda la informacion pura de todo lo que es ventas 
   const [dataList, setDataList]= useState<addedStockToListNetSales[]>([])
+  // dataStockList es donde se guarda la informacion pura la que llega desde el backend 
+  const [dataStockList, setDataStockList]= useState<StockWithColorNIsSelected[]>([])
+  ///**************************************************************************************************** */
+  // cuando el input tiene una entrada se filtran las coincidencias que cumplen y  se alojan en dataListFiler
+  // cuando su propiedad length es mayor a uno entonces se cambia de tabla y se renderiza con la informacion de dataList
   const [dataListFilter, setDataListFilter]= useState<addedStockToListNetSales[]>([])
+  const [dataListFilterStock, setDataListFilterStock]= useState<StockWithColorNIsSelected[]>([])
+  // el estado qu ese encarga del input
   const [inputFilter, setInputFilter] = useState<string>("")
+
+  const [optionSelected, setOptionSelected] = useState<string>("")
   const [apiResponse, setApiResponse]= useState<ListNetSalesOutPut[]>([])
   const [arrayDateTotalAndDay, setArrayDateTotalAndDay] = useState<ArraySaleTotalAndDay[]>([])
   const [total,setTotalSales]= useState<number | null>(0)
@@ -47,8 +61,7 @@ const handleFilterInput = (e:ChangeEvent<HTMLInputElement>):void =>{
 }
 
 const handleOptionSelected=(name:string) :void=> {
-    console.log(name)
-    optionSelected = name
+    setOptionSelected(name)
 
     setIsLoading((prevState)=> !prevState)
     setDataList([])
@@ -68,6 +81,7 @@ const handleOptionSelected=(name:string) :void=> {
             const total= totalSales(cleaningListNetSales)
             setApiResponse(cleaningListNetSales)
             setTotalSales(total)
+            setDataStockList([])
             
             const dataCleaningTest = adapterForReport(cleaningListNetSales)
             dataForReport = new Array([dayOfWeek,[...dataCleaningTest]])
@@ -81,6 +95,27 @@ const handleOptionSelected=(name:string) :void=> {
               setIsLoading((prevState)=> !prevState)
         })
         break
+      case "stockOptionInventatario":
+        fetchStock(token)
+        .then((response)=> {
+          const dataForTable =  cleanStockNAddProperties(response)
+          setIsLoading((prevState)=> !prevState)
+          setDataStockList(dataForTable)
+
+          // setDataListFilter(dataForTable)
+          
+          
+        })
+        .catch((error)=>{
+          dispatch(setErrorMessage({
+            isError:true,
+            errorMessage:"",
+            errorMessageBold:`${error.response.data.data}`,
+            severityType:"error",
+            title:`${error.message}`}))
+            setIsLoading((prevState)=> !prevState)
+        })
+        break
       case "sellsYesterday":
         const yesterdayDate= yesterday()
 
@@ -91,6 +126,7 @@ const handleOptionSelected=(name:string) :void=> {
           const total= totalSales(cleaningListNetSales)
           setApiResponse(cleaningListNetSales)
           setTotalSales(total)
+          setDataStockList([])
           // se prepara data para reporte
           const dayOfWeek = getDayOfWeek(yesterdayDate)
           const dataCleaningTest = adapterForReport(cleaningListNetSales)
@@ -127,6 +163,7 @@ const handleOptionSelected=(name:string) :void=> {
           const productsArrayFlatted= productsArray.flat(1)
           const netSales = listNetSales(productsArrayFlatted)
           const total = totalSales(netSales)
+          setDataStockList([])
           setApiResponse(netSales)
           setTotalSales(total)
         })
@@ -165,6 +202,7 @@ const handleOptionSelected=(name:string) :void=> {
           const productsArrayFlatted= productsArray.flat(1)
           const netSales = listNetSales(productsArrayFlatted)
           const total = totalSales(netSales)
+          setDataStockList([])
           setApiResponse(netSales)
           setTotalSales(total)
     
@@ -180,6 +218,7 @@ const handleOptionSelected=(name:string) :void=> {
         })
         break
       case "sellsLastWeek":
+        
         const dateLastWeek= lastWeek()
         const ArrayOfDatesAdapter = postWeeklyReportsAdapter(dateLastWeek)
         
@@ -201,6 +240,7 @@ const handleOptionSelected=(name:string) :void=> {
         const productsArrayFlatted= productsArray.flat(1)
         const netSales = listNetSales(productsArrayFlatted)
         const total = totalSales(netSales)
+        setDataStockList([])
         setApiResponse(netSales)
         setTotalSales(total)
         }).catch((error) => {
@@ -217,14 +257,21 @@ const handleOptionSelected=(name:string) :void=> {
   }
 
 const handleDownloadExcelReport = () => {
-  createExcelReport(dataForReport)
-
+  if(optionSelected === "stockOptionInventatario"){
+    const stockData = stockAdapter(dataStockList)
+    createStockReport(stockData);
+    
+    return
+  }
+  else{
+    createExcelReport(dataForReport)
+  }
 }
 // este effect se ejecuta cada que se recibe una respusta
 // pide informacion del stock y une las compras con sus
 // correspondientes stock
 useEffect(()=>{
-  fetchStock(token )
+  fetchStock(token)
   .then((response)=>{
     const addedStockToList= addStockToList(response,apiResponse)
     setIsLoading(false)
@@ -241,14 +288,21 @@ useEffect(()=>{
 
 useEffect(()=>{
   if (inputFilter.length === 0) {
+    setDataListFilterStock([])
     return setDataListFilter([])
   }
-  const dataFiltered = dataList.filter((item) =>{
-    return item.name.includes(inputFilter)
-  })
-  setDataListFilter(dataFiltered)
+  if(optionSelected !=="stockOptionInventatario"){
+    const dataFiltered = dataList.filter((item) =>{
+      return item.name.includes(inputFilter)
+    })
+    setDataListFilter(dataFiltered)
+  }else{
+    const dataFiltered = dataStockList.filter((item) =>{
+      return item.name.includes(inputFilter)
+    })
+    setDataListFilterStock(dataFiltered)
+  }
 },[inputFilter])
-console.log(dataListFilter)
 
   return (
     <>
@@ -260,11 +314,11 @@ console.log(dataListFilter)
       <Typography variant="h2" alignSelf={"center"}>Reportes de: </Typography>
       <StockOptionsList optionSelected={handleOptionSelected}/>
       <SellOptionsList optionSelected={handleOptionSelected}/>
-      {dataList.length > 0 && (
+      {dataList.length > 0 ||(dataStockList.length>0)  && (
         <Stack direction="row" sx={{pt:"30px" ,minWidth:"1200px"}}  justifyContent="space-between">
           <TextField onChange={handleFilterInput} value={inputFilter} id="outlined-basic" label="filtrar" variant="outlined" sx={{minWidth:"400px"}} />
             <Stack direction="row" spacing={10} >
-              {optionSelected!=="sellsToday" && optionSelected !== "sellsYesterday" && (
+              {optionSelected!=="sellsToday" && optionSelected !== "sellsYesterday" && optionSelected !== "stockOptionInventatario" &&   (
                 <Button
                 variant="contained"
                 color="success"
@@ -278,13 +332,26 @@ console.log(dataListFilter)
         </Stack>
       )}
       { 
-        (isLoading ||(dataList.length>0)) &&  (dataListFilter.length<=0) &&
-        (<SellsList total={total} dataList={dataList} isLoading={isLoading}/>)
+        ((dataList.length>0)) &&  (dataListFilter.length<=0) && optionSelected !=="stockOptionInventatario" &&
+        (<SellsList total={total} dataList={dataList}/>)
       }
       { 
-        (isLoading ||(dataListFilter.length>0)) && 
-        (<SellsList  dataList={dataListFilter} isLoading={isLoading}/>)
+        ((dataListFilter.length>0)) &&  optionSelected !=="stockOptionInventatario" &&
+        (<SellsList  dataList={dataListFilter}/>)
       }
+      { 
+        ((dataStockList.length>0)) && (dataListFilterStock.length<=0) && optionSelected === "stockOptionInventatario" &&
+        (<StockTable setDataList={setDataStockList}  dataList={dataStockList} />)
+      }
+      { 
+        ((dataListFilterStock.length>0)) && optionSelected === "stockOptionInventatario" &&
+        (<StockTable  dataList={dataListFilterStock} setDataList={setDataStockList} />)
+      }
+      {isLoading && (
+            <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+      )}
     
         
       {( isGraphicOpen  && (
