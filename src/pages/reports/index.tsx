@@ -14,6 +14,7 @@ import { setErrorMessage } from "../../store/slices/globalErrorMessage/globalErr
 import { createExcelReport, createStockReport } from "./utils/createExcelReport";
 import LinesChart from "./components/graphics/weeklyReportsGraphics/LineChart";
 import { StockTable } from "./components/gridReports/stock/stock";
+import { stockAdapter } from "./adapters";
 import {
   addDayOfWeek,
   addDayToArray,
@@ -29,7 +30,6 @@ import {
   totalSales,
   yesterday,
   } from "./utils";
-import { stockAdapter } from "./adapters";
 
 
   let dataForReport:any []
@@ -72,10 +72,9 @@ const handleOptionSelected=(name:string) :void=> {
         const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
         const formaDate= formatDate(formattedDate)
         const dayOfWeek = getDayOfWeek(formattedDate)
-    
+      
         fetchReport(formaDate,token)
           .then((response)=> {
-            
             const netSalesArray= response.data[0].salesOfTheDay;
             const cleaningListNetSales= listNetSales(netSalesArray)
             const total= totalSales(cleaningListNetSales)

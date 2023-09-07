@@ -45,7 +45,7 @@ const useBookMedicineByName= (name: string, dependence:string):BookMedicineRespo
         )
     } catch (error) {
         console.log(error)
-    }
+        }
     return () => {
         cancel()
         setElements([])

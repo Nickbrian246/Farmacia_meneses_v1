@@ -36,7 +36,6 @@ function InputSearchByName(props:Props) {
     };
     // diferenciar hacia donde manda la info
     useEffect(()=>{ 
-        console.log(elementSelected)
         if(elementSelected ==="") return
         getIdFromInputByName?.(elementSelected)
         if (isforCartlist) {
@@ -47,7 +46,8 @@ function InputSearchByName(props:Props) {
             })
         }
         setElementSelected("")
-    }, [elementSelected])
+    }, [elementSelected]);
+
     const handleOnBlur=()=>{
         setIsError(false)
     }
@@ -55,14 +55,13 @@ function InputSearchByName(props:Props) {
     return (
         <>
         <section  onBlur={handleOnBlur}>
-        <TextField
-        style={{width:"400px", background:"white",minHeight:"40px"}}
-        label="escriba el nombre "
-        value={name}
-        onChange={handleInput}
-        onClick={()=> setCloseList(false)}
-
-    />
+            <TextField
+                style={{width:"400px", background:"white",minHeight:"40px"}}
+                label="escriba el nombre "
+                value={name}
+                onChange={handleInput}
+                onClick={()=> setCloseList(false)}
+            />
     {(elements.length !=0 && typeof(elements) != "string" && closeList === false) && (
         <div className='InputlistContainer' >
             {elements.map((item:any) => (

@@ -77,6 +77,8 @@ const SaleModal=(props:Props) => {
     else {
       let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
       const adapter= salesAdapter({data:data})
+      console.log(adapter);
+      
 
       postSales(adapter ,token)
       .then((response) => {

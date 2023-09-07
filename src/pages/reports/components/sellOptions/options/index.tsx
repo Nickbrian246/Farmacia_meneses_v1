@@ -25,19 +25,19 @@ const SellOptionsList =(props:Props) => {
 
     >
       <Typography variant="h4" alignSelf={"center"} >Ventas:</Typography>
-      {listOptions.map((item) => (
-        <OptionsElement
-        background="#33CEFF"
-        elementId={item.id}
-        fontSize="1.7rem"
-        height="100px"
-        text={item.label}
-        width="230px"
-        key={item.id}
-        whatIsThisFor={item.name}
-        handleOptionSelected={handleOptionSelected}
-        />
-      ))}
+        {listOptions.map((item) => (
+          <OptionsElement
+          background="#33CEFF"
+          elementId={item.id}
+          fontSize="1.7rem"
+          height="100px"
+          text={item.label}
+          width="230px"
+          key={item.id}
+          whatIsThisFor={item.name}
+          handleOptionSelected={handleOptionSelected}
+          />
+        ))}
 
     </Stack>
     

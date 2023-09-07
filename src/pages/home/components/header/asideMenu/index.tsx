@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import {logOutUser} from "../../../../../store/slices/auth/Login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { listOptions } from "../../../../reports/components/sellOptions/options/sellOptionsList";
+
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -34,6 +36,7 @@ export default function ToggleMenu(props :Props) {
         bottom: false,
         right: false,
     });
+    const [isReport, setIsReport] = useState<boolean>(false)
     const navigate= useNavigate()
     const dispatch= useDispatch()
 
@@ -42,8 +45,7 @@ export default function ToggleMenu(props :Props) {
         setOptionSelected(name)
     }
 
-const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
+const toggleDrawer =(anchor: Anchor, open: boolean,id?:string) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
         event.type === 'keydown' &&
@@ -51,8 +53,10 @@ const toggleDrawer =
         (event as React.KeyboardEvent).key === 'Shift')
     ) {
         return;
-    }
-    setIsOpenModal(false)
+    }    
+    // setIsOpenModal(false)
+    console.log((`entrando`));
+    
     setState({ ...state, [anchor]: open });
     };
 
@@ -63,16 +67,19 @@ const toggleDrawer =
     }
 
     const handleSecondList=(name:string)=>{
-        if(name==="Reportes"){
-            navigate("/reports")
-        }
+        // if(name==="Reportes"){
+        //     navigate("/reports")
+        // }
+        if(name===`Reportes`){
+            setIsOpenModal(true)
+            
+        }   
     }
-
 const list = (anchor: Anchor) => (
     <Box
     sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 350 }}
     role="presentation"
-    onClick={toggleDrawer(anchor, false)}
+    // onClick={toggleDrawer(anchor, false)}
     onKeyDown={toggleDrawer(anchor, false)}
     >
     <List>
@@ -80,6 +87,8 @@ const list = (anchor: Anchor) => (
         <ListItem  key={uuidv4()} disablePadding>
             <ListItemButton onClick={()=> {
                 handleOptionSelected(text.nombre)
+                toggleDrawer(anchor, false)
+                setIsOpenModal(false)
                 }} >
             <ListItemText primary={text.nombre}  />
             </ListItemButton>
@@ -89,21 +98,25 @@ const list = (anchor: Anchor) => (
     <Divider />
     <List >
         {secondList.map((text) => (
-        <ListItem key={uuidv4()} disablePadding>
+        <ListItem key={uuidv4()} disablePadding style={text.nombre === "Reportes" ? { position: "relative" } : {}}>
             <ListItemButton onClick={()=> {
                 handleSecondList(text.nombre)
+                
             }}>
             <ListItemText primary={text.nombre}  />
             </ListItemButton>
         </ListItem>
         ))}
     </List>
+
     <Divider />
     <List >
         {logout.map((text) => (
         <ListItem key={uuidv4()} disablePadding>
             <ListItemButton onClick={()=> {
-                handleLogOut(text.id)
+                handleLogOut(text.id);
+                toggleDrawer(anchor, false);
+                setIsOpenModal(false);
             }}>
             <ListItemText sx={{color:"red",fontSize:"bold"}} primary={text.nombre}  />
             </ListItemButton>
@@ -119,7 +132,9 @@ return (
         <Drawer
             anchor={"left"}
             open={state["left"]}
-            onClose={toggleDrawer("left", false)}
+            onClose={()=>{
+            toggleDrawer("left", false),
+            setIsOpenModal(false)}}
         >
             {list("left")}
         </Drawer>
@@ -128,3 +143,16 @@ return (
     </div>
 );
 }
+// {isReport && (
+//     <List >
+//     {listOptions.map((text) => (
+//     <ListItem key={uuidv4()} disablePadding style={text.name === "Reportes" ? { position: "relative" } : {}}>
+//         <ListItemButton onClick={()=> {
+//             handleSecondList(text.name)
+//         }}>
+//         <ListItemText primary={text.name}  />
+//         </ListItemButton>
+//     </ListItem>
+//     ))}
+// </List>
+// )}

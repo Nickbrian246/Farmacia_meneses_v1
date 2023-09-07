@@ -47,9 +47,7 @@ const LogInForm = (props:Props) => {
           message:isError
         })
         return 
-      }
-      console.log(isError);
-      
+      }      
       const data= {
         email,
         password

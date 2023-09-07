@@ -22,7 +22,8 @@ const Header =() =>{
         errorMessage,
         errorMessageBold,
         duration
-    } = useSelector((state:any)=> state.globalErrorMessage)
+    } = useSelector((state:any)=> state.globalErrorMessage);
+    console.log(isOpenmodal)
 
     const handleModal = () => {
         setIsOpenModal((prevState) => !prevState)
@@ -73,7 +74,17 @@ return (
     ))}
     </aside>
     {isError && (
-        <Alert style={{position:"fixed",top:"12%",right:"30%", left:"30%",zIndex:"10000000"}} variant="filled" severity={`${severityType}`}>
+        <Alert 
+            style={{
+                position:"fixed",
+                top:"12%",
+                right:"30%",
+                left:"30%",
+                zIndex:"10000000",
+                }}
+        variant="filled" 
+        severity={`${severityType}`}
+        >
         <AlertTitle>{title}</AlertTitle>
         {errorMessage} - <strong>{errorMessageBold}</strong>
         </Alert>

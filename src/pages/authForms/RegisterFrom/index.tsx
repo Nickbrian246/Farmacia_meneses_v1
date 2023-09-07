@@ -77,8 +77,6 @@ const RegisterForm = (props:Props) => {
       return 
     }
     dispatch(RegisterRequest(data) as any)
-  
-
   };
   useEffect(()=> {
     if(userState.token){

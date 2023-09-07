@@ -3,7 +3,7 @@ import { loggedAdapter } from "../../../pages/authForms/logInForm/adapters/for-l
 import RegisterUser from "../../../interfaces/for-Auth";
 import { ResponseAuthFromBackEnd, UserLogIn, UserLogged } from "../../../interfaces/for-Auth";
 import axios ,{AxiosResponse} from "axios";
-const BASE_URL= import.meta.env.VITE_BASE_URL
+const BASE_URL= import.meta.env.VITE_BASE_URL;
 const config = {
   headers: {
   'Content-Type': 'application/json'
