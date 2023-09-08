@@ -72,9 +72,12 @@ const toggleDrawer =(anchor: Anchor, open: boolean,id?:string) =>
         // }
         if(name===`Reportes`){
             setIsOpenModal(true)
+            setIsReport((prevState) =>!prevState)
             
         }   
     }
+    
+    
 const list = (anchor: Anchor) => (
     <Box
     sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 350 }}
@@ -109,6 +112,7 @@ const list = (anchor: Anchor) => (
         ))}
     </List>
 
+
     <Divider />
     <List >
         {logout.map((text) => (
@@ -127,7 +131,7 @@ const list = (anchor: Anchor) => (
 );
 
 return (
-    <div>
+    <div style={{position:"absolute"}}>
         <React.Fragment key={"left"}>
         <Drawer
             anchor={"left"}
@@ -138,21 +142,27 @@ return (
         >
             {list("left")}
         </Drawer>
+        {isReport && (
+        <List  style={{
+            position:"absolute",
+            right:"-620px",
+            zIndex:"1300",
+            background:"#ffff",
+            top:"-50px"
+            }}>
+            {listOptions.map((text) => (
+            <ListItem key={uuidv4()} disablePadding style={text.name === "Reportes" ? { position: "relative" } : {}}>
+                <ListItemButton onClick={()=> {
+                    handleSecondList(text.name)
+                }}>
+                <ListItemText primary={text.label}  />
+                </ListItemButton>
+            </ListItem>
+            ))}
+        </List>
+        )}
         </React.Fragment>
     
     </div>
 );
 }
-// {isReport && (
-//     <List >
-//     {listOptions.map((text) => (
-//     <ListItem key={uuidv4()} disablePadding style={text.name === "Reportes" ? { position: "relative" } : {}}>
-//         <ListItemButton onClick={()=> {
-//             handleSecondList(text.name)
-//         }}>
-//         <ListItemText primary={text.name}  />
-//         </ListItemButton>
-//     </ListItem>
-//     ))}
-// </List>
-// )}

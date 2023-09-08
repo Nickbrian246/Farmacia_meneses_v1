@@ -23,8 +23,6 @@ const Header =() =>{
         errorMessageBold,
         duration
     } = useSelector((state:any)=> state.globalErrorMessage);
-    console.log(isOpenmodal)
-
     const handleModal = () => {
         setIsOpenModal((prevState) => !prevState)
     }
