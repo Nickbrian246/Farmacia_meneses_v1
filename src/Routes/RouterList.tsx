@@ -16,18 +16,18 @@ interface RouterList{
 
 const routerPrivateList :RouterList[]= [
   {
-  path:"/Home",
+  path:"/home",
   description:"home element",
   element:<Home  path="/" />,
   status:false,
   title:"home"
   },
 {
-  path:"/Reports",
+  path:"/reportes/:optionId",
   description:"Reports element",
-  element:<Reports  path="/Reports" />,
+  element:<Reports  path="/reportes/:opitonId" />,
   status:false,
-  title:"home"
+  title:"reportes"
   },
   {
     path:"/LogIn",

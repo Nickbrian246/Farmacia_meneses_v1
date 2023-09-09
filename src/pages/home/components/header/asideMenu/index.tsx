@@ -12,7 +12,8 @@ import {logOutUser} from "../../../../../store/slices/auth/Login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { listOptions } from "../../../../reports/components/sellOptions/options/sellOptionsList";
-
+import { stockOptionsList } from "../../../../reports/components/stock/listStockOptions";
+import { DatePicker } from "../../../../components/datePicker";
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -30,15 +31,16 @@ export default function ToggleMenu(props :Props) {
         setOpenFormModal,
         setOptionSelected
     } = props
+    const [isReport, setIsReport] = useState<boolean>(false)
+    const [isDatePickerOpen,setIsDatePickerOpen] = useState(false);
+    const navigate= useNavigate()
+    const dispatch= useDispatch()
     const [state, setState] = useState({
         top: false,
         left:true,
         bottom: false,
         right: false,
     });
-    const [isReport, setIsReport] = useState<boolean>(false)
-    const navigate= useNavigate()
-    const dispatch= useDispatch()
 
     const handleOptionSelected = (name:string) :void =>{
         setOpenFormModal(true)
@@ -76,8 +78,14 @@ const toggleDrawer =(anchor: Anchor, open: boolean,id?:string) =>
             
         }   
     }
-    
-    
+
+    const handleReportOptions = (option:string)=>{
+        if(option ==="personalized"){
+            setIsDatePickerOpen((prevState) => !prevState)
+            return 
+        }
+        navigate(`/reportes/${option}`)
+    }
 const list = (anchor: Anchor) => (
     <Box
     sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 350 }}
@@ -145,21 +153,37 @@ return (
         {isReport && (
         <List  style={{
             position:"absolute",
-            right:"-620px",
+            right:"-625px",
             zIndex:"1300",
             background:"#ffff",
             top:"-50px"
             }}>
             {listOptions.map((text) => (
-            <ListItem key={uuidv4()} disablePadding style={text.name === "Reportes" ? { position: "relative" } : {}}>
+            <ListItem key={uuidv4()} disablePadding >
                 <ListItemButton onClick={()=> {
-                    handleSecondList(text.name)
+                    handleReportOptions(text.name)
                 }}>
                 <ListItemText primary={text.label}  />
                 </ListItemButton>
             </ListItem>
             ))}
+            <Divider/>
+            {stockOptionsList.map((text) => (
+            <ListItem key={uuidv4()} disablePadding >
+                <ListItemButton onClick={()=> {
+                    handleReportOptions(text.name)
+                }}>
+                <ListItemText  primary={text.label}  />
+                </ListItemButton>
+            </ListItem>
+            ))}
         </List>
+        )}
+        {isDatePickerOpen && (
+            <DatePicker
+            setIsOpenModal  = {setIsOpenModal}
+            setIsDatePickerOpen = {setIsDatePickerOpen}
+            />
         )}
         </React.Fragment>
     

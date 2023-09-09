@@ -15,6 +15,7 @@ import { createExcelReport, createStockReport } from "./utils/createExcelReport"
 import LinesChart from "./components/graphics/weeklyReportsGraphics/LineChart";
 import { StockTable } from "./components/gridReports/stock/stock";
 import { stockAdapter } from "./adapters";
+import { useParams } from "react-router-dom";
 import {
   addDayOfWeek,
   addDayToArray,
@@ -30,6 +31,7 @@ import {
   totalSales,
   yesterday,
   } from "./utils";
+
 
 
   let dataForReport:any []
@@ -54,11 +56,25 @@ const Reports = (props:Props) => {
   const [isLoading, setIsLoading]= useState<boolean>(false)
   const [isGraphicOpen, setIsGraphicOpen] = useState<Boolean>(false)
   const dispatch =  useDispatch()
+  const {option} = useParams()
   const token= useSelector((state:any)=> state.loggedUser.token)
 
 const handleFilterInput = (e:ChangeEvent<HTMLInputElement>):void =>{
     setInputFilter(e.target.value)
 }
+useEffect(()=>{
+  if(option){    
+    handleOptionSelected(option);    
+  }else {
+    dispatch(setErrorMessage({
+      errorMessage:"ha habido un error ",
+      isError:true,
+      errorMessageBold:"comuniquese con asistencia en caso de que persiste",
+      severityType:"error",
+      title:"error"
+    }))
+  }
+},[option])
 
 const handleOptionSelected=(name:string) :void=> {
     setOptionSelected(name)
@@ -94,12 +110,13 @@ const handleOptionSelected=(name:string) :void=> {
               setIsLoading((prevState)=> !prevState)
         })
         break
-      case "stockOptionInventatario":
+      case "stock":       
         fetchStock(token)
         .then((response)=> {
           const dataForTable =  cleanStockNAddProperties(response)
           setIsLoading((prevState)=> !prevState)
           setDataStockList(dataForTable)
+          
 
           // setDataListFilter(dataForTable)
           
@@ -256,7 +273,7 @@ const handleOptionSelected=(name:string) :void=> {
   }
 
 const handleDownloadExcelReport = () => {
-  if(optionSelected === "stockOptionInventatario"){
+  if(optionSelected === "stock"){
     const stockData = stockAdapter(dataStockList)
     createStockReport(stockData);
     
@@ -290,7 +307,7 @@ useEffect(()=>{
     setDataListFilterStock([])
     return setDataListFilter([])
   }
-  if(optionSelected !=="stockOptionInventatario"){
+  if(optionSelected !=="stock"){
     const dataFiltered = dataList.filter((item) =>{
       return item.name.includes(inputFilter)
     })
@@ -310,14 +327,12 @@ useEffect(()=>{
     </Stack>
 
     <Stack justifyContent={"center"} alignItems={"center"} useFlexGap flexWrap="wrap" >
-      <Typography variant="h2" alignSelf={"center"}>Reportes de: </Typography>
-      <StockOptionsList optionSelected={handleOptionSelected}/>
-      <SellOptionsList optionSelected={handleOptionSelected}/>
+      <Typography variant="h2" alignSelf={"center"}>Reportes de: {option} </Typography>
       {dataList.length > 0 ||(dataStockList.length>0)  && (
         <Stack direction="row" sx={{pt:"30px" ,minWidth:"1200px"}}  justifyContent="space-between">
           <TextField onChange={handleFilterInput} value={inputFilter} id="outlined-basic" label="filtrar" variant="outlined" sx={{minWidth:"400px"}} />
             <Stack direction="row" spacing={10} >
-              {optionSelected!=="sellsToday" && optionSelected !== "sellsYesterday" && optionSelected !== "stockOptionInventatario" &&   (
+              {optionSelected!=="sellsToday" && optionSelected !== "sellsYesterday" && optionSelected !== "stock" &&   (
                 <Button
                 variant="contained"
                 color="success"
@@ -331,19 +346,19 @@ useEffect(()=>{
         </Stack>
       )}
       { 
-        ((dataList.length>0)) &&  (dataListFilter.length<=0) && optionSelected !=="stockOptionInventatario" &&
+        ((dataList.length>0)) &&  (dataListFilter.length<=0) && optionSelected !=="stock" &&
         (<SellsList total={total} dataList={dataList}/>)
       }
       { 
-        ((dataListFilter.length>0)) &&  optionSelected !=="stockOptionInventatario" &&
+        ((dataListFilter.length>0)) &&  optionSelected !=="stock" &&
         (<SellsList  dataList={dataListFilter}/>)
       }
       { 
-        ((dataStockList.length>0)) && (dataListFilterStock.length<=0) && optionSelected === "stockOptionInventatario" &&
+        ((dataStockList.length>0)) && (dataListFilterStock.length<=0) && optionSelected === "stock" &&
         (<StockTable setDataList={setDataStockList}  dataList={dataStockList} />)
       }
       { 
-        ((dataListFilterStock.length>0)) && optionSelected === "stockOptionInventatario" &&
+        ((dataListFilterStock.length>0)) && optionSelected === "stock" &&
         (<StockTable  dataList={dataListFilterStock} setDataList={setDataStockList} />)
       }
       {isLoading && (

@@ -19,7 +19,7 @@ const RoutesApp= () => {
       <Route path="/*" element= {<NotFound/>} />
         <Route element={<AuthGuard />}>
           <Route element={<Home path="/home"/>}   path="/home"/> 
-          <Route element={<Reports path="/reports"/>}   path="/reports"/> 
+          <Route element={<Reports path="/reportes/:option"/>}   path="/reportes/:option"/> 
           <Route path="/*" element= {<NotFound/>} />
         </Route>
       </Routes>

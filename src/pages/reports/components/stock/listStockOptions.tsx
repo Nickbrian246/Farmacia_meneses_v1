@@ -8,7 +8,7 @@ interface StockOptionsList {
 const stockOptionsList :StockOptionsList[]= [
   {
     name:"stock",
-    label:"inventario",
+    label:"Inventario",
     id:"stockOptionInventatario"
   },
 ]

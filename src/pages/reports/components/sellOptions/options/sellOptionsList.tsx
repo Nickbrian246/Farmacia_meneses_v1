@@ -3,27 +3,27 @@
 const listOptions= [
   {
     name:"sellsToday",
-    label:"hoy",
+    label:"Hoy",
     id:"sellsToday"
   },
   {
     name:"sellsYesterday",
-    label:"ayer",
+    label:"Ayer",
     id:"sellsYesterday"
   },
   {
     name:"yesterdayNToday",
-    label:"ayer y hoy",
+    label:"Ayer y Hoy",
     id:"yesterdayNToday"
   },
   {
     name:"sellsWeek",
-    label:"desde el lunes hasta hoy",
+    label:"Desde el lunes hasta hoy",
     id:"sellsWeek"
   },
   {
     name:"sellsLastWeek",
-    label:"semana pasada (lunes -domingo)",
+    label:"Semana pasada (lunes -domingo)",
     id:"sellsLastWeek"
   },
   {
@@ -32,9 +32,9 @@ const listOptions= [
     id:"sellsMonth"
   },
   {
-    name:"Personalized",
+    name:"personalized",
     label:"Elegir una fecha",
-    id:"Personalized"
+    id:"personalized"
   },
 ]
 export {listOptions}
