@@ -1,0 +1,8 @@
+.linkToRegister{
+    text-decoration: none;
+    font-weight: bold;
+    margin-Left: 4px;
+}
+.linkToRegister:hover{
+    text-decoration: underline;
+}

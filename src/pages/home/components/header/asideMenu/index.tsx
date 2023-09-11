@@ -57,7 +57,6 @@ const toggleDrawer =(anchor: Anchor, open: boolean,id?:string) =>
         return;
     }    
     // setIsOpenModal(false)
-    console.log((`entrando`));
     
     setState({ ...state, [anchor]: open });
     };

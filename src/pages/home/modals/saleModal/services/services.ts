@@ -15,7 +15,7 @@ export async function postSales(sales:PostNewSale, token: string) {
     });
     return response.statusText
   } catch (error) {
-    console.error(error);
+    throw(error)
   }
   
 }

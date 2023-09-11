@@ -32,13 +32,8 @@ const SaleModal=(props:Props) => {
   const token= useSelector((state:any)=> state.loggedUser.token)
   const [inputMoneyReceived, setInputMoneyReceived] = useState<string>("");
   const [inputMoneyCurrencyFormat, setInputMoneyCurrencyFormat] = useState<string>("")
-  const dispatch= useDispatch()
-  // const[errorMessage, setErrorMessage] = useState<ErrorMessages>({
-  //   errorName: '',
-  //   errorType:"error",
-  //   error: '',
-  //   errorMessage: ''
-  // })
+  const dispatch= useDispatch();
+  
   const {
   handleOpenSaleModal,
   total,
@@ -60,7 +55,7 @@ const SaleModal=(props:Props) => {
 
   let cambio=0
   if(inputMoneyReceived) {
-  cambio =  (inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0) -total 
+  cambio =  parseFloat(((inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0) - total ).toFixed(2))
   }
 
   const handleCobrar= ( e:FormEvent<HTMLFormElement>) => {
@@ -88,8 +83,6 @@ const SaleModal=(props:Props) => {
     else {
       let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
       const adapter= salesAdapter({data:data})
-      console.log(adapter);
-      
 
       postSales(adapter ,token)
       .then((response) => {
@@ -105,16 +98,16 @@ const SaleModal=(props:Props) => {
 
           dispatch(setClearState([]))
           handleOpenSaleModal()
-        }
+        };
       })
       .catch(err => {
-        console.log(err)
         dispatch(setErrorMessage({
-        errorMessage:`${err}`,
+        errorMessage:`${err.response.data.errorMessage}`,
         isError:true,
-        errorMessageBold:"",
+        errorMessageBold:"pofavor revise la disponibilidad en stock",
         severityType:"error",
-        title:"error al realizar la transaccion"
+        title:"error al realizar la transaccion",
+        duration:7000
         }))
       })
     

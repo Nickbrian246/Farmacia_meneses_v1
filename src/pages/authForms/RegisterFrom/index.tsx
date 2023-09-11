@@ -1,6 +1,6 @@
 import React,{ useEffect} from "react"
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { Button, Stack, TextField, Typography, InputAdornment, Alert, AlertTitle } from "@mui/material";
+import { Button, Box, TextField, Typography, InputAdornment, Alert, AlertTitle } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Autocomplete } from "@mui/material";
@@ -86,29 +86,35 @@ const RegisterForm = (props:Props) => {
 
   return (
     <>
-      <Stack
+      <Box
         sx={{
           borderRadius: "5px",
-          width: "500px",
-          height: "auto",
+          width: "600px",
+          height: "500px",
           padding: "15px",
           boxShadow: "-4px -4px 16px 1px rgba(0,0,0,0.56)",
           display: "flex",
-          justifyContent: "center"
+          flexDirection:"column",
+          justifyContent: "center",
+          background:"#ffff"
         }}
       >
-        <Typography sx={{ alignSelf: "center", fontSize: "2rem" }}>Bienvenido</Typography>
+        <Typography sx={{ alignSelf: "center", fontSize: "2rem",}}>Bienvenido</Typography>
+        <Typography sx={{ alignSelf: "center", fontSize: "1rem", mb:"20px"}}>Porfavor llene el registro </Typography>
+        
         <form
           style={{
             display: "flex",
             justifyContent: "center",
             alignContent: "center",
-            flexDirection: "column",
-            gap: "30px"
+            gap: "30px",
+            flexWrap:"wrap"
           }}
           onSubmit={handleSubmit}
         >
-          <TextField
+        <div style={{display:"flex", gap:"10px"}}>
+        <div style={{display:"flex", flexDirection:"column", gap:"15px"}}>
+        <TextField
             label="Ingrese su Nombre"
             value={registerUser.name}
             type="text"
@@ -131,8 +137,10 @@ const RegisterForm = (props:Props) => {
             sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Cual es su role?" />}
           />
+        </div>
 
-          <Autocomplete
+        <div style={{display:"flex", flexDirection:"column", gap:"15px"}}>
+        <Autocomplete
             disablePortal
             onChange={handleAutocompleteState}
             id="combo-box-demo"
@@ -167,8 +175,10 @@ const RegisterForm = (props:Props) => {
               )
             }}
           />
+        </div>
+        </div>
           <Button type="submit" size="large" variant="contained" color="primary" >
-            Iniciar Sesión
+            Crear cuenta
           </Button>
         </form>
 
@@ -185,7 +195,7 @@ const RegisterForm = (props:Props) => {
             Haga Click aqui para iniciar sesion
           </NavLink>
         </Typography>
-      </Stack>
+      </Box>
     </>
   );
 };

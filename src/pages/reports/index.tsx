@@ -320,6 +320,7 @@ useEffect(()=>{
   }
 },[inputFilter])
 
+
   return (
     <>
     <Stack>
@@ -328,7 +329,7 @@ useEffect(()=>{
 
     <Stack justifyContent={"center"} alignItems={"center"} useFlexGap flexWrap="wrap" >
       <Typography variant="h2" alignSelf={"center"}>Reportes de: {option} </Typography>
-      {dataList.length > 0 ||(dataStockList.length>0)  && (
+      {(dataList.length > 0 ||(dataStockList.length>0))  && (
         <Stack direction="row" sx={{pt:"30px" ,minWidth:"1200px"}}  justifyContent="space-between">
           <TextField onChange={handleFilterInput} value={inputFilter} id="outlined-basic" label="filtrar" variant="outlined" sx={{minWidth:"400px"}} />
             <Stack direction="row" spacing={10} >

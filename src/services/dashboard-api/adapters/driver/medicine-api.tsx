@@ -9,9 +9,8 @@ const BASE_URL= import.meta.env.VITE_BASE_URL
 
 
 
-
 const postMedicines= async( data:PostMedicines, token: string) => {
-  try {
+  try {    
     const sendData= await axios.put(`${BASE_URL}/productsV2`,data,
     {
       headers: {
