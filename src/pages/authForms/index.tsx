@@ -1,8 +1,9 @@
-import {useState} from"react"
 import { Alert, AlertTitle, Box } from "@mui/material";
 import LogInForm from "./logInForm";
 import RegisterForm from "./RegisterFrom";
-
+import { useSelector, useDispatch} from "react-redux";
+import { setAuthErrorMessage } from "../../store/slices/globalErrorMessage/forAuthErrorMessage";
+import { setErrorMessage } from "../../store/slices/globalErrorMessage/globalErrorMessage";
 interface Props{
   path:string
 }
@@ -12,20 +13,29 @@ interface Error{
 }
 
 const AuthForms = (props:Props) => {
-  const {path}= props
-  const [ isError, setIsError]= useState<Error>({
-    isError:false,
-    message:""
-  })
-  if(isError.isError){
+  const {path}= props;
+  const {
+    isError,
+    severityType,
+    title,
+    errorMessage,
+    errorMessageBold,
+    duration,
+  } = useSelector((state:any) => state.authErrorMessage)
+  const dispatch = useDispatch()
+ 
+  let durationMessage = duration ?? 3000;
+  if(isError){
     setTimeout(()=>{
-      setIsError({
-        isError:false,
-        message:""
-      })
-    },3000)
-  }
-  
+        dispatch(setAuthErrorMessage({
+            isError:false,
+            errorMessage:"",
+            errorMessageBold:"",
+            severityType:"error",
+            title:""}))
+    },durationMessage)
+}
+
   return ( 
     <>
     <Box 
@@ -37,16 +47,24 @@ const AuthForms = (props:Props) => {
       justifyContent:"center",
       alignItems:"center"
     }}>
-        {isError.isError && (
-        <Alert style={{position:"fixed",top:"5%",right:"30%", left:"30%",zIndex:"10000000"}} severity="error">
-        <AlertTitle>{isError.message}</AlertTitle>
+        {isError && (
+        <Alert style={{
+        position:"fixed",
+        top:"5%",
+        right:"30%",
+        left:"30%",
+        zIndex:"10000000"
+        }}
+        severity = {severityType}
+        >
+        <AlertTitle>{title}</AlertTitle>
         </Alert>
         )}
       {path==="/register" && (
-        <RegisterForm setIsError={setIsError} isError={isError}/>
+        <RegisterForm />
       )}
       {path==="/login" && (
-        <LogInForm setIsError={setIsError} isError={isError}/>
+        <LogInForm />
       )}
 
 

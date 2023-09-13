@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit"
 import shoppingCartReducer from "./slices/home/ProductCart"
 import loggedUser  from './slices/auth/Login'
-import globalErrorMessage from "./slices/globalErrorMessage/globalErrorMessage"
+import globalErrorMessage from "./slices/globalErrorMessage/globalErrorMessage";
+import authErrorMessage from "./slices/globalErrorMessage/forAuthErrorMessage";
 
- const appStore = configureStore(  {
+const appStore = configureStore(  {
   reducer:{
     shoppingCartReducer:shoppingCartReducer,
     loggedUser:loggedUser,
-    globalErrorMessage:globalErrorMessage
+    globalErrorMessage:globalErrorMessage,
+    authErrorMessage:authErrorMessage,
   }
 })
 export {appStore}

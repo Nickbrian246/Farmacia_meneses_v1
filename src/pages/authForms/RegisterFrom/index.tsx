@@ -11,13 +11,14 @@ import RegisterUser from "../../../interfaces/for-Auth";
 import { Role } from "../../../interfaces/for-Auth";
 import { estadosMexicanos,roles } from "./utils";
 import { useNavigate } from "react-router-dom";
+import { setAuthErrorMessage } from "../../../store/slices/globalErrorMessage/forAuthErrorMessage";
+
 
 type Register = Omit<RegisterUser, "state" | "role">;
 
 interface Props {
   path?:string,
-  setIsError:React.Dispatch<React.SetStateAction<Error>>,
-  isError:Error
+
 }
 interface Error{
   isError:boolean,
@@ -25,11 +26,12 @@ interface Error{
 }
 
 const RegisterForm = (props:Props) => {
-  const {path,setIsError, isError}= props
+  const navigate= useNavigate()
+  const dispatch= useDispatch()
+  const userState= useSelector((State:any)=> State.loggedUser)
+  const {isError} = useSelector((State:any)=> State.authErrorMessage)
   const [state, setSelectedState] = useState<string>("");
   const [role, setRole]= useState<Role>("admin");
-  const navigate= useNavigate()
-  const userState= useSelector((State:any)=> State.loggedUser)
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [registerUser, setRegisterUser] = useState<Register >({
     age: 0,
@@ -38,7 +40,6 @@ const RegisterForm = (props:Props) => {
     name: "",
     password: "",
   });
-  const dispatch= useDispatch()
 
   const handleEmailInput = (event: ChangeEvent<HTMLInputElement>): void => {
     const { value, name } = event.target;
@@ -69,11 +70,15 @@ const RegisterForm = (props:Props) => {
     const data= {...registerUser, state,role}
     const passwordDoesNotMeet= checkPassword(data.password)
     if (passwordDoesNotMeet) {
-      setIsError({
-          isError:true,
-          message:passwordDoesNotMeet
-        }
-      )
+      console.log(`entrando`);
+      
+      dispatch(setAuthErrorMessage({
+        errorMessage:"la contraseña no coincide",
+        errorMessageBold:"favor de revisar la contraseña",
+        isError:true,
+        severityType:"error",
+        title:"Contraseña incorrecta"
+      }))
       return 
     }
     dispatch(RegisterRequest(data) as any)
@@ -159,7 +164,7 @@ const RegisterForm = (props:Props) => {
           <TextField
             label="Ingrese una Contraseña"
             value={registerUser.password}
-            error={isError.isError}
+            error={isError}
             type={showPassword ? "text" : "password"}
             name="password"
             onChange={handleEmailInput}
