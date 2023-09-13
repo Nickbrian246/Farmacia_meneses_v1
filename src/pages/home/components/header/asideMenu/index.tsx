@@ -32,6 +32,7 @@ export default function ToggleMenu(props :Props) {
         setOptionSelected
     } = props
     const [isReport, setIsReport] = useState<boolean>(false)
+    const [isAddProducts, setIsAddProducts] = useState<boolean>(false)
     const [isDatePickerOpen,setIsDatePickerOpen] = useState(false);
     const navigate= useNavigate()
     const dispatch= useDispatch()
@@ -74,6 +75,7 @@ const toggleDrawer =(anchor: Anchor, open: boolean,id?:string) =>
         if(name===`Reportes`){
             setIsOpenModal(true)
             setIsReport((prevState) =>!prevState)
+            setIsAddProducts(false)
             
         }   
     }
@@ -93,25 +95,22 @@ const list = (anchor: Anchor) => (
     onKeyDown={toggleDrawer(anchor, false)}
     >
     <List>
-        {listItems.map((text, index) => (
+        
         <ListItem  key={uuidv4()} disablePadding>
             <ListItemButton onClick={()=> {
-                handleOptionSelected(text.nombre)
-                toggleDrawer(anchor, false)
-                setIsOpenModal(false)
+                setIsReport(false)
+                setIsAddProducts((preState) => !preState)   
                 }} >
-            <ListItemText primary={text.nombre}  />
+            <ListItemText primary={`Agreagar productos`}  />
             </ListItemButton>
         </ListItem>
-        ))}
     </List>
     <Divider />
     <List >
         {secondList.map((text) => (
         <ListItem key={uuidv4()} disablePadding style={text.nombre === "Reportes" ? { position: "relative" } : {}}>
             <ListItemButton onClick={()=> {
-                handleSecondList(text.nombre)
-                
+                handleSecondList(text.nombre) 
             }}>
             <ListItemText primary={text.nombre}  />
             </ListItemButton>
@@ -120,6 +119,17 @@ const list = (anchor: Anchor) => (
     </List>
 
 
+    <Divider />
+    <List >
+        <ListItem key={uuidv4()} disablePadding>
+            <ListItemButton onClick={()=> {
+                toggleDrawer(anchor, false);
+                setIsOpenModal(false);
+            }}>
+            <ListItemText  primary={`Ver perfil`}  />
+            </ListItemButton>
+        </ListItem>
+    </List>
     <Divider />
     <List >
         {logout.map((text) => (
@@ -149,6 +159,27 @@ return (
         >
             {list("left")}
         </Drawer>
+        {(isAddProducts && !isReport ) && (
+                <List
+                style={{
+                    position:"absolute",
+                    right:"-490px",
+                    zIndex:"1300",
+                    background:"#ffff",
+                    top:"-120px"
+                    }}>
+                {listItems.map((text, index) => (
+                <ListItem  key={uuidv4()} disablePadding>
+                    <ListItemButton onClick={()=> {
+                        handleOptionSelected(text.nombre)
+                        setIsOpenModal(false)
+                        }} >
+                    <ListItemText primary={text.nombre}  />
+                    </ListItemButton>
+                </ListItem>
+                ))}
+            </List>
+        )}
         {isReport && (
         <List  style={{
             position:"absolute",
@@ -160,6 +191,7 @@ return (
             {listOptions.map((text) => (
             <ListItem key={uuidv4()} disablePadding >
                 <ListItemButton onClick={()=> {
+                    setIsAddProducts(false)
                     handleReportOptions(text.name)
                 }}>
                 <ListItemText primary={text.label}  />
@@ -171,6 +203,7 @@ return (
             <ListItem key={uuidv4()} disablePadding >
                 <ListItemButton onClick={()=> {
                     handleReportOptions(text.name)
+                    setIsAddProducts(false)
                 }}>
                 <ListItemText  primary={text.label}  />
                 </ListItemButton>
