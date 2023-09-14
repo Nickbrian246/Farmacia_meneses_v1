@@ -5,9 +5,10 @@ import {CiMenuBurger} from "react-icons/ci";
 import ToggleMenu from "./asideMenu";
 import { MedicineModalFlow } from "../../../Modalflow";
 import {  NavLink } from "react-router-dom";
-import { Alert, AlertTitle, ImageListItem } from "@mui/material";
+import { Alert, AlertTitle, Avatar, ImageListItem, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setErrorMessage } from "../../../../store/slices/globalErrorMessage/globalErrorMessage";
+import { deepOrange, deepPurple } from '@mui/material/colors';
 
 
 
@@ -24,6 +25,7 @@ const Header =() =>{
         errorMessageBold,
         duration
     } = useSelector((state:any)=> state.globalErrorMessage);
+    const {name} = useSelector((state:any) => state.loggedUser);
     const handleModal = () => {
         setIsOpenModal((prevState) => !prevState)
     }
@@ -46,6 +48,10 @@ return (
         <CiMenuBurger 
         className='icon-header'
         onClick={()=>{handleModal()}}/>
+        </div>
+        <div style={{display:"flex", justifyContent:"center",alignItems:"center", gap:"10px"}}>
+        <Avatar sx={{ bgcolor: deepOrange[500] }}>{name.split("",2)}</Avatar>
+        <Typography>{`Usuario: ${name}`}</Typography>
         </div>
         <ImageListItem sx={{width: 350, height: 450 }}>
             <NavLink to={"/home"}>

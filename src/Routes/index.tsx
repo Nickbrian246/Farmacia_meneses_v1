@@ -3,6 +3,7 @@ import { NotFound } from "../pages/NotFound404"
 import AuthGuard from "../guards/auth.guard"
 import { Home } from "../pages/home"
 import { Reports } from "../pages/reports"
+import { Profile } from "../pages/profile/Profile"
 import AuthForms from "../pages/authForms"
 
 
@@ -20,6 +21,7 @@ const RoutesApp= () => {
         <Route element={<AuthGuard />}>
           <Route element={<Home path="/home"/>}   path="/home"/> 
           <Route element={<Reports path="/reportes/:option"/>}   path="/reportes/:option"/> 
+          <Route element={<Profile path="/perfil"/>}   path="/perfil"/> 
           <Route path="/*" element= {<NotFound/>} />
         </Route>
       </Routes>

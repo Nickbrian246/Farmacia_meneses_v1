@@ -125,6 +125,7 @@ const list = (anchor: Anchor) => (
             <ListItemButton onClick={()=> {
                 toggleDrawer(anchor, false);
                 setIsOpenModal(false);
+                navigate("/perfil")
             }}>
             <ListItemText  primary={`Ver perfil`}  />
             </ListItemButton>

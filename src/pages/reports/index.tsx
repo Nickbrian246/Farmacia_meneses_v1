@@ -13,6 +13,7 @@ import { adapterForReport, postWeeklyReportsAdapter } from "./adapters/forPostWe
 import { setErrorMessage } from "../../store/slices/globalErrorMessage/globalErrorMessage";
 import { createExcelReport, createStockReport } from "./utils/createExcelReport";
 import LinesChart from "./components/graphics/weeklyReportsGraphics/LineChart";
+import { VerticalGhrapic } from "./components/graphics/verticalGraphics/VerticalGraphics";
 import { StockTable } from "./components/gridReports/stock/stock";
 import { stockAdapter } from "./adapters";
 import { useParams } from "react-router-dom";
@@ -370,9 +371,16 @@ useEffect(()=>{
     
         
       {( isGraphicOpen  && (
+        <>
+        {optionSelected !== "yesterdayNToday" && (
+                    <Box sx={{width:"1090px", height:"700px"}}>
+                    <LinesChart arrayDateTotalAndDay={arrayDateTotalAndDay} />
+                      </Box>
+        )}
           <Box sx={{width:"1090px", height:"700px"}}>
-        <LinesChart arrayDateTotalAndDay={arrayDateTotalAndDay} />
+        <VerticalGhrapic arrayDateTotalAndDay={arrayDateTotalAndDay} />
           </Box>
+        </>
       ))}
     </Stack>
     </>
