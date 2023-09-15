@@ -1,4 +1,10 @@
-import { ArrayOfDates, CleaningRepeatItems, FilterDataForReportWithNoDay, ListNetSalesDriven, ListNetSalesOutPut } from "../interfaces"
+import { 
+  ArrayOfDates,
+  CleaningRepeatItems,
+  FilterDataForReportWithNoDay,
+  ListNetSalesDriven,
+  ListNetSalesOutPut,
+  } from "../interfaces"
 export function  postWeeklyReportsAdapter(date: string[]):ArrayOfDates{
     const dates:ArrayOfDates = {
       dates: date.map((item) => {

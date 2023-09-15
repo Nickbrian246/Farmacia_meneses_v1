@@ -21,7 +21,7 @@ const postDrinksAdapter= (data:FormDrinks):PostDrinks => {
       {
         name:data.name,
         price:data.price,
-        tag:data.tag,
+        tag:data.type,
         quantity:data.quantity,
         brand:data.brand,
         size:data.size,

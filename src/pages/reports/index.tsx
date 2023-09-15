@@ -372,18 +372,21 @@ useEffect(()=>{
         
       {( isGraphicOpen  && (
         <>
-        {optionSelected !== "yesterdayNToday" && (
-                    <Box sx={{width:"1090px", height:"700px"}}>
-                    <LinesChart arrayDateTotalAndDay={arrayDateTotalAndDay} />
+        {optionSelected === "yesterdayNToday" && (
+                    <Box sx={{width:"1090px", height:"500px", mb:"50px"}}>
+                    <VerticalGhrapic arrayDateTotalAndDay={arrayDateTotalAndDay} />
                       </Box>
         )}
-          <Box sx={{width:"1090px", height:"700px"}}>
-        <VerticalGhrapic arrayDateTotalAndDay={arrayDateTotalAndDay} />
-          </Box>
+        {optionSelected !== "yesterdayNToday" && (
+            <Box sx={{width:"1090px", height:"700px"}}>
+              <LinesChart arrayDateTotalAndDay={arrayDateTotalAndDay} />
+            </Box>
+        )}
+
         </>
       ))}
     </Stack>
-    </>
+    </> 
   )
 };
 

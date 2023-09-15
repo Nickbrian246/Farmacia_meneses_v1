@@ -194,6 +194,7 @@ return (
                 <ListItemButton onClick={()=> {
                     setIsAddProducts(false)
                     handleReportOptions(text.name)
+                    setIsOpenModal(false);
                 }}>
                 <ListItemText primary={text.label}  />
                 </ListItemButton>
