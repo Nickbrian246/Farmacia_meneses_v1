@@ -54,7 +54,7 @@ return (
         <Typography>{`Usuario: ${name}`}</Typography>
         </div>
         <ImageListItem sx={{width: 350, height: 450 }}>
-            <NavLink to={"/home"}>
+            <NavLink to={"/"}>
                 <img
                 className='logo-container-img'
                 src={logoFarmaciaMeneses}
