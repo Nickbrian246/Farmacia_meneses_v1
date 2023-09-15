@@ -78,12 +78,3 @@ export type  {
     ModifyItemMedicine,
     ModifyItemForOtherProducts,
 }
-// interface FormMedicineAdd {
-//     name:string,
-//     compound:string,
-//     price:string,
-//     type:string,
-//     quantity:string,
-//     function:string,
-//     imgId?:string
-// }

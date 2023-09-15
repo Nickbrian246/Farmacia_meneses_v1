@@ -88,7 +88,7 @@ return (
                 zIndex:"10000000",
                 }}
         variant="filled" 
-        severity={`${severityType}`}
+        severity={severityType}
         >
         <AlertTitle>{title}</AlertTitle>
         {errorMessage} - <strong>{errorMessageBold}</strong>

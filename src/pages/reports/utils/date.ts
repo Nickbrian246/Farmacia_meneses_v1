@@ -237,7 +237,7 @@ export function todayAndYesterday():string[]{
     return [formattedYesterday,formattedToday]
   }
 
-  export function  addDayToSingleArray(saleArray:[]){  
+  export function  addDayToSingleArray(saleArray:any[]){  
     const date = saleArray[0].date
     const data = saleArray[0]
     let dayOfWeek = ""

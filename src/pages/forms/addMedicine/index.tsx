@@ -10,15 +10,15 @@ import {FormMedicine} from "../interfaces"
 const AddMedicine=()=>{
     const [error, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
+
     const [form, setForm] = useState<FormMedicine>({
         name:"",
         compound:"",
-        price:"",
+        price:0,
         type:"",
-        quantity:"",
+        quantity:0,
         function:"",
-        imgId:""
-        
+        size:""
     })
     const formRef = useRef<HTMLFormElement>(null);
     const handleSumbitBtn = (event: FormEvent<HTMLFormElement> ) =>{
@@ -32,7 +32,10 @@ const AddMedicine=()=>{
             return setError(true)
         }
         // SOLUCIONAR CHEQUEADO DE TIPOS DE DATOS
-        if( !!isNaN(parseFloat(form.price)) || !!isNaN(parseFloat(form.quantity)) ) {
+        const parsePriceToString:string =  form.price.toString()
+        const parseQuantityToString:string =  form.quantity.toString()
+
+        if( /[a-zA-Z]/g.test(parsePriceToString) ||  /[a-zA-Z]/g.test(parseQuantityToString) )  {
             setErrorMessage("los camops precio y cantidad deben de ser numeros")
             return setError(true)
         }
