@@ -13,7 +13,9 @@ export async function postSales(sales:PostNewSale, token: string) {
         "Authorization":`Bearer ${token}`
         }
     });
-    return response.statusText
+
+    
+    return response.status
   } catch (error) {
     throw(error)
   }

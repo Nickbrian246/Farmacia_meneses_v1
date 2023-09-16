@@ -73,7 +73,7 @@
     };
   useEffect(()=>{
     if(userState.token){
-      navigate("/home")
+      navigate("/")
     }
   },[userState.token])
 

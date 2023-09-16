@@ -86,7 +86,10 @@ const SaleModal=(props:Props) => {
 
       postSales(adapter ,token)
       .then((response) => {
-        if(response ==="OK"){
+        console.log(response);
+        
+        
+        if(response ===200){
           dispatch(setErrorMessage({
             errorMessage:``,
             isError:true,

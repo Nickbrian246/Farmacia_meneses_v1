@@ -19,7 +19,7 @@ const RoutesApp= () => {
       <Route element={<AuthForms path="/register"/>}  path="/register"/> 
       <Route path="/*" element= {<NotFound/>} />
         <Route element={<AuthGuard />}>
-        <Route index element={<Home path="/home" />} />
+          <Route index element={<Home path="/home" />} />
           <Route element={<Reports path="/reportes/:option"/>}   path="/reportes/:option"/> 
           <Route element={<Profile path="/perfil"/>}   path="/perfil"/> 
           <Route path="/*" element= {<NotFound/>} />
