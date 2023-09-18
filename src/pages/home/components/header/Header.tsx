@@ -4,7 +4,7 @@ import logoFarmaciaMeneses from "../../../../assets/Farmacias-meneses-logo.png"
 import {CiMenuBurger} from "react-icons/ci";
 import ToggleMenu from "./asideMenu";
 import { MedicineModalFlow } from "../../../Modalflow";
-import {  NavLink } from "react-router-dom";
+import {  Link, NavLink } from "react-router-dom";
 import { Alert, AlertTitle, Avatar, ImageListItem, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setErrorMessage } from "../../../../store/slices/globalErrorMessage/globalErrorMessage";
@@ -49,10 +49,20 @@ return (
         className='icon-header'
         onClick={()=>{handleModal()}}/>
         </div>
-        <div style={{display:"flex", justifyContent:"center",alignItems:"center", gap:"10px"}}>
+        <Link 
+        to={"/perfil"}
+        style={{
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            gap:"10px",
+            textDecoration:"none",
+            color:"black"
+            }}
+            >
         <Avatar sx={{ bgcolor: deepOrange[500] }}>{name.split("",2)}</Avatar>
         <Typography>{`Usuario: ${name}`}</Typography>
-        </div>
+        </Link>
         <ImageListItem sx={{width: 350, height: 450 }}>
             <NavLink to={"/"}>
                 <img

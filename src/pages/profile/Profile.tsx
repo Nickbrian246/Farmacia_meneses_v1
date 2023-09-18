@@ -56,10 +56,10 @@ const Profile = (props:Props) =>{
         <Box sx={{
             width:"100%",
             display:"flex",
-            flexDirection:"column",
-            padding:"80px",
+            flexDirection:"row",
             justifyContent:"center",
-            alignItems:"center",
+            alignContent:"center",
+            marginTop:"4%",
             }}>
                 <Box 
                 sx={{

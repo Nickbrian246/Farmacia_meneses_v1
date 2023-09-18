@@ -1,6 +1,6 @@
 import React,{ useEffect} from "react"
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { Button, Box, TextField, Typography, InputAdornment, Alert, AlertTitle } from "@mui/material";
+import { Button, Box, TextField, Typography, InputAdornment, Alert, AlertTitle, CircularProgress } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Autocomplete } from "@mui/material";
@@ -33,6 +33,7 @@ const RegisterForm = (props:Props) => {
   const [state, setSelectedState] = useState<string>("");
   const [role, setRole]= useState<Role>("admin");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [registerUser, setRegisterUser] = useState<Register >({
     age: 0,
     email: "",
@@ -81,6 +82,7 @@ const RegisterForm = (props:Props) => {
       }))
       return 
     }
+    setIsLoading(true)
     dispatch(RegisterRequest(data) as any)
   };
   useEffect(()=> {
@@ -88,9 +90,32 @@ const RegisterForm = (props:Props) => {
       navigate("/")
     }
   },[userState.token])
+  if(isLoading){
+    setTimeout(() => {
+      setIsLoading(false)
+      dispatch(setAuthErrorMessage({
+        errorMessage:"",
+        errorMessageBold:"",
+        isError:true,
+        severityType:"error",
+        title:"Ha habido un error en el registro. Por favor, comuníquese con soporte técnico o inténtelo más tarde",
+        duration:7_000
+      }))
+    }, 10_000);
+  }
 
   return (
     <>
+    {isLoading && (
+        <Box sx={{
+          display: 'flex',
+          position:"absolute",
+          zIndex:"100",
+          left:"48%"
+          }}>
+          <CircularProgress  />
+        </Box>
+      )}
       <Box
         sx={{
           borderRadius: "5px",

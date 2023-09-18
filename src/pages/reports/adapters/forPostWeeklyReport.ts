@@ -48,10 +48,11 @@ export function listOfSalesAdapterForReport(data:SalesOfTheDay[] ):modelForSales
  */
 export function adapterForReportTwoDimensionalArray(listOfSales:SaleModelForReport[][]) : modelForReport[][]{
   const listOfSalesAdapted: modelForReport[][] = listOfSales.map((saleList:SaleModelForReport[]) => { 
-
+    //@ts-ignore
     const groupOfSalesAdepted:modelForReport[] = saleList.map((sale:SaleModelForReport): modelForReport[] => {
       const groupOfSales:SalesOfTheDay[] = sale.salesOfTheDay
       const adapter:modelForSalesOfTheDayReport[] = listOfSalesAdapterForReport(groupOfSales)
+       //@ts-ignore
       return { ...sale,salesOfTheDay:adapter }
     })
 

@@ -1,6 +1,6 @@
   import styles from "./logInFrom.module.css"
   import  { ChangeEvent, FormEvent, useEffect, useState } from "react";
-  import { Button, Box, TextField, Typography, InputAdornment, Alert, AlertTitle } from "@mui/material";
+  import { Button, Box, TextField, Typography, InputAdornment, Alert, AlertTitle, CircularProgress } from "@mui/material";
   import { NavLink } from "react-router-dom";
   import { AiOutlineConsoleSql, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
   import { LoggingRequest } from "../../../store/thunks/auth/authThunks";
@@ -35,6 +35,7 @@
     const [email, setEmail] = useState("");
     const [password, setPassWord] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleEmailInput = (event: ChangeEvent<HTMLInputElement>): void => {
       const { value, name } = event.target;
@@ -64,7 +65,8 @@
         const data= {
           email,
           password
-        }        
+        }     
+        setIsLoading(true)   
         dispatch(LoggingRequest(data) as any)
       };
 
@@ -75,10 +77,33 @@
     if(userState.token){
       navigate("/")
     }
-  },[userState.token])
+  },[userState.token]);
+  if(isLoading){
+    setTimeout(() => {
+      setIsLoading(false)
+      dispatch(setAuthErrorMessage({
+        errorMessage:"",
+        errorMessageBold:"",
+        isError:true,
+        severityType:"error",
+        title:"Ha habido un error en el registro. Por favor, comuníquese con soporte técnico o inténtelo más tarde",
+        duration:7_000
+      }))
+    }, 10_000);
+  }
 
     return (
       <>
+      {isLoading && (
+        <Box sx={{
+          display: 'flex',
+          position:"absolute",
+          zIndex:"100",
+          left:"60%"
+          }}>
+          <CircularProgress  />
+        </Box>
+      )}
         <Box
           sx={{
             borderRadius: "5px",
@@ -89,7 +114,8 @@
             display: "flex",
             background:"white",
             justifyContent: "center",
-            overflow:"hidden"
+            overflow:"hidden",
+            position:"relative"
           }}
         >
           <div  style={{width:"50%",height:"100%"}}>
