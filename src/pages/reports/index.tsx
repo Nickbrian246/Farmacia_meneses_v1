@@ -103,13 +103,28 @@ const handleOptionSelected=(name:string) :void=> {
             const dataCleaningTest = adapterForReport(cleaningListNetSales)
             dataForReport = new Array([dayOfWeek,[...dataCleaningTest]])
           }).catch((error)=>{ 
-            dispatch(setErrorMessage({
-              isError:true,
-              errorMessage:"",
-              errorMessageBold:`${error.response.data.data}`,
-              severityType:"error",
-              title:`${error.message}`}))
-              setIsLoading((prevState)=> !prevState)
+            if(error.response.status === 404) {
+              dispatch(
+                setErrorMessage({
+                isError:true,
+                errorMessage:"",
+                errorMessageBold:`${error.response.data.error}`,
+                severityType:"warning",
+                title:`${error.message}`,
+                duration:6_000,
+              }))
+                setIsLoading((prevState)=> !prevState)
+            }else {
+
+              dispatch(
+                setErrorMessage({
+                isError:true,
+                errorMessage:"",
+                errorMessageBold:`${error.response.data.error}`,
+                severityType:"error",
+                title:`${error.message}`}))
+                setIsLoading((prevState)=> !prevState)
+            }
         })
         break
       case "stock":       
