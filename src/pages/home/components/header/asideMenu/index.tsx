@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { listOptions } from "../../../../reports/components/sellOptions/options/sellOptionsList";
 import { stockOptionsList } from "../../../../reports/components/stock/listStockOptions";
 import { DatePicker } from "../../../../components/datePicker";
+import { te } from "date-fns/locale";
 
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -82,10 +83,13 @@ const toggleDrawer =(anchor: Anchor, open: boolean,id?:string) =>
 
     const handleReportOptions = (option:string)=>{
         if(option ==="personalized"){
-            setIsDatePickerOpen((prevState) => !prevState)
+            setIsDatePickerOpen(true)
+            console.log(isDatePickerOpen);
+            
             return 
+        }else {
+            navigate(`/reportes/${option}`)
         }
-        navigate(`/reportes/${option}`)
     }
 const list = (anchor: Anchor) => (
     <Box
@@ -184,23 +188,25 @@ return (
         {isReport && (
         <List  style={{
             position:"absolute",
-            right:"-625px",
+            right:"-747px",
             zIndex:"1300",
             background:"#ffff",
-            top:"-50px"
+            top:"-100px"
             }}>
             {listOptions.map((text) => (
             <ListItem key={uuidv4()} disablePadding >
-                <ListItemButton onClick={()=> {
-                    setIsAddProducts(false)
+                <ListItemButton 
+                disabled ={ text.label === "Del mes" || text.label === "Elegir una fecha"}
+                onClick={()=> {
                     handleReportOptions(text.name)
+                    setIsAddProducts(false)
                     setIsOpenModal(false);
                 }}>
                 <ListItemText primary={text.label}  />
                 </ListItemButton>
             </ListItem>
             ))}
-            <Divider/>
+            <Divider/> 
             {stockOptionsList.map((text) => (
             <ListItem key={uuidv4()} disablePadding >
                 <ListItemButton onClick={()=> {

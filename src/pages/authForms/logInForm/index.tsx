@@ -121,12 +121,13 @@
                 value={email}
                 type="email"
                 name="email"
+                error={isError}
                 onChange={handleEmailInput}
               />
               <TextField
                 label="Ingrese su Contraseña"
                 value={password}
-                error={isError.isError}
+                error={isError}
                 type={showPassword ? "text" : "password"}
                 name="password"
                 onChange={handleEmailInput}

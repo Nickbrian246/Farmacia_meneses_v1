@@ -3,6 +3,8 @@ import { SaleModel, SaleModelForReport, StockReport } from "../../interfaces";
 import { formatDate } from "../date";
 
 export function createExcelReport (data:any []){
+  console.log(data);
+  
   const workbook = XLSX.utils.book_new();
   if(data.length ===1){
     const worksheet = XLSX.utils.json_to_sheet(data[0][1]);// json _to_sheet espera un array

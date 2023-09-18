@@ -46,9 +46,10 @@ export const RegisterRequest = createAsyncThunk (
         user,
         config
         );
-      const adapter = loggedAdapter(gettingInfo.data);
+      const adapter = loggedAdapter(gettingInfo.data);      
       return adapter
     } catch (err:any) {
+      
       dispatch(setAuthErrorMessage({
         title:`${err.response.data.error}`,
         isError:true,

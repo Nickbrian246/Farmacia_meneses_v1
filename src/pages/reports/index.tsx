@@ -9,7 +9,7 @@ import { useSelector, useDispatch} from "react-redux";
 import { useState } from "react";
 import { ArraySaleTotalAndDay, ListNetSalesOutPut, StockWithColorNIsSelected, addedStockToListNetSales } from "./interfaces";
 import { Header } from "../home/components/header/Header";
-import { adapterForReport, postWeeklyReportsAdapter } from "./adapters/forPostWeeklyReport";
+import { adapterForReport, adapterForReportTwoDimensionalArray, postWeeklyReportsAdapter } from "./adapters/forPostWeeklyReport";
 import { setErrorMessage } from "../../store/slices/globalErrorMessage/globalErrorMessage";
 import { createExcelReport, createStockReport } from "./utils/createExcelReport";
 import LinesChart from "./components/graphics/weeklyReportsGraphics/LineChart";
@@ -78,11 +78,12 @@ useEffect(()=>{
 },[option])
 
 const handleOptionSelected=(name:string) :void=> {
-    setOptionSelected(name)
+    setOptionSelected(name) 
 
     setIsLoading((prevState)=> !prevState)
     setDataList([])
     setTotalSales(null)
+    setIsGraphicOpen(false)
     switch (name){
       case "sellsToday":
         const today = new Date();
@@ -146,7 +147,7 @@ const handleOptionSelected=(name:string) :void=> {
           setDataStockList([])
           // se prepara data para reporte
           const dayOfWeek = getDayOfWeek(yesterdayDate)
-          const dataCleaningTest = adapterForReport(cleaningListNetSales)
+          const dataCleaningTest = adapterForReport(cleaningListNetSales);
           dataForReport = new Array([dayOfWeek,[...dataCleaningTest]])
           dataForReport = dataForReport
         }).catch((error)=>{ 
@@ -165,8 +166,8 @@ const handleOptionSelected=(name:string) :void=> {
     
         fetchWeeklyReport(datesAdapter,token)
         .then((response)=>{
-          const dataForExcelReport = addDayToArray(response.data)
-          dataForReport = dataForExcelReport
+          const dataForExcelReportRow = addDayToArray(response.data)
+          dataForReport =  adapterForReportTwoDimensionalArray (dataForExcelReportRow)
           
           const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
           const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
@@ -198,7 +199,8 @@ const handleOptionSelected=(name:string) :void=> {
         break
       case "sellsWeek":
         const currentDay= formatDate(new Date())
-        const arrayOfDays = getArrayOfDates(currentDay)
+        const arrayOfDays = getArrayOfDates(currentDay);
+        
         const postAdapter = postWeeklyReportsAdapter(arrayOfDays)
     
         fetchWeeklyReport(postAdapter,token)
@@ -235,9 +237,8 @@ const handleOptionSelected=(name:string) :void=> {
         })
         break
       case "sellsLastWeek":
-        
         const dateLastWeek= lastWeek()
-        const ArrayOfDatesAdapter = postWeeklyReportsAdapter(dateLastWeek)
+        const ArrayOfDatesAdapter = postWeeklyReportsAdapter(dateLastWeek);
         
         fetchWeeklyReport(ArrayOfDatesAdapter,token)
         .then((response) => {
@@ -277,7 +278,6 @@ const handleDownloadExcelReport = () => {
   if(optionSelected === "stock"){
     const stockData = stockAdapter(dataStockList)
     createStockReport(stockData);
-    
     return
   }
   else{

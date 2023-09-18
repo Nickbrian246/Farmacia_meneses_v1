@@ -105,6 +105,8 @@ export function lastWeek() :string[]{
     const currentDate = new Date()
     let start = 7
     let  accedingToLastWeek = subDays(currentDate, start) 
+    console.log((accedingToLastWeek));
+    
     let day  = accedingToLastWeek.getDay() 
     
     for(let i = start; i<20; i++){

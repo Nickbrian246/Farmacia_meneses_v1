@@ -67,5 +67,21 @@ export interface ArraySaleTotalAndDay {
   date:string,
   day:string
 }
+export interface modelForSalesOfTheDayReport{
+  name:string,
+  price:number,
+  productSell:Number,
+  total:string
+}
+
+export interface modelForReport  {
+  client: string,
+  createdAt: string,
+  date: string,
+  salesOfTheDay: modelForSalesOfTheDayReport[],
+  updatedAt: string,
+  _id: string,
+  day:string
+}
 export type TotalAndDatesArray = [number, string]
 export type Array2levelS = Array<SaleModel>

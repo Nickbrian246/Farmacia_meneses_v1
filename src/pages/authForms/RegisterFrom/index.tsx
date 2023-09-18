@@ -77,7 +77,7 @@ const RegisterForm = (props:Props) => {
         errorMessageBold:"favor de revisar la contraseña",
         isError:true,
         severityType:"error",
-        title:"Contraseña incorrecta"
+        title:`${passwordDoesNotMeet}`
       }))
       return 
     }
@@ -85,7 +85,7 @@ const RegisterForm = (props:Props) => {
   };
   useEffect(()=> {
     if(userState.token){
-      navigate("/home")
+      navigate("/")
     }
   },[userState.token])
 
@@ -105,7 +105,7 @@ const RegisterForm = (props:Props) => {
         }}
       >
         <Typography sx={{ alignSelf: "center", fontSize: "2rem",}}>Bienvenido</Typography>
-        <Typography sx={{ alignSelf: "center", fontSize: "1rem", mb:"20px"}}>Porfavor llene el registro </Typography>
+        <Typography sx={{ alignSelf: "center", fontSize: "1rem", mb:"20px"}}>Por favor, llene el registro.</Typography>
         
         <form
           style={{
@@ -159,6 +159,7 @@ const RegisterForm = (props:Props) => {
             value={registerUser.email}
             type="email"
             name="email"
+            error={isError}
             onChange={handleEmailInput}
           />
           <TextField

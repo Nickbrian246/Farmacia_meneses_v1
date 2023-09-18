@@ -18,7 +18,7 @@ const listOptions= [
   },
   {
     name:"sellsWeek",
-    label:"Desde el lunes hasta hoy",
+    label:"Desde el lunes hasta hoy (de la presente semana)",
     id:"sellsWeek"
   },
   {
