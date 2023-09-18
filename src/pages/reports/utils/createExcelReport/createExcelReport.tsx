@@ -15,8 +15,11 @@ export function createExcelReport (data:any []){
   else {
     //  este caso es para cuando es mas de dos dias
     data.forEach((subArray:SaleModelForReport[]) => {
-      const salesData = subArray[0].salesOfTheDay; // Obtener los datos de ventas del día actual
+      const salesData = subArray[0]?.salesOfTheDay;
+      if(!salesData) return
+      // Obtener los datos de ventas del día actual
       // Crear una nueva hoja en el libro de Excel con el nombre del día
+      
       const worksheet = XLSX.utils.json_to_sheet(salesData);
       XLSX.utils.sheet_add_aoa(worksheet, [["Producto", "Precio", "Cantidad vendida", "Total"]], { origin: "A1" });//  asignando headers
       const max_width = salesData.reduce((w, r) => Math.max(w, r.name.length), 10); // asignando ancho de columnas tomando como ref el texto mas grande

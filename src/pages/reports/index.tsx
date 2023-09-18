@@ -183,7 +183,7 @@ const handleOptionSelected=(name:string) :void=> {
         .then((response)=>{
           const dataForExcelReportRow = addDayToArray(response.data)
           dataForReport =  adapterForReportTwoDimensionalArray (dataForExcelReportRow)
-          
+    
           const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
           const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
           setArrayDateTotalAndDay(dayAdded)
@@ -296,6 +296,8 @@ const handleDownloadExcelReport = () => {
     return
   }
   else{
+  
+    
     createExcelReport(dataForReport)
   }
 }
