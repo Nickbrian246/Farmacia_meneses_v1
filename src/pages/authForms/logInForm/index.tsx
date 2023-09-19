@@ -22,6 +22,7 @@
 
   const LogInForm = (props:Props) => {
     const userState= useSelector((state:any) => state.loggedUser)  
+    const {isFetchingData} = useSelector((state:any) => state.forAuthforLoaderStatus)
     const {
       isError,
       severityType,
@@ -35,7 +36,6 @@
     const [email, setEmail] = useState("");
     const [password, setPassWord] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false)
 
     const handleEmailInput = (event: ChangeEvent<HTMLInputElement>): void => {
       const { value, name } = event.target;
@@ -65,8 +65,7 @@
         const data= {
           email,
           password
-        }     
-        setIsLoading(true)   
+        }       
         dispatch(LoggingRequest(data) as any)
       };
 
@@ -78,23 +77,23 @@
       navigate("/")
     }
   },[userState.token]);
-  if(isLoading){
-    setTimeout(() => {
-      setIsLoading(false)
-      dispatch(setAuthErrorMessage({
-        errorMessage:"",
-        errorMessageBold:"",
-        isError:true,
-        severityType:"error",
-        title:"Ha habido un error en el registro. Por favor, comuníquese con soporte técnico o inténtelo más tarde",
-        duration:7_000
-      }))
-    }, 10_000);
-  }
+  // if(isLoading){
+  //   setTimeout(() => {
+  //     setIsLoading(false)
+  //     dispatch(setAuthErrorMessage({
+  //       errorMessage:"",
+  //       errorMessageBold:"",
+  //       isError:true,
+  //       severityType:"error",
+  //       title:"Ha habido un error en el registro. Por favor, comuníquese con soporte técnico o inténtelo más tarde",
+  //       duration:7_000
+  //     }))
+  //   }, 10_000);
+  // }
 
     return (
       <>
-      {isLoading && (
+      {isFetchingData && (
         <Box sx={{
           display: 'flex',
           position:"absolute",

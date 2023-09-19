@@ -93,7 +93,7 @@ const listFormForOtherProducts:List []=[
     {
     name:"quantity",
     id:"quantityFieldOtherProduct",
-    label:"Cantidad en stock"
+    label:"Cantidad que se agrega a inventario"
     },
     {
     name:"size",

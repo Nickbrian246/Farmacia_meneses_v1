@@ -30,10 +30,10 @@ const RegisterForm = (props:Props) => {
   const dispatch= useDispatch()
   const userState= useSelector((State:any)=> State.loggedUser)
   const {isError} = useSelector((State:any)=> State.authErrorMessage)
+  const {isFetchingData} = useSelector((state:any) => state.forAuthforLoaderStatus)
   const [state, setSelectedState] = useState<string>("");
   const [role, setRole]= useState<Role>("admin");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [registerUser, setRegisterUser] = useState<Register >({
     age: 0,
     email: "",
@@ -82,7 +82,6 @@ const RegisterForm = (props:Props) => {
       }))
       return 
     }
-    setIsLoading(true)
     dispatch(RegisterRequest(data) as any)
   };
   useEffect(()=> {
@@ -90,23 +89,23 @@ const RegisterForm = (props:Props) => {
       navigate("/")
     }
   },[userState.token])
-  if(isLoading){
-    setTimeout(() => {
-      setIsLoading(false)
-      dispatch(setAuthErrorMessage({
-        errorMessage:"",
-        errorMessageBold:"",
-        isError:true,
-        severityType:"error",
-        title:"Ha habido un error en el registro. Por favor, comuníquese con soporte técnico o inténtelo más tarde",
-        duration:7_000
-      }))
-    }, 10_000);
-  }
+  // if(isLoading){
+  //   setTimeout(() => {
+  //     setIsLoading(false)
+  //     dispatch(setAuthErrorMessage({
+  //       errorMessage:"",
+  //       errorMessageBold:"",
+  //       isError:true,
+  //       severityType:"error",
+  //       title:"Ha habido un error en el registro. Por favor, comuníquese con soporte técnico o inténtelo más tarde",
+  //       duration:7_000
+  //     }))
+  //   }, 10_000);
+  // }
 
   return (
     <>
-    {isLoading && (
+    {isFetchingData && (
         <Box sx={{
           display: 'flex',
           position:"absolute",

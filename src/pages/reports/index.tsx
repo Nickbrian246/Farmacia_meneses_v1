@@ -343,6 +343,7 @@ type OptionList = {
   sellsLastWeek: string;
   sellsMonth: string;
   personalized: string;
+  stock:string
 };
 
 const optionList: OptionList = {
@@ -353,6 +354,7 @@ const optionList: OptionList = {
   sellsLastWeek: "Semana pasada (lunes - domingo)",
   sellsMonth: "Del mes",
   personalized: "Elegir una fecha",
+  stock:"Inventario"
 };
 type Option = keyof OptionList;
   return (

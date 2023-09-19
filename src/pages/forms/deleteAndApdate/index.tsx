@@ -162,7 +162,7 @@ const FormCrudMedicine=(props:Props) =>{
                 setError((prevState) => !prevState),
                 setErrorMessage({
                     error:"dato actualizado con exito",
-                    message:`el dato con nombre ${response.data.name} fue actualizado con exito`,
+                    message:`el dato con nombre ${formMedicine.name} fue actualizado con exito`,
                     type:"success",
                     errorName:"exito"
                 })
@@ -248,9 +248,10 @@ const FormCrudMedicine=(props:Props) =>{
                 postOtherProduct(adapter,token)
                 .then((response) => {
                     setError((prevState) => !prevState),
+
                     setErrorMessage({
                         error:"dato registrado con exito",
-                        message:`el dato con nombre ${response.data.name}`,
+                        message:`el dato con nombre ${otherProductsForm.name}`,
                         type:"success",
                         errorName:"exito"
                     })
