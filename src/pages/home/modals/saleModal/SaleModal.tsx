@@ -1,6 +1,6 @@
 import "./saleModal.css";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Alert, AlertTitle, Button } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, CircularProgress } from "@mui/material";
 import { postSales } from "./services";
 import { salesAdapter } from "./adapters";
 import { setClearState } from "../../../../store/slices/home/ProductCart";
@@ -31,7 +31,8 @@ export type AlertColor = 'success' | 'info' | 'warning' | 'error';
 const SaleModal=(props:Props) => {
   const token= useSelector((state:any)=> state.loggedUser.token)
   const [inputMoneyReceived, setInputMoneyReceived] = useState<string>("");
-  const [inputMoneyCurrencyFormat, setInputMoneyCurrencyFormat] = useState<string>("")
+  const [inputMoneyCurrencyFormat, setInputMoneyCurrencyFormat] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const dispatch= useDispatch();
   
   const {
@@ -81,14 +82,13 @@ const SaleModal=(props:Props) => {
 
     }
     else {
+      setIsLoading(true)
       let cashReceived =(inputMoneyReceived ? parseFloat(inputMoneyReceived) : 0)
       const adapter= salesAdapter({data:data})
 
       postSales(adapter ,token)
       .then((response) => {
-        console.log(response);
-        
-        
+      setIsLoading(false)
         if(response ===200){
           dispatch(setErrorMessage({
             errorMessage:``,
@@ -104,6 +104,7 @@ const SaleModal=(props:Props) => {
         };
       })
       .catch(err => {
+        setIsLoading(false)
         dispatch(setErrorMessage({
         errorMessage:`${err.response.data.errorMessage}`,
         isError:true,
@@ -119,6 +120,18 @@ const SaleModal=(props:Props) => {
 
   return (
     <>
+  {isLoading && (
+        <Box sx={{ 
+          display: 'flex',
+          position:"absolute",
+          zIndex:"5000",
+          left:"50%",
+          bottom:"45%"
+          }}
+          >
+          <CircularProgress />
+        </Box>
+  )}
     <section className="backGroundContainer-SaleModal">
       <div className="backGroundContainer-formContainer">
         <p style={{

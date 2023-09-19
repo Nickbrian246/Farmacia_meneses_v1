@@ -46,10 +46,12 @@ return (
     <header className='header-container'>
         <div className='icon-container'>
         <CiMenuBurger 
+        title="menu de opciones"
         className='icon-header'
         onClick={()=>{handleModal()}}/>
         </div>
         <Link 
+        title="informacion de usuario"
         to={"/perfil"}
         style={{
             display:"flex",
@@ -66,6 +68,7 @@ return (
         <ImageListItem sx={{width: 350, height: 450 }}>
             <NavLink to={"/"}>
                 <img
+                title="logo de la empresa"
                 className='logo-container-img'
                 src={logoFarmaciaMeneses}
                 alt='logo de empresa'

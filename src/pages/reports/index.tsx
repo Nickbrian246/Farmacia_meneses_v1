@@ -221,6 +221,7 @@ const handleOptionSelected=(name:string) :void=> {
         fetchWeeklyReport(postAdapter,token)
         .then((response) => {
           const dataForExcelReport = addDayToArray(response.data)
+          
           dataForReport = dataForExcelReport
     
           const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
@@ -257,10 +258,9 @@ const handleOptionSelected=(name:string) :void=> {
         
         fetchWeeklyReport(ArrayOfDatesAdapter,token)
         .then((response) => {
-        const dataForExcelReport = addDayToArray(response.data)
-        dataForReport=dataForExcelReport
+        const dataForExcelReportRow = addDayToArray(response.data)
+        dataForReport =  adapterForReportTwoDimensionalArray (dataForExcelReportRow)
         
-    
         const arrayOfTotalAndDates = reduceArraysOfSalesToTotalAndDate(response.data)
         const dayAdded = addDayOfWeek(arrayOfTotalAndDates)
         setArrayDateTotalAndDay(dayAdded)
@@ -296,8 +296,6 @@ const handleDownloadExcelReport = () => {
     return
   }
   else{
-  
-    
     createExcelReport(dataForReport)
   }
 }
@@ -327,18 +325,36 @@ useEffect(()=>{
   }
   if(optionSelected !=="stock"){
     const dataFiltered = dataList.filter((item) =>{
-      return item.name.includes(inputFilter)
+      return item.name.toLowerCase().includes(inputFilter.toLowerCase())
     })
     setDataListFilter(dataFiltered)
   }else{
     const dataFiltered = dataStockList.filter((item) =>{
-      return item.name.includes(inputFilter)
+      return item.name.toLowerCase().includes(inputFilter.toLowerCase())
     })
     setDataListFilterStock(dataFiltered)
   }
 },[inputFilter])
+type OptionList = {
+  sellsToday: string;
+  sellsYesterday: string;
+  yesterdayNToday: string;
+  sellsWeek: string;
+  sellsLastWeek: string;
+  sellsMonth: string;
+  personalized: string;
+};
 
-
+const optionList: OptionList = {
+  sellsToday: "Hoy",
+  sellsYesterday: "Ayer",
+  yesterdayNToday: "Ayer y Hoy",
+  sellsWeek: "Desde el lunes hasta hoy (de la presente semana)",
+  sellsLastWeek: "Semana pasada (lunes - domingo)",
+  sellsMonth: "Del mes",
+  personalized: "Elegir una fecha",
+};
+type Option = keyof OptionList;
   return (
     <>
     <Stack>
@@ -346,10 +362,22 @@ useEffect(()=>{
     </Stack>
 
     <Stack justifyContent={"center"} alignItems={"center"} useFlexGap flexWrap="wrap" >
-      <Typography variant="h2" alignSelf={"center"}>Reportes de: {option} </Typography>
+      <Typography 
+      sx={{m:"20px"}}
+      variant="h4"
+      alignSelf={"center"}
+      >
+        {`Reportes de: ${optionList[option as Option]}`}
+      </Typography>
       {(dataList.length > 0 ||(dataStockList.length>0))  && (
         <Stack direction="row" sx={{pt:"30px" ,minWidth:"1200px"}}  justifyContent="space-between">
-          <TextField onChange={handleFilterInput} value={inputFilter} id="outlined-basic" label="filtrar" variant="outlined" sx={{minWidth:"400px"}} />
+          <TextField 
+          onChange={handleFilterInput}
+          value={inputFilter}
+          label="filtrar"
+          variant="outlined"
+          sx={{minWidth:"400px"}}
+          />
             <Stack direction="row" spacing={10} >
               {optionSelected!=="sellsToday" && optionSelected !== "sellsYesterday" && optionSelected !== "stock" &&   (
                 <Button
